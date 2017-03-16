@@ -57,6 +57,12 @@ public class VisualizeGitHubAccessPoints {
 		System.out.println("Scanning '" + object.getURL() + "'...");
 		JsonElement element = object.getRawResponseAsJson();
 		
+		if (element == null) {
+			System.err.println("Connection failed.");
+			System.out.println(object.getURL());
+			System.exit(0);
+		}
+		
 		String json = gson.toJson(element).replaceAll("\n", "<br>").replaceAll(" ", "&nbsp;");
 		
 		Map<String, Class<?>> queries = getSubURLs(object);
@@ -65,44 +71,38 @@ public class VisualizeGitHubAccessPoints {
 		lines:
 		for (String line: json.split("<br>")) {
 			for (Map.Entry<String, Class<?>> entry: queries.entrySet()) {
-				if ((element.isJsonObject() && line.startsWith("&nbsp;&nbsp;\"")) || (element.isJsonArray() && line.startsWith("&nbsp;&nbsp;&nbsp;&nbsp;\""))) {
-					if (line.contains("\"url\":")) {
+				if (line.contains("\"url\":")) {
+					builder.append("<font color=#44FF44>" + line + "</font><br>");
+					continue lines;
+				}
+				else if (entry.getKey().split(" | ")[0].contains("@")) {
+					if (line.contains("\"" + entry.getKey().split(" | ")[0].split("@")[1] + "\":")) {
 						builder.append("<font color=#44FF44>" + line + "</font><br>");
 						continue lines;
 					}
-					else if (entry.getKey().split(" | ")[0].contains("@")) {
-						if (line.contains("\"" + entry.getKey().split(" | ")[0].split("@")[1] + "\":")) {
-							builder.append("<font color=#44FF44>" + line + "</font><br>");
-							continue lines;
-						}
-					}
-					else {
-						Pattern pattern = Pattern.compile(entry.getKey().split(" | ")[2]);
-						final Matcher matcher = pattern.matcher(line);
-						if (matcher.matches()) {
-							builder.append("<font color=#44FF44>" + line + "</font><br>");
-							
-							if (line.contains(entry.getKey().split(" | ")[0]) && GitHubObject.class.isAssignableFrom(entry.getValue())) {
-								Constructor<?> constructor = getConstructor(entry.getValue());
-								
-								if (constructor != null) {
-									GitHubObject content = new GitHubObject(api, null, entry.getKey().split(" | ")[0]);
-									
-									try {
-										analyseObject(api, gson, (GitHubObject) constructor.newInstance(content));
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-								}
-							}
-							
-							continue lines;
-						}
-					}
 				}
 				else {
-					builder.append("<font color=#555555>" + line + "</font><br>");
-					continue lines;
+					Pattern pattern = Pattern.compile(entry.getKey().split(" | ")[2]);
+					final Matcher matcher = pattern.matcher(line);
+					if (matcher.matches()) {
+						builder.append("<font color=#44FF44>" + line + "</font><br>");
+						
+						if (line.contains(entry.getKey().split(" | ")[0]) && GitHubObject.class.isAssignableFrom(entry.getValue())) {
+							Constructor<?> constructor = getConstructor(entry.getValue());
+							
+							if (constructor != null) {
+								GitHubObject content = new GitHubObject(api, null, entry.getKey().split(" | ")[0]);
+								
+								try {
+									analyseObject(api, gson, (GitHubObject) constructor.newInstance(content));
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}
+						
+						continue lines;
+					}
 				}
 			}
 			
