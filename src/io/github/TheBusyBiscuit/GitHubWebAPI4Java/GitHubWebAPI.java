@@ -44,6 +44,23 @@ public class GitHubWebAPI {
 			
 			if (token != "") {
 				query += "?access_token=" + token;
+				
+				if (object.getParameters() != null) {
+					for (Map.Entry<String, String> parameter: object.getParameters().entrySet()) {
+						query += "&" + parameter.getKey() + "=" + parameter.getValue();
+					}
+				}
+			}
+			else {
+				if (object.getParameters() != null) {
+					boolean first = true;
+					
+					for (Map.Entry<String, String> parameter: object.getParameters().entrySet()) {
+						query += (first ? "?": "&") + parameter.getKey() + "=" + parameter.getValue();
+						
+						first = false;
+					}
+				}
 			}
 			
 			URL website = new URL(query);

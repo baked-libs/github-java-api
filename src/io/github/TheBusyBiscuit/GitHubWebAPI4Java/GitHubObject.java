@@ -1,5 +1,7 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
+import java.util.Map;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -95,6 +97,10 @@ public class GitHubObject {
 		if (response != null) {
 			response = null;
 		}
+	}
+
+	public Map<String, String> getParameters() {
+		return null;
 	}
 
 }
