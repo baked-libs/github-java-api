@@ -3,23 +3,38 @@ package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+
 public class GitHubBranch extends GitHubObject {
 	
 	private GitHubRepository repo;
+	private String name;
 	
 	public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name) {
 		super(api, repo, "/branches/" + name);
 		
+		this.name = name;
 		this.repo = repo;
 	}
 	
 	public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name, JsonElement response) {
 		super(api, repo, "/branches/" + name);
-		
+
+		this.name = name;
 		this.repo = repo;
 		this.minimal = response;
 	}
+
+	public GitHubBranch(GitHubObject obj) {
+		super(obj);
+	}
 	
+	@Override
+	public String getRawURL() {
+		return ".*repos/.*/.*/branches/.*";
+	}
+	
+	@GitHubAccessPoint(path = "@name", type = String.class)
 	public String getName() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -30,7 +45,8 @@ public class GitHubBranch extends GitHubObject {
 		
 		return isInvalid(response, "name") ? null: response.get("name").getAsString();
 	}
-	
+
+	@GitHubAccessPoint(path = "@commit/sha", type = GitHubCommit.class)
 	public GitHubCommit getLastCommit() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -53,7 +69,7 @@ public class GitHubBranch extends GitHubObject {
 	}
 	
 	public boolean isDefaultBranch() throws IllegalAccessException {
-		return getName().equals(getRepository().getDefaultBranch());
+		return name.equals(getRepository().getDefaultBranch().name);
 	}
 
 }

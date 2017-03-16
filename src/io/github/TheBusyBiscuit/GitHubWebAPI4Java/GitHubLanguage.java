@@ -19,10 +19,15 @@ public class GitHubLanguage extends GitHubObject {
 		return this.repo;
 	}
 	
+	@Override
+	public String getRawURL() {
+		return ".*repos/.*/.*/languages";
+	}
+	
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public int getSize() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		

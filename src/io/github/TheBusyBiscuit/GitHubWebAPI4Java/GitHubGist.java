@@ -5,6 +5,8 @@ import java.util.Date;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+
 public class GitHubGist extends GitHubObject {
 	
 	public GitHubGist(GitHubWebAPI api, String id) {
@@ -16,7 +18,17 @@ public class GitHubGist extends GitHubObject {
 		
 		this.minimal = response;
 	}
+
+	public GitHubGist(GitHubObject obj) {
+		super(obj);
+	}
 	
+	@Override
+	public String getRawURL() {
+		return ".*gists/.*";
+	}
+
+	@GitHubAccessPoint(path = "@id", type = String.class)
 	public String getID() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -27,7 +39,8 @@ public class GitHubGist extends GitHubObject {
 
 		return isInvalid(response, "id") ? null: response.get("id").getAsString();
 	}
-	
+
+	@GitHubAccessPoint(path = "@created_at", type = Date.class)
 	public Date getCreationDate() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -38,7 +51,8 @@ public class GitHubGist extends GitHubObject {
 
 		return isInvalid(response, "created_at") ? null: GitHubDate.parse(response.get("created_at").getAsString());
 	}
-	
+
+	@GitHubAccessPoint(path = "@updated_at", type = Date.class)
 	public Date getLastUpdatedDate() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

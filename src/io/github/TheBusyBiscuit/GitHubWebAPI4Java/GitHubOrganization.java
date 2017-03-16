@@ -3,6 +3,8 @@ package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+
 public class GitHubOrganization extends UniqueGitHubObject {
 	
 	public GitHubOrganization(GitHubWebAPI api, String name) {
@@ -14,7 +16,17 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		
 		this.minimal = response;
 	}
+
+	public GitHubOrganization(GitHubObject obj) {
+		super(obj);
+	}
 	
+	@Override
+	public String getRawURL() {
+		return ".*orgs/.*";
+	}
+
+	@GitHubAccessPoint(path = "@name", type = String.class)
 	public String getName() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -25,7 +37,8 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		
 		return isInvalid(response, "name") ? null: response.get("name").getAsString();
 	}
-	
+
+	@GitHubAccessPoint(path = "@login", type = String.class)
 	public String getUsername() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -36,7 +49,8 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		
 		return isInvalid(response, "login") ? null: response.get("login").getAsString();
 	}
-	
+
+	@GitHubAccessPoint(path = "@description", type = String.class)
 	public String getDescription() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

@@ -20,10 +20,26 @@ public class GitHubObject {
 		this.suffix = suffix;
 	}
 
-	protected String getURL() {
-		StringBuilder builder = new StringBuilder();
+	public GitHubObject(GitHubObject object) {
+		this.api = object.api;
+		this.parent = object.parent;
+		this.suffix = object.suffix;
+	}
+
+	public String getURL() {
+		return this.getURL(suffix);
+	}
+
+	protected String getURL(String suffix) {
+		if (parent == null) {
+			return suffix;
+		}
 		
-		GitHubObject o = this;
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(new StringBuilder(suffix).reverse().toString());
+		
+		GitHubObject o = getParent();
 		while (o != null) {
 			builder.append(new StringBuilder(o.getSuffix()).reverse().toString());
 			
@@ -31,6 +47,10 @@ public class GitHubObject {
 		}
 		
 		return builder.reverse().toString();
+	}
+
+	public String getRawURL() {
+		return this.getURL();
 	}
 	
 	public JsonElement getRawResponseAsJson() {
