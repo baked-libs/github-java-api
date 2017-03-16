@@ -46,7 +46,7 @@ public class GitHubBranch extends GitHubObject {
 		return isInvalid(response, "name") ? null: response.get("name").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@commit/sha", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "@commit", type = GitHubCommit.class)
 	public GitHubCommit getLastCommit() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		

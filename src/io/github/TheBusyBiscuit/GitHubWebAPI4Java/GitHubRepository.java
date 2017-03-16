@@ -56,6 +56,28 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
+	@GitHubAccessPoint(path = "/branches", type = GitHubRepository.class)
+	public List<GitHubBranch> getBranches() throws IllegalAccessException {
+		GitHubObject branches = new GitHubObject(api, this, "/branches");
+		JsonElement response = branches.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubBranch> list = new ArrayList<GitHubBranch>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubBranch branch = new GitHubBranch(api, this, object.get("name").getAsString(), object);
+	    	list.add(branch);
+	    }
+		
+		return list;
+	}
+
 	@GitHubAccessPoint(path = "/stargazers", type = GitHubUser.class)
 	public List<GitHubUser> getStargazers() throws IllegalAccessException {
 		GitHubObject users = new GitHubObject(api, this, "/stargazers");
