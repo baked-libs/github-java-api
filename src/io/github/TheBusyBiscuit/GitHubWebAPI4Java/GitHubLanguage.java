@@ -15,6 +15,15 @@ public class GitHubLanguage extends GitHubObject {
 		this.repo = repo;
 	}
 	
+	public GitHubLanguage(GitHubWebAPI api, GitHubRepository repo, String name, JsonElement response) {
+		super(api, repo, "/languages");
+		
+		this.name = name;
+		this.repo = repo;
+		
+		this.minimal = response;
+	}
+	
 	public GitHubRepository getRepository() {
 		return this.repo;
 	}
@@ -29,7 +38,7 @@ public class GitHubLanguage extends GitHubObject {
 	}
 
 	public int getSize() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
+		JsonElement element = getResponse(false);
 		
 		if (element == null) {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");

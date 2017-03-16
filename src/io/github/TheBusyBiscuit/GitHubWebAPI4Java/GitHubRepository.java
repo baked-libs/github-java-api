@@ -2,6 +2,7 @@ package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -56,7 +57,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/branches", type = GitHubRepository.class)
+	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class)
 	public List<GitHubBranch> getBranches() throws IllegalAccessException {
 		GitHubObject branches = new GitHubObject(api, this, "/branches");
 		JsonElement response = branches.getResponse(true);
@@ -139,6 +140,47 @@ public class GitHubRepository extends UniqueGitHubObject {
 	    	
 	    	GitHubContributor user = new GitHubContributor(api, object.get("login").getAsString(), object);
 	    	list.add(user);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/languages", type = GitHubLanguage.class)
+	public List<GitHubLanguage> getLanguages() throws IllegalAccessException {
+		GitHubObject langs = new GitHubObject(api, this, "/languages");
+		JsonElement response = langs.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubLanguage> list = new ArrayList<GitHubLanguage>();
+		JsonObject object = response.getAsJsonObject();
+		
+		for (Map.Entry<String, JsonElement> entry: object.entrySet()) {
+			list.add(new GitHubLanguage(api, this, entry.getKey(), object));
+		}
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
+	public List<GitHubCommit> getCommits() throws IllegalAccessException {
+		GitHubObject commits = new GitHubObject(api, this, "/commits");
+		JsonElement response = commits.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubCommit> list = new ArrayList<GitHubCommit>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubCommit commit = new GitHubCommit(api, this, object.get("sha").getAsString(), object);
+	    	list.add(commit);
 	    }
 		
 		return list;
