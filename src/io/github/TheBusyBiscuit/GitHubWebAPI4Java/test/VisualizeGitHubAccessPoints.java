@@ -118,7 +118,7 @@ public class VisualizeGitHubAccessPoints {
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		panes.put(pane, object.getClass().getSimpleName());
+		panes.put(pane, object.getClass().getSimpleName().replace("GitHub", ""));
 	}
 
 	public static Map<String, Class<?>> getSubURLs(GitHubObject object) {
