@@ -67,7 +67,7 @@ public class GitHubWebAPI {
 			
 			HttpURLConnection connection = (HttpURLConnection) website.openConnection();
 	        connection.setConnectTimeout(5000);
-	        connection.addRequestProperty("User-Agent", "GitHub Web API (by TheBusyBiscuit)");
+	        connection.addRequestProperty("User-Agent", "GitHub Web API 4 Java (by TheBusyBiscuit)");
 	        connection.setDoOutput(true);
 			
 	        if (connection.getResponseCode() == 200) {
