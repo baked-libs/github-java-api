@@ -19,7 +19,9 @@ import javax.swing.ScrollPaneConstants;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubRepository;
@@ -107,50 +109,20 @@ public class VisualizeGitHubAccessPoints {
 			System.exit(0);
 		}
 		
-		String json = gson.toJson(element).replaceAll("\n", "<br>").replaceAll(" ", "&nbsp;");
-		
 		Map<String, GitHubAccessPoint> queries = getSubURLs(object);
+		
+		colorJson(api, gson, "", queries, element);
+		
+		String json = gson.toJson(element).replaceAll("\n", "<br>").replaceAll(" ", "&nbsp;");
 		StringBuilder builder = new StringBuilder();
 		
-		lines:
 		for (String line: json.split("<br>")) {
-			for (Map.Entry<String, GitHubAccessPoint> entry: queries.entrySet()) {
-				if (line.contains("\"url\":")) {
-					builder.append("<font color=#44FF44>" + line + "</font><br>");
-					continue lines;
-				}
-				else if (entry.getKey().split(" | ")[0].contains("@")) {
-					if (line.contains("\"" + entry.getKey().split(" | ")[0].split("@")[1] + "\":")) {
-						builder.append("<font color=#44FF44>" + line + "</font><br>");
-						continue lines;
-					}
-				}
-				else {
-					Pattern pattern = Pattern.compile(entry.getKey().split(" | ")[2]);
-					final Matcher matcher = pattern.matcher(line);
-					if (matcher.matches()) {
-						builder.append("<font color=#44FF44>" + line + "</font><br>");
-						
-						if (line.contains(entry.getKey().split(" | ")[0]) && GitHubObject.class.isAssignableFrom(entry.getValue().type())) {
-							Constructor<?> constructor = getConstructor(entry.getValue().type());
-							
-							if (constructor != null) {
-								GitHubObject content = new GitHubObject(api, null, entry.getKey().split(" | ")[0]);
-								
-								try {
-									analyseObject(api, gson, (GitHubObject) constructor.newInstance(content));
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						}
-						
-						continue lines;
-					}
-				}
+			if (line.contains("\\\"GITHUB_ACCESS_POINT\\\"")) {
+				builder.append("<font color=#44FF44>" + line.replace("\\\"GITHUB_ACCESS_POINT\\\"", "") + "</font><br>");
 			}
-			
-			builder.append("<font color=#FF4444>" + line + "</font><br>");
+			else {
+				builder.append("<font color=#FF4444>" + line + "</font><br>");
+			}
 		}
 		
 		JEditorPane text = new JEditorPane();
@@ -165,6 +137,79 @@ public class VisualizeGitHubAccessPoints {
 		String label = object.getURL() + " | " + object.getClass().getSimpleName().replace("GitHub", "") + (element.isJsonArray() ? "[]": "");
 		
 		panes.put(label, pane);
+	}
+
+	private static void colorJson(GitHubWebAPI api, Gson gson, String path, Map<String, GitHubAccessPoint> queries, JsonElement element) {
+		if (element.isJsonArray()) {
+			JsonArray array = element.getAsJsonArray();
+			for (int i = 0; i < array.size(); i++) {
+				colorJson(api, gson, path, queries, array.get(i));
+			}
+		}
+		else if (element.isJsonObject()) {
+			JsonObject object = element.getAsJsonObject();
+			List<Map.Entry<String, JsonElement>> blank = new ArrayList<Map.Entry<String,JsonElement>>();
+			List<Map.Entry<String, JsonElement>> entries = new ArrayList<Map.Entry<String,JsonElement>>();
+			
+			for (Map.Entry<String, JsonElement> json: object.entrySet()) {
+				blank.add(json);
+				String p = path + (path == "" ? "": "/") + json.getKey();
+				colorJson(api, gson, p, queries, json.getValue());
+				
+				if (json.getValue().isJsonPrimitive() && json.getValue() != null) {
+					if (json.getKey().equals("url")) {
+						entries.add(json);
+						blank.remove(json);
+					}
+					else {
+						for (Map.Entry<String, GitHubAccessPoint> entry: queries.entrySet()) {
+							if (entry.getKey().split(" | ")[0].contains("@")) {
+								String key = entry.getKey().split(" | ")[0].split("@")[1];
+								if (key.equals(p)) {
+									entries.add(json);
+									blank.remove(json);
+									break;
+								}
+							}
+							else {
+								Pattern pattern = Pattern.compile(entry.getKey().split(" | ")[2]);
+								final Matcher matcher = pattern.matcher(json.getValue().getAsString());
+								if (matcher.matches()) {
+									entries.add(json);
+									blank.remove(json);
+									
+									if (json.getValue().getAsString().contains(entry.getKey().split(" | ")[0]) && GitHubObject.class.isAssignableFrom(entry.getValue().type())) {
+										Constructor<?> constructor = getConstructor(entry.getValue().type());
+										
+										if (constructor != null) {
+											GitHubObject content = new GitHubObject(api, null, entry.getKey().split(" | ")[0]);
+											
+											try {
+												analyseObject(api, gson, (GitHubObject) constructor.newInstance(content));
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+										}
+									}
+									
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			for (Map.Entry<String, JsonElement> entry: entries) {
+				object.add("\"GITHUB_ACCESS_POINT\"" + entry.getKey(), entry.getValue());
+				object.remove(entry.getKey());
+			}
+			
+			for (Map.Entry<String, JsonElement> entry: blank) {
+				object.remove(entry.getKey());
+				object.add(entry.getKey(), entry.getValue());
+			}
+		}
 	}
 
 	public static Map<String, GitHubAccessPoint> getSubURLs(GitHubObject object) {

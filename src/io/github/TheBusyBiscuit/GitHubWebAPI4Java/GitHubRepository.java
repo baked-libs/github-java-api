@@ -186,7 +186,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "@owner", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@owner/login", type = GitHubUser.class)
 	public GitHubUser getOwner() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
