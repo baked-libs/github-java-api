@@ -403,6 +403,10 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "default_branch") ? null: new GitHubBranch(api, this, response.get("default_branch").getAsString());
 	}
 
+	public GitHubBranch getBranch(String name) throws IllegalAccessException {
+		return new GitHubBranch(api, this, name);
+	}
+
 	@GitHubAccessPoint(path = "@pushed_at", type = Date.class)
 	public Date getLastPushedDate() throws IllegalAccessException {
 		JsonElement element = getResponse(false);

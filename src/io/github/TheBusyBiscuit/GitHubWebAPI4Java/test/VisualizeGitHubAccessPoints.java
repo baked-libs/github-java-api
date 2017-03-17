@@ -23,6 +23,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubBranch;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubCommit;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubRepository;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubUser;
@@ -46,9 +48,21 @@ public class VisualizeGitHubAccessPoints {
 		
 		GitHubUser user = api.getUser("TheBusyBiscuit");
 		GitHubRepository repo = user.getRepository("Slimefun4");
+		GitHubBranch branch = null;
+		GitHubCommit commit = null;
+		
+		try {
+			branch = repo.getDefaultBranch();
+			commit = branch.getLastCommit();
+		} catch (IllegalAccessException e) {
+			System.err.println("Connection failed.");
+			System.exit(0);
+		}
 		
 		analyseObject(api, gson, user);
 		analyseObject(api, gson, repo);
+		analyseObject(api, gson, branch);
+		analyseObject(api, gson, commit);
 		
 		System.out.println("Preparing UI...");
 		
