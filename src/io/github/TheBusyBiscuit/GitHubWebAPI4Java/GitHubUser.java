@@ -313,6 +313,18 @@ public class GitHubUser extends UniqueGitHubObject {
 		return isInvalid(response, "avatar_url") ? null: response.get("avatar_url").getAsString();
 	}
 
+	@GitHubAccessPoint(path = "@type", type = String.class)
+	public String getType() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "type") ? null: response.get("type").getAsString();
+	}
+
 	@GitHubAccessPoint(path = "@public_repos", type = Integer.class)
 	public int getRepositoriesAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
