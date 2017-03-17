@@ -120,6 +120,9 @@ public class VisualizeGitHubAccessPoints {
 			if (line.contains("\\\"GITHUB_ACCESS_POINT\\\"")) {
 				builder.append("<font color=#44FF44>" + line.replace("\\\"GITHUB_ACCESS_POINT\\\"", "") + "</font><br>");
 			}
+			else if (line.endsWith("{") || line.endsWith("}") || line.endsWith("},") || line.equals("[]") || line.equals("{}")) {
+				builder.append("<font color=#DDDDDD>" + line + "</font><br>");
+			}
 			else {
 				builder.append("<font color=#FF4444>" + line + "</font><br>");
 			}
@@ -162,13 +165,44 @@ public class VisualizeGitHubAccessPoints {
 						blank.remove(json);
 					}
 					else {
+						query:
 						for (Map.Entry<String, GitHubAccessPoint> entry: queries.entrySet()) {
 							if (entry.getKey().split(" | ")[0].contains("@")) {
 								String key = entry.getKey().split(" | ")[0].split("@")[1];
 								if (key.equals(p)) {
 									entries.add(json);
 									blank.remove(json);
-									break;
+									break query;
+								}
+								else if (path != "" && key.equals(path)) {
+									Constructor<?> constructor = getConstructor(entry.getValue().type());
+									if (constructor != null) {
+										try {
+											GitHubObject content = new GitHubObject(api, null, entry.getKey().split(" | ")[0]);
+											Map<String, GitHubAccessPoint> map = getSubURLs((GitHubObject) constructor.newInstance(content));
+											
+											for (Map.Entry<String, GitHubAccessPoint> e: map.entrySet()) {
+												if (e.getKey().split(" | ")[0].split("@").length == 3) {
+													if (e.getKey().split(" | ")[0].split("@")[2].equals(json.getKey())) {
+														entries.add(json);
+														blank.remove(json);
+														break query;
+													}
+												}
+												else {
+													Pattern pattern = Pattern.compile(e.getKey().split(" | ")[2]);
+													final Matcher matcher = pattern.matcher(json.getValue().getAsString());
+													if (matcher.matches()) {
+														entries.add(json);
+														blank.remove(json);
+														break query;
+													}
+												}
+											}
+										} catch (Exception e) {
+											e.printStackTrace();
+										} 
+									}
 								}
 							}
 							else {
@@ -192,7 +226,7 @@ public class VisualizeGitHubAccessPoints {
 										}
 									}
 									
-									break;
+									break query;
 								}
 							}
 						}
