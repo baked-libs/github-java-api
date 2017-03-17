@@ -120,7 +120,10 @@ public class VisualizeGitHubAccessPoints {
 			if (line.contains("\\\"GITHUB_ACCESS_POINT\\\"")) {
 				builder.append("<font color=#44FF44>" + line.replace("\\\"GITHUB_ACCESS_POINT\\\"", "") + "</font><br>");
 			}
-			else if (line.endsWith("{") || line.endsWith("}") || line.endsWith("},") || line.equals("[]") || line.equals("{}")) {
+			else if (line.endsWith("{") || line.endsWith("}") || line.endsWith("},")) {
+				builder.append("<font color=#DDDDDD>" + line + "</font><br>");
+			}
+			else if (line.endsWith("[") || line.endsWith("]") || line.endsWith("],")) {
 				builder.append("<font color=#DDDDDD>" + line + "</font><br>");
 			}
 			else {

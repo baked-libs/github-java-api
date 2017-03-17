@@ -1,6 +1,7 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -400,6 +401,18 @@ public class GitHubRepository extends UniqueGitHubObject {
 		JsonObject response = element.getAsJsonObject();
 
 		return isInvalid(response, "default_branch") ? null: new GitHubBranch(api, this, response.get("default_branch").getAsString());
+	}
+
+	@GitHubAccessPoint(path = "@pushed_at", type = Date.class)
+	public Date getLastPushedDate() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "pushed_at") ? null: GitHubDate.parse(response.get("pushed_at").getAsString());
 	}
 
 }
