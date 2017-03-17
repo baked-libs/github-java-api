@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,19 +22,18 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubObject;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubRepository;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubUser;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
 public class VisualizeGitHubAccessPoints {
 	
-	private static Map<JScrollPane, String> panes = new HashMap<JScrollPane, String>();
+	private static Map<String, JScrollPane> panes = new HashMap<String, JScrollPane>();
 	
 	public static void main(String[] args) {
 		GitHubWebAPI api = new GitHubWebAPI();
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		
-		GitHubUser user = api.getUser("TheBusyBiscuit");
 		
 		JFrame frame = new JFrame("GitHub Access Point Visualizer");
 		frame.setSize(1420, 940);
@@ -41,11 +42,54 @@ public class VisualizeGitHubAccessPoints {
 		
 		JTabbedPane tabs = new JTabbedPane();
 		
-		analyseObject(api, gson, user);
-		analyseObject(api, gson, user.getRepository("Slimefun4"));
+		GitHubUser user = api.getUser("TheBusyBiscuit");
+		GitHubRepository repo = user.getRepository("Slimefun4");
 		
-		for (Map.Entry<JScrollPane, String> entry: panes.entrySet()) {
-			tabs.addTab(entry.getValue(), entry.getKey());
+		analyseObject(api, gson, user);
+		analyseObject(api, gson, repo);
+		
+		System.out.println("Preparing UI...");
+		
+		Map<String, List<String>> categories = new HashMap<String, List<String>>();
+		
+		children:
+		for (Map.Entry<String, JScrollPane> child: panes.entrySet()) {
+			for (Map.Entry<String, JScrollPane> parent: panes.entrySet()) {
+				if (child.getKey().equals(parent.getKey())) {
+					continue;
+				}
+				if (child.getKey().split(" | ")[0].startsWith(parent.getKey().split(" | ")[0])) {
+					List<String> list = new ArrayList<String>();
+					if (categories.containsKey(parent.getKey())) {
+						list = categories.get(parent.getKey());
+					}
+					list.add(child.getKey());
+					categories.put(parent.getKey(), list);
+					
+					continue children;
+				}
+			}
+			
+			if (!categories.containsKey(child.getKey())) {
+				categories.put(child.getKey(), new ArrayList<String>());
+			}
+		}
+		
+		for (Map.Entry<String, List<String>> entry: categories.entrySet()) {
+			if (!entry.getValue().isEmpty()) {
+				JTabbedPane sub = new JTabbedPane();
+				
+				sub.add("Main", panes.get(entry.getKey()));
+				
+				for (String child: entry.getValue()) {
+					sub.add(child.split(" | ")[0].replace(entry.getKey().split(" | ")[0], ""), panes.get(child));
+				}
+				
+				tabs.add(entry.getKey().split(" | ")[2], sub);
+			}
+			else {
+				tabs.add(entry.getKey().split(" | ")[2], panes.get(entry.getKey()));
+			}
 		}
 		
 		frame.add(tabs);
@@ -65,12 +109,12 @@ public class VisualizeGitHubAccessPoints {
 		
 		String json = gson.toJson(element).replaceAll("\n", "<br>").replaceAll(" ", "&nbsp;");
 		
-		Map<String, Class<?>> queries = getSubURLs(object);
+		Map<String, GitHubAccessPoint> queries = getSubURLs(object);
 		StringBuilder builder = new StringBuilder();
 		
 		lines:
 		for (String line: json.split("<br>")) {
-			for (Map.Entry<String, Class<?>> entry: queries.entrySet()) {
+			for (Map.Entry<String, GitHubAccessPoint> entry: queries.entrySet()) {
 				if (line.contains("\"url\":")) {
 					builder.append("<font color=#44FF44>" + line + "</font><br>");
 					continue lines;
@@ -87,8 +131,8 @@ public class VisualizeGitHubAccessPoints {
 					if (matcher.matches()) {
 						builder.append("<font color=#44FF44>" + line + "</font><br>");
 						
-						if (line.contains(entry.getKey().split(" | ")[0]) && GitHubObject.class.isAssignableFrom(entry.getValue())) {
-							Constructor<?> constructor = getConstructor(entry.getValue());
+						if (line.contains(entry.getKey().split(" | ")[0]) && GitHubObject.class.isAssignableFrom(entry.getValue().type())) {
+							Constructor<?> constructor = getConstructor(entry.getValue().type());
 							
 							if (constructor != null) {
 								GitHubObject content = new GitHubObject(api, null, entry.getKey().split(" | ")[0]);
@@ -118,11 +162,13 @@ public class VisualizeGitHubAccessPoints {
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		panes.put(pane, object.getClass().getSimpleName().replace("GitHub", ""));
+		String label = object.getURL() + " | " + object.getClass().getSimpleName().replace("GitHub", "") + (element.isJsonArray() ? "[]": "");
+		
+		panes.put(label, pane);
 	}
 
-	public static Map<String, Class<?>> getSubURLs(GitHubObject object) {
-		Map<String, Class<?>> queries = new HashMap<String, Class<?>>();
+	public static Map<String, GitHubAccessPoint> getSubURLs(GitHubObject object) {
+		Map<String, GitHubAccessPoint> queries = new HashMap<String, GitHubAccessPoint>();
 		
 	    Class<?> c = object.getClass();
 	    
@@ -130,7 +176,7 @@ public class VisualizeGitHubAccessPoints {
 	        for (final Method method : c.getDeclaredMethods()) {
 	            if (method.isAnnotationPresent(GitHubAccessPoint.class)) {
 	                Annotation annotation = method.getAnnotation(GitHubAccessPoint.class);
-	                queries.put(object.getURL() + ((GitHubAccessPoint) annotation).path() + " | " + object.getRawURL() + ((GitHubAccessPoint) annotation).path() + ".*", ((GitHubAccessPoint) annotation).type());
+	                queries.put(object.getURL() + ((GitHubAccessPoint) annotation).path() + " | " + object.getRawURL() + ((GitHubAccessPoint) annotation).path() + ".*", (GitHubAccessPoint) annotation);
 	            }
 	        }
 	        
