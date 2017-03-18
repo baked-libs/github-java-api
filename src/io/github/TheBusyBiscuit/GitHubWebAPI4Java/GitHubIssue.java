@@ -1,7 +1,11 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -112,7 +116,7 @@ public class GitHubIssue extends GitHubObject {
 
 	@GitHubAccessPoint(path = "@created_at", type = Date.class)
 	public Date getCreationDate() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
+		JsonElement element = getResponse(false);
 		
 		if (element == null) {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
@@ -120,6 +124,27 @@ public class GitHubIssue extends GitHubObject {
 		JsonObject response = element.getAsJsonObject();
 
 		return isInvalid(response, "created_at") ? null: GitHubDate.parse(response.get("created_at").getAsString());
+	}
+
+	@GitHubAccessPoint(path = "@labels", type = GitHubLabel.class)
+	public List<GitHubLabel> getLabels() throws IllegalAccessException, UnsupportedEncodingException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		List<GitHubLabel> labels = new ArrayList<GitHubLabel>();
+		
+		JsonArray array = response.get("labels").getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+			JsonObject obj = array.get(i).getAsJsonObject();
+			labels.add(new GitHubLabel(api, repo, obj.get("name").getAsString(), obj));
+		}
+		
+		return labels;
 	}
 
 }
