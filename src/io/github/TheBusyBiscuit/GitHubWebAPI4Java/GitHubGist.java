@@ -64,4 +64,16 @@ public class GitHubGist extends GitHubObject {
 		return isInvalid(response, "updated_at") ? null: GitHubDate.parse(response.get("updated_at").getAsString());
 	}
 
+	@GitHubAccessPoint(path = "@owner", type = GitHubUser.class)
+	public GitHubUser getOwner() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "owner") ? null: new GitHubUser(api, response.get("owner").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
+	}
+
 }
