@@ -187,6 +187,28 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	public List<GitHubIssue> getIssues() throws IllegalAccessException {
+		GitHubObject commits = new GitHubObject(api, this, "/issues");
+		JsonElement response = commits.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubIssue issue = new GitHubIssue(api, this, object.get("number").getAsInt(), object);
+	    	list.add(issue);
+	    }
+		
+		return list;
+	}
+
 	@GitHubAccessPoint(path = "@owner", type = GitHubUser.class)
 	public GitHubUser getOwner() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
@@ -405,6 +427,10 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	public GitHubBranch getBranch(String name) throws IllegalAccessException {
 		return new GitHubBranch(api, this, name);
+	}
+
+	public GitHubIssue getIssue(int number) throws IllegalAccessException {
+		return new GitHubIssue(api, this, number);
 	}
 
 	@GitHubAccessPoint(path = "@pushed_at", type = Date.class)
