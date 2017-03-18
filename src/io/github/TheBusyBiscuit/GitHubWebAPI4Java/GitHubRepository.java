@@ -456,6 +456,10 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return new GitHubIssue(api, this, number);
 	}
 
+	public GitHubLabel getLabel(String name) throws IllegalAccessException, UnsupportedEncodingException {
+		return new GitHubLabel(api, this, name);
+	}
+
 	@GitHubAccessPoint(path = "@pushed_at", type = Date.class)
 	public Date getLastPushedDate() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
