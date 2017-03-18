@@ -1,5 +1,7 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
+import java.util.Date;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -94,6 +96,18 @@ public class GitHubIssue extends GitHubObject {
 	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class)
 	public GitHubRepository getRepository() {
 		return this.repo;
+	}
+
+	@GitHubAccessPoint(path = "@created_at", type = Date.class)
+	public Date getCreationDate() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "created_at") ? null: GitHubDate.parse(response.get("created_at").getAsString());
 	}
 
 }
