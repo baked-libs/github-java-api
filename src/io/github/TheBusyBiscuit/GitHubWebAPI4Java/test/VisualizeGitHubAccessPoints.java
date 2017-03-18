@@ -202,16 +202,20 @@ public class VisualizeGitHubAccessPoints {
 							if (matcher.matches()) {
 								colored = true;
 								
-								if (json.getValue().getAsString().contains(url) && GitHubObject.class.isAssignableFrom(entry.getValue().type())) {
-									Constructor<?> constructor = getConstructor(entry.getValue().type());
+								if (entry.getValue() != null) {
+									Class<?> c = entry.getValue().type();
 									
-									if (constructor != null) {
-										GitHubObject o = new GitHubObject(api, null, url);
+									if (json.getValue().getAsString().contains(url) && GitHubObject.class.isAssignableFrom(c)) {
+										Constructor<?> constructor = getConstructor(c);
 										
-										try {
-											analyseObject(api, gson, (GitHubObject) constructor.newInstance(o));
-										} catch (Exception e) {
-											e.printStackTrace();
+										if (constructor != null) {
+											GitHubObject o = new GitHubObject(api, null, url);
+											
+											try {
+												analyseObject(api, gson, (GitHubObject) constructor.newInstance(o));
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
 										}
 									}
 								}
@@ -230,16 +234,18 @@ public class VisualizeGitHubAccessPoints {
 							String attribute = url.split("@")[1];
 							
 							if (attribute.equals(p)) {
-								Class<?> c = queries.get(entry.getKey()).type();
-								
-								if (GitHubObject.class.isAssignableFrom(c)) {
-									Constructor<?> constructor = getConstructor(c);
+								if (entry.getValue() != null) {
+									Class<?> c = entry.getValue().type();
 									
-									if (constructor != null) {
-										GitHubObject o = new GitHubObject(api, null, object.getURL());
-										GitHubObject dummy = (GitHubObject) constructor.newInstance(o);
+									if (GitHubObject.class.isAssignableFrom(c)) {
+										Constructor<?> constructor = getConstructor(c);
 										
-										colorize(api, gson, dummy, p, json.getValue());
+										if (constructor != null) {
+											GitHubObject o = new GitHubObject(api, null, object.getURL());
+											GitHubObject dummy = (GitHubObject) constructor.newInstance(o);
+											
+											colorize(api, gson, dummy, p, json.getValue());
+										}
 									}
 								}
 								
@@ -308,6 +314,9 @@ public class VisualizeGitHubAccessPoints {
 	        
 	        c = c.getSuperclass();
 	    }
+	    
+	    String p = "@" + (path == "" ? "": (path + "/")) + "url";
+        queries.put(object.getURL() + p + " | " + object.getRawURL() + p + ".*", null);
 	    
 	    return queries;
 	}
