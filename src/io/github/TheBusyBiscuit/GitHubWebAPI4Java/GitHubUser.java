@@ -372,5 +372,14 @@ public class GitHubUser extends UniqueGitHubObject {
 
 		return isInvalid(response, "following") ? null: response.get("following").getAsInt();
 	}
+	
+	public GitHubOrganization toOrganization() throws IllegalAccessException {
+		if (getType().equals("Organization")) {
+			return new GitHubOrganization(api, username);
+		}
+		else {
+			return null;
+		}
+	}
 
 }
