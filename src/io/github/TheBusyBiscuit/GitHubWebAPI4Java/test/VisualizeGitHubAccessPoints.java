@@ -61,9 +61,9 @@ public class VisualizeGitHubAccessPoints {
 			System.exit(0);
 		}
 		
-		analyseObject(api, gson, user);
-		analyseObject(api, gson, repo);
-		analyseObject(api, gson, branch);
+//		analyseObject(api, gson, user);
+//		analyseObject(api, gson, repo);
+//		analyseObject(api, gson, branch);
 		analyseObject(api, gson, commit);
 		
 		System.out.println("Preparing UI...");
@@ -126,7 +126,7 @@ public class VisualizeGitHubAccessPoints {
 		}
 		
 		try {
-			colorize(api, gson, object, "", element);
+			colorize(api, gson, object, "", "", element);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -164,16 +164,16 @@ public class VisualizeGitHubAccessPoints {
 		panes.put(label, pane);
 	}
 	
-	private static void colorize(GitHubWebAPI api, Gson gson, GitHubObject object, String path, JsonElement element) throws Exception {
+	private static void colorize(GitHubWebAPI api, Gson gson, GitHubObject object, String path, String dir, JsonElement element) throws Exception {
 		if (element.isJsonArray()) {
 			JsonArray array = element.getAsJsonArray();
 			for (int i = 0; i < array.size(); i++) {
-				colorize(api, gson, object, path, array.get(i));
+				colorize(api, gson, object, path, dir, array.get(i));
 			}
 		}
 		else if (element.isJsonObject()) {
 			JsonObject obj = element.getAsJsonObject();
-			Map<String, GitHubAccessPoint> queries = getSubURLs(path, object);
+			Map<String, GitHubAccessPoint> queries = getSubURLs(dir, object);
 			
 			Map<String, JsonElement> content = new HashMap<String, JsonElement>();
 			
@@ -190,7 +190,6 @@ public class VisualizeGitHubAccessPoints {
 						
 						if (url.contains("@")) {
 							String attribute = url.split("@")[1];
-							
 							if (attribute.equals(p)) {
 								colored = true;
 								break query;
@@ -244,11 +243,15 @@ public class VisualizeGitHubAccessPoints {
 											GitHubObject o = new GitHubObject(api, null, object.getURL());
 											GitHubObject dummy = (GitHubObject) constructor.newInstance(o);
 											
-											colorize(api, gson, dummy, p, json.getValue());
+											colorize(api, gson, dummy, p, p, json.getValue());
 										}
 									}
 								}
 								
+								break query;
+							}
+							else if (attribute.contains("/") && attribute.startsWith(p + "/")) {
+								colorize(api, gson, object, p, dir, json.getValue());
 								break query;
 							}
 						}
