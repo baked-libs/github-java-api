@@ -92,6 +92,18 @@ public class GitHubIssue extends GitHubObject {
 
 		return isInvalid(response, "state") ? false: response.get("state").getAsString().equals("open");
 	}
+
+	@GitHubAccessPoint(path = "@locked", type = Boolean.class)
+	public boolean isLocked() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "locked") ? false: response.get("locked").getAsBoolean();
+	}
 	
 	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class)
 	public GitHubRepository getRepository() {
