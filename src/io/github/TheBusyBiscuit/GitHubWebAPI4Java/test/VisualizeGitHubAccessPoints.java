@@ -5,6 +5,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,10 +125,8 @@ public class VisualizeGitHubAccessPoints {
 			System.exit(0);
 		}
 		
-		Map<String, GitHubAccessPoint> queries = getSubURLs(object);
-		
 		try {
-			colorJson(api, true, gson, "", object.getClass(), queries, element);
+			colorize(api, gson, object, "", element);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,6 +153,7 @@ public class VisualizeGitHubAccessPoints {
 		text.setContentType("text/html");
 		text.setBackground(new Color(30, 30, 30));
 		text.setText(builder.toString());
+		text.setEditable(false);
 
 		JScrollPane pane = new JScrollPane(text);
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -162,108 +163,131 @@ public class VisualizeGitHubAccessPoints {
 		
 		panes.put(label, pane);
 	}
-
-	private static void colorJson(GitHubWebAPI api, boolean deep, Gson gson, String path, Class<?> c, Map<String, GitHubAccessPoint> queries, JsonElement element) throws Exception {
+	
+	private static void colorize(GitHubWebAPI api, Gson gson, GitHubObject object, String path, JsonElement element) throws Exception {
 		if (element.isJsonArray()) {
 			JsonArray array = element.getAsJsonArray();
 			for (int i = 0; i < array.size(); i++) {
-				colorJson(api, true, gson, path, c, queries, array.get(i));
+				colorize(api, gson, object, path, array.get(i));
 			}
 		}
 		else if (element.isJsonObject()) {
-			JsonObject object = element.getAsJsonObject();
-			List<Map.Entry<String, JsonElement>> blank = new ArrayList<Map.Entry<String,JsonElement>>();
-			List<Map.Entry<String, JsonElement>> entries = new ArrayList<Map.Entry<String,JsonElement>>();
+			JsonObject obj = element.getAsJsonObject();
+			Map<String, GitHubAccessPoint> queries = getSubURLs(path, object);
 			
-			for (Map.Entry<String, JsonElement> json: object.entrySet()) {
-				blank.add(json);
+			Map<String, JsonElement> content = new HashMap<String, JsonElement>();
+			
+			for (Map.Entry<String, JsonElement> json: obj.entrySet()) {
+				boolean colored = false;
+				
 				String p = path + (path == "" ? "": "/") + json.getKey();
 				
-				if (json.getValue() == null || json.getValue().isJsonNull()) {
-					
-				}
-				else if (json.getValue().isJsonObject() || json.getValue().isJsonArray()) {
-					for (String url: queries.keySet()) {
-						if (url.split(" | ")[0].split("@")[url.split(" | ")[0].split("@").length - 1].equals(json.getKey())) {
-							Class<?> cl = queries.get(url).type();
+				if (json.getValue().isJsonPrimitive()) {
+					query:
+					for (Map.Entry<String, GitHubAccessPoint> entry: queries.entrySet()) {
+						String url = entry.getKey().split(" | ")[0];
+						String regex = entry.getKey().split(" | ")[2];
+						
+						if (url.contains("@")) {
+							String attribute = url.split("@")[1];
 							
-							if (GitHubObject.class.isAssignableFrom(cl)) {
-								Constructor<?> constructor = getConstructor(cl);
-								
-								if (constructor != null) {
-									GitHubObject content = new GitHubObject(api, null, "");
-									Map<String, GitHubAccessPoint> map = getSubURLs((GitHubObject) constructor.newInstance(content));
-									colorJson(api, false, gson, p, cl, map, json.getValue());
-								}
+							if (attribute.equals(p)) {
+								colored = true;
+								break query;
 							}
-							else {
-								colorJson(api, true, gson, p, c, queries, json.getValue());
-							}
-							
-							break;
 						}
-					}
-
-					colorJson(api, true, gson, p, c, queries, json.getValue());
-				}
-				else if (json.getValue().isJsonPrimitive()) {
-					if (json.getKey().equals("url")) {
-						entries.add(json);
-						blank.remove(json);
-					}
-					else {
-						query:
-						for (Map.Entry<String, GitHubAccessPoint> entry: queries.entrySet()) {
-							if (entry.getKey().split(" | ")[0].contains("@")) {
-								String key = entry.getKey().split(" | ")[0].split("@")[entry.getKey().split(" | ")[0].split("@").length - 1];
-								if (key.equals(p)) {
-									entries.add(json);
-									blank.remove(json);
-									break query;
-								}
-							}
-							else {
-								Pattern pattern = Pattern.compile(entry.getKey().split(" | ")[2]);
-								final Matcher matcher = pattern.matcher(json.getValue().getAsString());
-								if (matcher.matches()) {
-									entries.add(json);
-									blank.remove(json);
+						else {
+							Pattern pattern = Pattern.compile(regex);
+							final Matcher matcher = pattern.matcher(json.getValue().getAsString());
+							if (matcher.matches()) {
+								colored = true;
+								
+								if (json.getValue().getAsString().contains(url) && GitHubObject.class.isAssignableFrom(entry.getValue().type())) {
+									Constructor<?> constructor = getConstructor(entry.getValue().type());
 									
-									if (deep && json.getValue().getAsString().contains(entry.getKey().split(" | ")[0]) && GitHubObject.class.isAssignableFrom(entry.getValue().type())) {
-										Constructor<?> constructor = getConstructor(entry.getValue().type());
+									if (constructor != null) {
+										GitHubObject o = new GitHubObject(api, null, url);
 										
-										if (constructor != null) {
-											GitHubObject content = new GitHubObject(api, null, entry.getKey().split(" | ")[0]);
-											
-											try {
-												analyseObject(api, gson, (GitHubObject) constructor.newInstance(content));
-											} catch (Exception e) {
-												e.printStackTrace();
-											}
+										try {
+											analyseObject(api, gson, (GitHubObject) constructor.newInstance(o));
+										} catch (Exception e) {
+											e.printStackTrace();
 										}
 									}
-									
-									break query;
 								}
+								
+								break query;
 							}
 						}
 					}
 				}
+				else {
+					query:
+					for (Map.Entry<String, GitHubAccessPoint> entry: queries.entrySet()) {
+						String url = entry.getKey().split(" | ")[0];
+						
+						if (url.contains("@")) {
+							String attribute = url.split("@")[1];
+							
+							if (attribute.equals(p)) {
+								Class<?> c = queries.get(entry.getKey()).type();
+								
+								if (GitHubObject.class.isAssignableFrom(c)) {
+									Constructor<?> constructor = getConstructor(c);
+									
+									if (constructor != null) {
+										GitHubObject o = new GitHubObject(api, null, object.getURL());
+										GitHubObject dummy = (GitHubObject) constructor.newInstance(o);
+										
+										colorize(api, gson, dummy, p, json.getValue());
+									}
+								}
+								
+								break query;
+							}
+						}
+					}
+				}
+				
+				if (colored) {
+					content.put("\"GITHUB_ACCESS_POINT\"" + json.getKey(), json.getValue());
+				}
+				else {
+					content.put(json.getKey(), json.getValue());
+				}
 			}
 			
-			for (Map.Entry<String, JsonElement> entry: entries) {
-				object.add("\"GITHUB_ACCESS_POINT\"" + entry.getKey(), entry.getValue());
-				object.remove(entry.getKey());
-			}
+			List<String> keys = new ArrayList<String>(content.keySet());
 			
-			for (Map.Entry<String, JsonElement> entry: blank) {
-				object.remove(entry.getKey());
-				object.add(entry.getKey(), entry.getValue());
+			Collections.sort(keys, new Comparator<String>() {
+
+				@Override
+				public int compare(String o1, String o2) {
+					if (o1.contains("\"GITHUB_ACCESS_POINT\"") && !o2.contains("\"GITHUB_ACCESS_POINT\"")) {
+						return -1;
+					}
+					else if (!o1.contains("\"GITHUB_ACCESS_POINT\"") && o2.contains("\"GITHUB_ACCESS_POINT\"")) {
+						return 1;
+					}
+					else {
+						return 0;
+					}
+				}
+			});
+			
+			for (String key: keys) {
+				if (key.contains("\"GITHUB_ACCESS_POINT\"")) {
+					obj.remove(key.replace("\"GITHUB_ACCESS_POINT\"", ""));
+				}
+				else {
+					obj.remove(key);
+				}
+				obj.add(key, content.get(key));
 			}
 		}
 	}
 
-	public static Map<String, GitHubAccessPoint> getSubURLs(GitHubObject object) {
+	public static Map<String, GitHubAccessPoint> getSubURLs(String path, GitHubObject object) {
 		Map<String, GitHubAccessPoint> queries = new HashMap<String, GitHubAccessPoint>();
 		
 	    Class<?> c = object.getClass();
@@ -272,7 +296,13 @@ public class VisualizeGitHubAccessPoints {
 	        for (final Method method : c.getDeclaredMethods()) {
 	            if (method.isAnnotationPresent(GitHubAccessPoint.class)) {
 	                Annotation annotation = method.getAnnotation(GitHubAccessPoint.class);
-	                queries.put(object.getURL() + ((GitHubAccessPoint) annotation).path() + " | " + object.getRawURL() + ((GitHubAccessPoint) annotation).path() + ".*", (GitHubAccessPoint) annotation);
+	            	String p = ((GitHubAccessPoint) annotation).path();
+	            	
+	            	if (p.startsWith("@")) {
+	            		p = p.replace("@", "@" + (path == "" ? "": (path + "/")));
+	            	}
+	            	
+	                queries.put(object.getURL() + p + " | " + object.getRawURL() + p + ".*", (GitHubAccessPoint) annotation);
 	            }
 	        }
 	        
