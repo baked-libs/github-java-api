@@ -134,4 +134,16 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "message") ? null: response.get("message").getAsString();
 	}
 
+	@GitHubAccessPoint(path = "@commit/tree", type = GitHubFileTree.class)
+	public GitHubFileTree getFileTree() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject().get("commit").getAsJsonObject().get("tree").getAsJsonObject();
+		
+		return isInvalid(response, "sha") ? null: new GitHubFileTree(api, repo, response.get("sha").getAsString());
+	}
+
 }
