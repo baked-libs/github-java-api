@@ -122,4 +122,16 @@ public class GitHubCommit extends GitHubObject {
 		return parents;
 	}
 
+	@GitHubAccessPoint(path = "@commit/message", type = String.class)
+	public String getMessage() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject().get("commit").getAsJsonObject();
+		
+		return isInvalid(response, "message") ? null: response.get("message").getAsString();
+	}
+
 }
