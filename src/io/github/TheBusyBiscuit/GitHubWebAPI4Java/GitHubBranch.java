@@ -72,4 +72,9 @@ public class GitHubBranch extends GitHubObject {
 		return name.equals(getRepository().getDefaultBranch().name);
 	}
 
+	@GitHubAccessPoint(path = "@_links/self", type = String.class)
+	@Override
+	public String getURL() {
+		return super.getURL();
+	}
 }
