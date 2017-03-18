@@ -34,4 +34,28 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "sha") ? null: response.get("sha").getAsString();
 	}
 
+	@GitHubAccessPoint(path = "@author", type = GitHubUser.class)
+	public GitHubUser getAuthor() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "author") ? null: new GitHubUser(api, response.get("author").getAsJsonObject().get("login").getAsString(), response.get("author").getAsJsonObject());
+	}
+
+	@GitHubAccessPoint(path = "@committer", type = GitHubUser.class)
+	public GitHubUser getCommitter() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "committer") ? null: new GitHubUser(api, response.get("committer").getAsJsonObject().get("login").getAsString(), response.get("committer").getAsJsonObject());
+	}
+
 }
