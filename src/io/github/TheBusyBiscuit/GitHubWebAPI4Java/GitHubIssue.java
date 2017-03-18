@@ -2,7 +2,6 @@ package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -11,7 +10,7 @@ import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
-public class GitHubIssue extends GitHubObject {
+public class GitHubIssue extends UniqueGitHubObject {
 	
 	private GitHubRepository repo;
 	
@@ -47,18 +46,6 @@ public class GitHubIssue extends GitHubObject {
 		JsonObject response = element.getAsJsonObject();
 		
 		return isInvalid(response, "number") ? null: response.get("number").getAsInt();
-	}
-	
-	@GitHubAccessPoint(path = "@id", type = Integer.class)
-	public int getUID() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "id") ? null: response.get("id").getAsInt();
 	}
 
 	@GitHubAccessPoint(path = "@user", type = GitHubUser.class)
@@ -112,18 +99,6 @@ public class GitHubIssue extends GitHubObject {
 	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class)
 	public GitHubRepository getRepository() {
 		return this.repo;
-	}
-
-	@GitHubAccessPoint(path = "@created_at", type = Date.class)
-	public Date getCreationDate() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "created_at") ? null: GitHubDate.parse(response.get("created_at").getAsString());
 	}
 
 	@GitHubAccessPoint(path = "@labels", type = GitHubLabel.class)
