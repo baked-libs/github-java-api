@@ -58,4 +58,40 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "committer") ? null: new GitHubUser(api, response.get("committer").getAsJsonObject().get("login").getAsString(), response.get("committer").getAsJsonObject());
 	}
 
+	@GitHubAccessPoint(path = "@stats/total", type = Integer.class)
+	public int getTotalModifications() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject().get("stats").getAsJsonObject();
+
+		return isInvalid(response, "total") ? null: response.get("total").getAsInt();
+	}
+
+	@GitHubAccessPoint(path = "@stats/additions", type = Integer.class)
+	public int getAdditions() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject().get("stats").getAsJsonObject();
+
+		return isInvalid(response, "additions") ? null: response.get("additions").getAsInt();
+	}
+
+	@GitHubAccessPoint(path = "@stats/deletions", type = Integer.class)
+	public int getDeletions() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject().get("stats").getAsJsonObject();
+
+		return isInvalid(response, "deletions") ? null: response.get("deletions").getAsInt();
+	}
+
 }
