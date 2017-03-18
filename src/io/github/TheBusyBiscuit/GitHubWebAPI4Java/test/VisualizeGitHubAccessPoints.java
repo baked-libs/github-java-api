@@ -61,9 +61,9 @@ public class VisualizeGitHubAccessPoints {
 			System.exit(0);
 		}
 		
-//		analyseObject(api, gson, user);
-//		analyseObject(api, gson, repo);
-//		analyseObject(api, gson, branch);
+		analyseObject(api, gson, user);
+		analyseObject(api, gson, repo);
+		analyseObject(api, gson, branch);
 		analyseObject(api, gson, commit);
 		
 		System.out.println("Preparing UI...");
