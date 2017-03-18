@@ -66,6 +66,30 @@ public class GitHubIssue extends GitHubObject {
 		
 		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
 	}
+
+	@GitHubAccessPoint(path = "@title", type = String.class)
+	public String getTitle() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "title") ? null: response.get("title").getAsString();
+	}
+
+	@GitHubAccessPoint(path = "@state", type = Boolean.class)
+	public boolean isOpen() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "state") ? false: response.get("state").getAsString().equals("open");
+	}
 	
 	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class)
 	public GitHubRepository getRepository() {
