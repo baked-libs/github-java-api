@@ -1,5 +1,9 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -7,9 +11,12 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
 public class GitHubCommit extends GitHubObject {
 	
+	GitHubRepository repo;
+	
 	public GitHubCommit(GitHubWebAPI api, GitHubRepository repo, String id, JsonElement response) {
 		super(api, repo, "/commits/" + id);
 		
+		this.repo = repo;
 		this.minimal = response;
 	}
 
@@ -92,6 +99,27 @@ public class GitHubCommit extends GitHubObject {
 		JsonObject response = element.getAsJsonObject().get("stats").getAsJsonObject();
 
 		return isInvalid(response, "deletions") ? null: response.get("deletions").getAsInt();
+	}
+
+	@GitHubAccessPoint(path = "@parents", type = GitHubCommit.class)
+	public List<GitHubCommit> getParents() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		List<GitHubCommit> parents = new ArrayList<GitHubCommit>();
+		
+		JsonArray array = response.get("parents").getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+			JsonObject obj = array.get(i).getAsJsonObject();
+			parents.add(new GitHubCommit(api, repo, obj.get("sha").getAsString(), obj));
+		}
+		
+		return parents;
 	}
 
 }
