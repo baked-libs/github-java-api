@@ -85,8 +85,8 @@ public class GitHubIssue extends GitHubObject {
 		return isInvalid(response, "title") ? null: response.get("title").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@state", type = Boolean.class)
-	public boolean isOpen() throws IllegalAccessException {
+	@GitHubAccessPoint(path = "@state", type = State.class)
+	public State getState() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
 		if (element == null) {
@@ -94,7 +94,7 @@ public class GitHubIssue extends GitHubObject {
 		}
 		JsonObject response = element.getAsJsonObject();
 
-		return isInvalid(response, "state") ? false: response.get("state").getAsString().equals("open");
+		return isInvalid(response, "state") ? null: State.valueOf(response.get("state").getAsString().toUpperCase());
 	}
 
 	@GitHubAccessPoint(path = "@locked", type = Boolean.class)
@@ -145,6 +145,13 @@ public class GitHubIssue extends GitHubObject {
 		}
 		
 		return labels;
+	}
+	
+	public enum State {
+		
+		OPEN,
+		CLOSED;
+		
 	}
 
 }

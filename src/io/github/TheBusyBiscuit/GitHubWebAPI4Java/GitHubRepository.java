@@ -3,6 +3,7 @@ package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -190,7 +191,54 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
 	public List<GitHubIssue> getIssues() throws IllegalAccessException {
-		GitHubObject issues = new GitHubObject(api, this, "/issues");
+		GitHubObject issues = new GitHubObject(api, this, "/issues") {
+			
+			
+			@Override
+			public Map<String, String> getParameters() {
+				Map<String, String> params = new HashMap<String, String>();
+				
+				params.put("state", "all");
+				
+				return params;
+			}
+			
+		};
+		
+		JsonElement response = issues.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubIssue issue = new GitHubIssue(api, this, object.get("number").getAsInt(), object);
+	    	list.add(issue);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	public List<GitHubIssue> getIssues(final GitHubIssue.State state) throws IllegalAccessException {
+		GitHubObject issues = new GitHubObject(api, this, "/issues") {
+			
+			
+			@Override
+			public Map<String, String> getParameters() {
+				Map<String, String> params = new HashMap<String, String>();
+				
+				params.put("state", state.toString().toLowerCase());
+				
+				return params;
+			}
+			
+		};
 		JsonElement response = issues.getResponse(true);
 		
 		if (response == null) {
