@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 public class AccessPointExporter {
 	
 	public static void main(String[] args) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 		
 		AccessPointVisualizer.run(false);
 		

@@ -46,7 +46,7 @@ public class AccessPointVisualizer {
 	
 	protected static void run(boolean openVisualizer) {
 		GitHubWebAPI api = new GitHubWebAPI();
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 		
 		GitHubUser user = api.getUser("TheBusyBiscuit");
 		GitHubRepository repo = user.getRepository("Slimefun4");
@@ -213,7 +213,7 @@ public class AccessPointVisualizer {
 				
 				String p = path + (path == "" ? "": "/") + json.getKey();
 				
-				if (json.getValue().isJsonPrimitive()) {
+				if (json.getValue().isJsonPrimitive() || json.getValue().isJsonNull()) {
 					query:
 					for (Map.Entry<String, GitHubAccessPoint> entry: queries.entrySet()) {
 						String url = entry.getKey().split(" | ")[0];
@@ -226,7 +226,7 @@ public class AccessPointVisualizer {
 								break query;
 							}
 						}
-						else {
+						else if (json.getValue().isJsonPrimitive()) {
 							Pattern pattern = Pattern.compile(regex);
 							final Matcher matcher = pattern.matcher(json.getValue().getAsString());
 							if (matcher.matches()) {
@@ -322,6 +322,7 @@ public class AccessPointVisualizer {
 				else {
 					obj.remove(key);
 				}
+				
 				obj.add(key, content.get(key));
 			}
 		}
