@@ -34,20 +34,18 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubUser;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
-public class VisualizeGitHubAccessPoints {
+public class AccessPointVisualizer {
 	
-	private static Map<String, JScrollPane> panes = new HashMap<String, JScrollPane>();
+	public static Map<String, JCallbackDisplay> panes = new HashMap<String, JCallbackDisplay>();
+	public static Map<String, List<String>> categories = new HashMap<String, List<String>>();
 	
 	public static void main(String[] args) {
+		run(true);
+	}
+	
+	protected static void run(boolean openVisualizer) {
 		GitHubWebAPI api = new GitHubWebAPI();
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		
-		JFrame frame = new JFrame("GitHub Access Point Visualizer");
-		frame.setSize(1420, 940);
-		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JTabbedPane tabs = new JTabbedPane();
 		
 		GitHubUser user = api.getUser("TheBusyBiscuit");
 		GitHubRepository repo = user.getRepository("Slimefun4");
@@ -72,11 +70,9 @@ public class VisualizeGitHubAccessPoints {
 		
 		System.out.println("Preparing UI...");
 		
-		Map<String, List<String>> categories = new HashMap<String, List<String>>();
-		
 		children:
-		for (Map.Entry<String, JScrollPane> child: panes.entrySet()) {
-			for (Map.Entry<String, JScrollPane> parent: panes.entrySet()) {
+		for (Map.Entry<String, JCallbackDisplay> child: panes.entrySet()) {
+			for (Map.Entry<String, JCallbackDisplay> parent: panes.entrySet()) {
 				if (child.getKey().equals(parent.getKey())) {
 					continue;
 				}
@@ -97,28 +93,45 @@ public class VisualizeGitHubAccessPoints {
 			}
 		}
 		
-		for (Map.Entry<String, List<String>> entry: categories.entrySet()) {
-			if (!entry.getValue().isEmpty()) {
-				JTabbedPane sub = new JTabbedPane();
-				
-				sub.add("Main", panes.get(entry.getKey()));
-				
-				for (String child: entry.getValue()) {
-					sub.add(child.split(" | ")[0].replace(entry.getKey().split(" | ")[0], ""), panes.get(child));
+		if (openVisualizer) {
+			JFrame frame = new JFrame("GitHub Access Point Visualizer");
+			frame.setSize(1420, 940);
+			frame.setLocationRelativeTo(null);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			JTabbedPane tabs = new JTabbedPane();
+			
+			for (Map.Entry<String, List<String>> entry: categories.entrySet()) {
+				if (!entry.getValue().isEmpty()) {
+					JTabbedPane sub = new JTabbedPane();
+					
+					sub.add("Main", panes.get(entry.getKey()));
+					
+					for (String child: entry.getValue()) {
+						JScrollPane pane = new JScrollPane(panes.get(child));
+						pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+						pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+						
+						sub.add(child.split(" | ")[0].replace(entry.getKey().split(" | ")[0], ""), pane);
+					}
+					
+					tabs.add(entry.getKey().split(" | ")[2], sub);
 				}
-				
-				tabs.add(entry.getKey().split(" | ")[2], sub);
+				else {
+					JScrollPane pane = new JScrollPane(panes.get(entry.getKey()));
+					pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+					pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					
+					tabs.add(entry.getKey().split(" | ")[2], pane);
+				}
 			}
-			else {
-				tabs.add(entry.getKey().split(" | ")[2], panes.get(entry.getKey()));
-			}
+			
+			frame.add(tabs);
+			
+			frame.setVisible(true);
 		}
-		
-		frame.add(tabs);
-		
-		frame.setVisible(true);
 	}
-	
+
 	private static void analyseObject(GitHubWebAPI api, Gson gson, GitHubObject object) {
 		System.out.println("Scanning '" + object.getURL() + "'...");
 		JsonElement element = object.getRawResponseAsJson();
@@ -153,19 +166,11 @@ public class VisualizeGitHubAccessPoints {
 			}
 		}
 		
-		JEditorPane text = new JEditorPane();
-		text.setContentType("text/html");
-		text.setBackground(new Color(30, 30, 30));
-		text.setText(builder.toString());
-		text.setEditable(false);
-
-		JScrollPane pane = new JScrollPane(text);
-		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JCallbackDisplay text = new JCallbackDisplay(builder.toString());
 		
 		String label = object.getURL() + " | " + object.getClass().getSimpleName().replace("GitHub", "") + (element.isJsonArray() ? "[]": "");
 		
-		panes.put(label, pane);
+		panes.put(label, text);
 	}
 	
 	private static void colorize(GitHubWebAPI api, Gson gson, GitHubObject object, String path, String dir, JsonElement element) throws Exception {
@@ -335,6 +340,22 @@ public class VisualizeGitHubAccessPoints {
 	    	}
 	    }
 	    return null;
+	}
+	
+	public static class JCallbackDisplay extends JEditorPane {
+		
+		private static final long serialVersionUID = -5137159745987700918L;
+		
+		public String raw;
+		
+		public JCallbackDisplay(String raw) {
+			this.raw = raw;
+			
+			setContentType("text/html");
+			setBackground(new Color(30, 30, 30));
+			setText(raw);
+			setEditable(false);
+		}
 	}
 
 }
