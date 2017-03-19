@@ -34,6 +34,10 @@ public class GitHubWebAPI {
 		return new GitHubUser(this, username);
 	}
 	
+	public GitHubOrganization getOrganization(String username) {
+		return new GitHubOrganization(this, username);
+	}
+	
 	public GitHubRepository getRepository(String username, String repo) {
 		return new GitHubRepository(this, username + "/" + repo);
 	}
