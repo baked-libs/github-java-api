@@ -29,6 +29,7 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubBranch;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubCommit;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubFileTree;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubObject;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubOrganization;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubRepository;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubUser;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
@@ -49,6 +50,7 @@ public class AccessPointVisualizer {
 		
 		GitHubUser user = api.getUser("TheBusyBiscuit");
 		GitHubRepository repo = user.getRepository("Slimefun4");
+		GitHubOrganization org = api.getOrganization("Bukkit");
 		GitHubBranch branch = null;
 		GitHubCommit commit = null;
 		GitHubFileTree tree = null;
@@ -67,6 +69,7 @@ public class AccessPointVisualizer {
 		analyseObject(api, gson, branch);
 		analyseObject(api, gson, commit);
 		analyseObject(api, gson, tree);
+		analyseObject(api, gson, org);
 		
 		System.out.println("Preparing UI...");
 		
@@ -93,6 +96,24 @@ public class AccessPointVisualizer {
 			}
 		}
 		
+		List<String> keys = new ArrayList<String>(categories.keySet());
+		
+		Collections.sort(keys, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				if (o1.split(" | ")[2].equals("Organization") && !o2.split(" | ")[2].equals("Organization")) {
+					return 1;
+				}
+				else if (!o1.split(" | ")[2].equals("Organization") && o2.split(" | ")[2].equals("Organization")) {
+					return -1;
+				}
+				else {
+					return 0;
+				}
+			}
+		});
+		
 		if (openVisualizer) {
 			JFrame frame = new JFrame("GitHub Access Point Visualizer");
 			frame.setSize(1420, 940);
@@ -101,28 +122,29 @@ public class AccessPointVisualizer {
 			
 			JTabbedPane tabs = new JTabbedPane();
 			
-			for (Map.Entry<String, List<String>> entry: categories.entrySet()) {
-				if (!entry.getValue().isEmpty()) {
+			for (String key: keys) {
+				List<String> value = categories.get(key);
+				if (!value.isEmpty()) {
 					JTabbedPane sub = new JTabbedPane();
 					
-					sub.add("Main", panes.get(entry.getKey()));
+					sub.add("Main", panes.get(key));
 					
-					for (String child: entry.getValue()) {
+					for (String child: value) {
 						JScrollPane pane = new JScrollPane(panes.get(child));
 						pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 						pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 						
-						sub.add(child.split(" | ")[0].replace(entry.getKey().split(" | ")[0], ""), pane);
+						sub.add(child.split(" | ")[0].replace(key.split(" | ")[0], ""), pane);
 					}
 					
-					tabs.add(entry.getKey().split(" | ")[2], sub);
+					tabs.add(key.split(" | ")[2], sub);
 				}
 				else {
-					JScrollPane pane = new JScrollPane(panes.get(entry.getKey()));
+					JScrollPane pane = new JScrollPane(panes.get(key));
 					pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 					pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					
-					tabs.add(entry.getKey().split(" | ")[2], pane);
+					tabs.add(key.split(" | ")[2], pane);
 				}
 			}
 			
