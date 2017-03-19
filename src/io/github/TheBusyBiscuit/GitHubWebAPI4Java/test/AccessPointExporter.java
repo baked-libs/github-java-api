@@ -21,7 +21,7 @@ public class AccessPointExporter {
 		System.out.println("Exporting files...");
 		
 		try {
-			FileWriter writer = new FileWriter("E:\\Projects\\GitHub\\TheBusyBiscuit.github.io\\docs\\GitHubWebAPI4Java\\api.json");
+			FileWriter writer = new FileWriter("E:\\Projects\\GitHub\\TheBusyBiscuit.github.io\\docs\\GitHubWebAPI4Java\\assets\\api.json");
 			
 			JsonArray settings = new JsonArray();
 			
@@ -51,7 +51,7 @@ public class AccessPointExporter {
 				category.addProperty("file", i + ".txt");
 				category.addProperty("url", key.split(" | ")[0]);
 				
-				FileWriter text = new FileWriter("E:\\Projects\\GitHub\\TheBusyBiscuit.github.io\\docs\\GitHubWebAPI4Java\\callbacks\\" + i + ".txt");
+				FileWriter text = new FileWriter("E:\\Projects\\GitHub\\TheBusyBiscuit.github.io\\docs\\GitHubWebAPI4Java\\assets\\" + i + ".txt");
 				text.write(AccessPointVisualizer.panes.get(key).raw);
 				i++;
 				
@@ -63,7 +63,7 @@ public class AccessPointExporter {
 					obj.addProperty("url", child.split(" | ")[0].replace(key.split(" | ")[0], ""));
 					obj.addProperty("file", i + ".txt");
 					
-					FileWriter text2 = new FileWriter("E:\\Projects\\GitHub\\TheBusyBiscuit.github.io\\docs\\GitHubWebAPI4Java\\callbacks\\" + i + ".txt");
+					FileWriter text2 = new FileWriter("E:\\Projects\\GitHub\\TheBusyBiscuit.github.io\\docs\\GitHubWebAPI4Java\\assets\\" + i + ".txt");
 					text2.write(AccessPointVisualizer.panes.get(child).raw);
 
 					text2.flush();
