@@ -169,7 +169,39 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
 	public List<GitHubCommit> getCommits() throws IllegalAccessException {
-		GitHubObject commits = new GitHubObject(api, this, "/commits");
+		return this.getCommits(1);
+	}
+
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
+	public List<GitHubCommit> getAllCommits() throws IllegalAccessException {
+		List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
+		
+		int i = 2;
+		List<GitHubCommit> temp = getCommits(1);
+		
+		while (!temp.isEmpty()) {
+			commits.addAll(temp);
+			
+			temp = getCommits(i);
+			i++;
+		}
+		
+		return commits;
+	}
+
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
+	public List<GitHubCommit> getCommits(int page) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("page", String.valueOf(page));
+		
+		GitHubObject commits = new GitHubObject(api, this, "/commits") {
+			
+			@Override
+			public Map<String, String> getParameters() {
+				return params;
+			}
+			
+		};
 		JsonElement response = commits.getResponse(true);
 		
 		if (response == null) {
