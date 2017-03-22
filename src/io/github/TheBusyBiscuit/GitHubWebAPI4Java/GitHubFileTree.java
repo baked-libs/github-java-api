@@ -13,18 +13,22 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
 public class GitHubFileTree extends GitHubFile {
 	
-	private static Map<String, String> params = new HashMap<String, String>();
+	private Map<String, String> params = new HashMap<String, String>();
 	
-	static {
-		params.put("recursive", "1");
-	}
-	
-	public GitHubFileTree(GitHubWebAPI api, GitHubRepository repo, String id) {
+	public GitHubFileTree(GitHubWebAPI api, GitHubRepository repo, String id, boolean recursive) {
 		super(api, repo, "/git/trees/" + id);
+		
+		if (recursive) {
+			params.put("recursive", "1");
+		}
 	}
 	
-	public GitHubFileTree(GitHubWebAPI api, GitHubRepository repo, String id, JsonElement response) {
+	public GitHubFileTree(GitHubWebAPI api, GitHubRepository repo, String id, JsonElement response, boolean recursive) {
 		super(api, repo, "/git/trees/" + id, response);
+		
+		if (recursive) {
+			params.put("recursive", "1");
+		}
 	}
 
 	public GitHubFileTree(GitHubObject obj) {
@@ -62,7 +66,7 @@ public class GitHubFileTree extends GitHubFile {
 				files.add(new GitHubBlob(api, getRepository(), obj.get("sha").getAsString(), obj));
 			}
 			else if (type.equals("tree")) {
-				files.add(new GitHubFileTree(api, getRepository(), obj.get("sha").getAsString(), obj));
+				files.add(new GitHubFileTree(api, getRepository(), obj.get("sha").getAsString(), obj, false));
 			}
 		}
 		

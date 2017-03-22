@@ -143,7 +143,7 @@ public class GitHubCommit extends GitHubObject {
 		}
 		JsonObject response = element.getAsJsonObject().get("commit").getAsJsonObject().get("tree").getAsJsonObject();
 		
-		return isInvalid(response, "sha") ? null: new GitHubFileTree(api, repo, response.get("sha").getAsString());
+		return isInvalid(response, "sha") ? null: new GitHubFileTree(api, repo, response.get("sha").getAsString(), true);
 	}
 
 }
