@@ -24,6 +24,7 @@ public class GitHubBlob extends GitHubFile {
 		return ".*repos/.*/.*/git/blobs/.*";
 	}
 
+	@Override
 	@GitHubAccessPoint(path = "@size", type = Integer.class)
 	public int getSize() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
