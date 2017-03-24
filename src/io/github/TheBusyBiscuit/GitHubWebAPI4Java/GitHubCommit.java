@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.RepositorySnapshot;
 
 public class GitHubCommit extends GitHubObject {
 	
@@ -22,6 +23,10 @@ public class GitHubCommit extends GitHubObject {
 
 	public GitHubCommit(GitHubObject obj) {
 		super(obj);
+	}
+	
+	public GitHubRepository getRepository() {
+		return this.repo;
 	}
 	
 	@Override
@@ -146,4 +151,7 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "sha") ? null: new GitHubFileTree(api, repo, response.get("sha").getAsString(), true);
 	}
 
+	public RepositorySnapshot getSnapshot() {
+		return new RepositorySnapshot(this);
+	}
 }
