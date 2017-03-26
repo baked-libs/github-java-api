@@ -221,6 +221,28 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
+	@GitHubAccessPoint(path = "/downloads", type = GitHubDownload.class)
+	public List<GitHubDownload> getDownloads() throws IllegalAccessException {
+		GitHubObject downloads = new GitHubObject(api, this, "/downloads");
+		JsonElement response = downloads.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubDownload> list = new ArrayList<GitHubDownload>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubDownload download = new GitHubDownload(api, this, object.get("id").getAsInt(), object);
+	    	list.add(download);
+	    }
+		
+		return list;
+	}
+
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
 	public List<GitHubIssue> getIssues() throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
