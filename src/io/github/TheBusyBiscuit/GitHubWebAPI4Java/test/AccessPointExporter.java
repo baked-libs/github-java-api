@@ -31,10 +31,16 @@ public class AccessPointExporter {
 
 				@Override
 				public int compare(String o1, String o2) {
-					if (o1.split(" | ")[2].equals("Organization") && !o2.split(" | ")[2].equals("Organization")) {
+					if (!o1.split(" | ")[2].equals("User") && o2.split(" | ")[2].equals("User")) {
 						return 1;
 					}
-					else if (!o1.split(" | ")[2].equals("Organization") && o2.split(" | ")[2].equals("Organization")) {
+					else if (!o1.split(" | ")[2].equals("Repository") && o2.split(" | ")[2].equals("Repository")) {
+						return 1;
+					}
+					else if (o1.split(" | ")[2].equals("User") && !o2.split(" | ")[2].equals("User")) {
+						return -1;
+					}
+					else if (o1.split(" | ")[2].equals("Repository") && !o2.split(" | ")[2].equals("Repository")) {
 						return -1;
 					}
 					else {
