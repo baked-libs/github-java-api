@@ -15,7 +15,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 	
 	GitHubRepository repo;
 	
-	public GitHubPullRequest(GitHubWebAPI api, GitHubRepository repo, String id, JsonElement response) {
+	public GitHubPullRequest(GitHubWebAPI api, GitHubRepository repo, int id, JsonElement response) {
 		super(api, repo, "/pulls/" + id);
 		
 		this.repo = repo;
