@@ -30,6 +30,7 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubCommit;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubFileTree;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubOrganization;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubPullRequest;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubRepository;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubUser;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
@@ -54,11 +55,14 @@ public class AccessPointVisualizer {
 		GitHubBranch branch = null;
 		GitHubCommit commit = null;
 		GitHubFileTree tree = null;
+		GitHubPullRequest pr = null;
 		
 		try {
 			branch = repo.getDefaultBranch();
 			commit = branch.getLastCommit();
 			tree = commit.getFileTree();
+			
+			pr = repo.getPullRequests().get(0);
 		} catch (IllegalAccessException e) {
 			System.err.println("Connection failed.");
 			System.exit(0);
@@ -69,12 +73,14 @@ public class AccessPointVisualizer {
 		analyseObject(api, gson, branch);
 		analyseObject(api, gson, commit);
 		analyseObject(api, gson, tree);
+		analyseObject(api, gson, pr);
 		analyseObject(api, gson, org);
 		
 		System.out.println("Preparing UI...");
 		
 		children:
 		for (Map.Entry<String, JCallbackDisplay> child: panes.entrySet()) {
+			System.out.println(child.getKey());
 			for (Map.Entry<String, JCallbackDisplay> parent: panes.entrySet()) {
 				if (child.getKey().equals(parent.getKey())) {
 					continue;
@@ -190,7 +196,7 @@ public class AccessPointVisualizer {
 		
 		JCallbackDisplay text = new JCallbackDisplay(builder.toString());
 		
-		String label = object.getURL() + " | " + object.getClass().getSimpleName().replace("GitHub", "") + (element.isJsonArray() ? "[]": "");
+		String label = object.getURL() + " | " + object.getClass().getSimpleName().replace("GitHub", "");
 		
 		panes.put(label, text);
 	}
