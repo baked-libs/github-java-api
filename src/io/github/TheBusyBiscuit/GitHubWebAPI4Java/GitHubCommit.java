@@ -14,6 +14,12 @@ public class GitHubCommit extends GitHubObject {
 	
 	GitHubRepository repo;
 	
+	public GitHubCommit(GitHubWebAPI api, GitHubRepository repo, String id) {
+		super(api, repo, "/commits/" + id);
+		
+		this.repo = repo;
+	}
+	
 	public GitHubCommit(GitHubWebAPI api, GitHubRepository repo, String id, JsonElement response) {
 		super(api, repo, "/commits/" + id);
 		

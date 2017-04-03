@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
-public class GitHubIssue extends UniqueGitHubObject {
+public class GitHubIssue extends RepositoryFeature {
 	
 	private GitHubRepository repo;
 	
@@ -34,66 +34,6 @@ public class GitHubIssue extends UniqueGitHubObject {
 	@Override
 	public String getRawURL() {
 		return ".*repos/.*/.*/issues/.*";
-	}
-	
-	@GitHubAccessPoint(path = "@number", type = Integer.class)
-	public int getNumber() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "number") ? null: response.get("number").getAsInt();
-	}
-
-	@GitHubAccessPoint(path = "@user", type = GitHubUser.class)
-	public GitHubUser getUser() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
-	}
-
-	@GitHubAccessPoint(path = "@title", type = String.class)
-	public String getTitle() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "title") ? null: response.get("title").getAsString();
-	}
-
-	@GitHubAccessPoint(path = "@state", type = State.class)
-	public State getState() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "state") ? null: State.valueOf(response.get("state").getAsString().toUpperCase());
-	}
-
-	@GitHubAccessPoint(path = "@locked", type = Boolean.class)
-	public boolean isLocked() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "locked") ? false: response.get("locked").getAsBoolean();
 	}
 	
 	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class)
@@ -120,13 +60,6 @@ public class GitHubIssue extends UniqueGitHubObject {
 		}
 		
 		return labels;
-	}
-	
-	public enum State {
-		
-		OPEN,
-		CLOSED;
-		
 	}
 
 }

@@ -279,7 +279,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
-	public List<GitHubIssue> getIssues(final GitHubIssue.State state) throws IllegalAccessException {
+	public List<GitHubIssue> getIssues(final RepositoryFeature.State state) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
 			
