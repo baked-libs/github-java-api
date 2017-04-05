@@ -110,4 +110,16 @@ public class GitHubIssue extends RepositoryFeature {
 		return isInvalid(response, "milestone") ? null: new GitHubMilestone(api, getRepository(), response.get("milestone").getAsJsonObject().get("number").getAsInt(), response.get("milestone").getAsJsonObject());
 	}
 
+	@GitHubAccessPoint(path = "@body", type = String.class)
+	public String getMessageBody() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "body") ? null: response.get("body").getAsString();
+	}
+
 }

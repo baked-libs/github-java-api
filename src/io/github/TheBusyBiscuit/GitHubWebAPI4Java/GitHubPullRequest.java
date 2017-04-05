@@ -310,6 +310,18 @@ public class GitHubPullRequest extends RepositoryFeature {
 
 		return isInvalid(response, "mergeable") ? false: response.get("mergeable").getAsBoolean();
 	}
+
+	@GitHubAccessPoint(path = "@body", type = String.class)
+	public String getMessageBody() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "body") ? null: response.get("body").getAsString();
+	}
 	
 	public GitHubIssue toIssue() throws IllegalAccessException {
 		return new GitHubIssue(api, getRepository(), getNumber());
