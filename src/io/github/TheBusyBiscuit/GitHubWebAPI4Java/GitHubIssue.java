@@ -122,4 +122,25 @@ public class GitHubIssue extends RepositoryFeature {
 		return isInvalid(response, "body") ? null: response.get("body").getAsString();
 	}
 
+	@GitHubAccessPoint(path = "@assignees", type = GitHubUser.class)
+	public List<GitHubUser> getAssignees() throws IllegalAccessException, UnsupportedEncodingException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		List<GitHubUser> users = new ArrayList<GitHubUser>();
+		
+		JsonArray array = response.get("assignees").getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+			JsonObject obj = array.get(i).getAsJsonObject();
+			users.add(new GitHubUser(api, obj.get("login").getAsString(), obj));
+		}
+		
+		return users;
+	}
+
 }
