@@ -6,9 +6,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -45,7 +47,12 @@ public class AccessPointVisualizer {
 	public static Map<String, String> data = new HashMap<String, String>();
 	public static Map<String, List<String>> categories = new HashMap<String, List<String>>();
 	
+	public static Map<Class<?>, List<String>> blacklist = new HashMap<Class<?>, List<String>>();
+	
 	public static void main(String[] args) {
+		blacklist.put(GitHubCommit.class, Arrays.asList("commit/committer", "commit/author"));
+		blacklist.put(GitHubRepository.class, Arrays.asList("forks", "watchers", "open_issues", "permissions"));
+		
 		run(true);
 	}
 	
@@ -271,6 +278,19 @@ public class AccessPointVisualizer {
 		}
 		else if (element.isJsonObject()) {
 			JsonObject obj = element.getAsJsonObject();
+			
+			if (blacklist.containsKey(object.getClass())) {
+				for (String hidden: blacklist.get(object.getClass())) {
+					for (Map.Entry<String, JsonElement> json: new HashSet<Map.Entry<String, JsonElement>>(obj.entrySet())) {
+						String p = path + (path == "" ? "": "/") + json.getKey();
+						
+						if (p.equals(hidden)) {
+							obj.remove(json.getKey());
+						}
+					}
+				}
+			}
+			
 			Map<String, GitHubAccessPoint> queries = getSubURLs(dir, object);
 			
 			Map<String, JsonElement> content = new HashMap<String, JsonElement>();
