@@ -42,7 +42,7 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
 public class AccessPointVisualizer {
 	
-	public static Map<String, JCallbackDisplay> panes = new HashMap<String, JCallbackDisplay>();
+	public static Map<String, String> data = new HashMap<String, String>();
 	public static Map<String, List<String>> categories = new HashMap<String, List<String>>();
 	
 	public static void main(String[] args) {
@@ -91,7 +91,7 @@ public class AccessPointVisualizer {
 		
 		System.out.println("Preparing UI...");
 		
-		for (Map.Entry<String, JCallbackDisplay> child: panes.entrySet()) {
+		for (Map.Entry<String, String> child: data.entrySet()) {
 			System.out.println(child.getKey());
 			
 			String parent = findDominantParent(child.getKey());
@@ -149,10 +149,10 @@ public class AccessPointVisualizer {
 				if (!value.isEmpty()) {
 					JTabbedPane sub = new JTabbedPane();
 					
-					sub.add("Main", new JCallbackDisplay(panes.get(key).raw));
+					sub.add("Main", new JCallbackDisplay(data.get(key)));
 					
 					for (String child: value) {
-						JScrollPane pane = new JScrollPane(panes.get(child));
+						JScrollPane pane = new JScrollPane(new JCallbackDisplay(data.get(child)));
 						pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 						pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 						
@@ -162,7 +162,7 @@ public class AccessPointVisualizer {
 					tabs.add(key.split(" | ")[2], sub);
 				}
 				else {
-					JScrollPane pane = new JScrollPane(panes.get(key));
+					JScrollPane pane = new JScrollPane(new JCallbackDisplay(data.get(key)));
 					pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 					pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					
@@ -201,7 +201,7 @@ public class AccessPointVisualizer {
 	private static String findNextFamilyMember(String key) {
 		String dominantParent = "";
 		
-		for (Map.Entry<String, JCallbackDisplay> parent: panes.entrySet()) {
+		for (Map.Entry<String, String> parent: data.entrySet()) {
 			if (key.equals(parent.getKey())) {
 				continue;
 			}
@@ -251,11 +251,10 @@ public class AccessPointVisualizer {
 			}
 		}
 		
-		JCallbackDisplay text = new JCallbackDisplay(builder.toString());
 		
 		String label = object.getURL() + " | " + object.getClass().getSimpleName().replace("GitHub", "");
 		
-		panes.put(label, text);
+		data.put(label, builder.toString());
 	}
 	
 	private static void colorize(GitHubWebAPI api, Gson gson, GitHubObject object, String path, String dir, JsonElement element) throws Exception {

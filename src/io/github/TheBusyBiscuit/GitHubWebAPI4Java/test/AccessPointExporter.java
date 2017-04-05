@@ -58,7 +58,7 @@ public class AccessPointExporter {
 				category.addProperty("url", key.split(" | ")[0]);
 				
 				FileWriter text = new FileWriter("E:\\Projects\\GitHub\\TheBusyBiscuit.github.io\\docs\\GitHubWebAPI4Java\\assets\\" + i + ".txt");
-				text.write(AccessPointVisualizer.panes.get(key).raw);
+				text.write(AccessPointVisualizer.data.get(key));
 				i++;
 				
 				JsonArray children = new JsonArray();
@@ -70,7 +70,7 @@ public class AccessPointExporter {
 					obj.addProperty("file", i + ".txt");
 					
 					FileWriter text2 = new FileWriter("E:\\Projects\\GitHub\\TheBusyBiscuit.github.io\\docs\\GitHubWebAPI4Java\\assets\\" + i + ".txt");
-					text2.write(AccessPointVisualizer.panes.get(child).raw);
+					text2.write(AccessPointVisualizer.data.get(child));
 
 					text2.flush();
 					text2.close();
