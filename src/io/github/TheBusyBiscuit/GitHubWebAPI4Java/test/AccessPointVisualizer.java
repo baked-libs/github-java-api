@@ -156,7 +156,11 @@ public class AccessPointVisualizer {
 				if (!value.isEmpty()) {
 					JTabbedPane sub = new JTabbedPane();
 					
-					sub.add("Main", new JCallbackDisplay(data.get(key)));
+					JScrollPane main =  new JScrollPane(new JCallbackDisplay(data.get(key)));
+					main.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+					main.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					
+					sub.add("Main", main);
 					
 					for (String child: value) {
 						JScrollPane pane = new JScrollPane(new JCallbackDisplay(data.get(child)));
