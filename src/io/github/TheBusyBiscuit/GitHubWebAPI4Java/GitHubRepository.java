@@ -282,12 +282,195 @@ public class GitHubRepository extends UniqueGitHubObject {
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
+			@Override
+			public Map<String, String> getParameters() {
+				Map<String, String> params = new HashMap<String, String>();
+				
+				params.put("state", state.toString().toLowerCase());
+				
+				return params;
+			}
+			
+		};
+		JsonElement response = issues.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubIssue issue = new GitHubIssue(api, this, object.get("number").getAsInt(), object);
+	    	list.add(issue);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	public List<GitHubIssue> getIssues(final GitHubLabel label) throws IllegalAccessException {
+		GitHubObject issues = new GitHubObject(api, this, "/issues") {
+			
+			@Override
+			public Map<String, String> getParameters() {
+				Map<String, String> params = new HashMap<String, String>();
+				
+				params.put("state", "all");
+				params.put("labels", label.getURLEncodedParameter());
+				
+				return params;
+			}
+			
+		};
+		JsonElement response = issues.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubIssue issue = new GitHubIssue(api, this, object.get("number").getAsInt(), object);
+	    	list.add(issue);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	public List<GitHubIssue> getIssues(final RepositoryFeature.State state, final GitHubLabel label) throws IllegalAccessException {
+		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
 			@Override
 			public Map<String, String> getParameters() {
 				Map<String, String> params = new HashMap<String, String>();
 				
 				params.put("state", state.toString().toLowerCase());
+				params.put("labels", label.getURLEncodedParameter());
+				
+				return params;
+			}
+			
+		};
+		JsonElement response = issues.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubIssue issue = new GitHubIssue(api, this, object.get("number").getAsInt(), object);
+	    	list.add(issue);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	public List<GitHubIssue> getIssues(final GitHubMilestone milestone) throws IllegalAccessException {
+		GitHubObject issues = new GitHubObject(api, this, "/issues") {
+			
+			@Override
+			public Map<String, String> getParameters() {
+				Map<String, String> params = new HashMap<String, String>();
+				
+				params.put("state", "all");
+				try {
+					params.put("milestone", String.valueOf(milestone.getNumber()));
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				
+				return params;
+			}
+			
+		};
+		JsonElement response = issues.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubIssue issue = new GitHubIssue(api, this, object.get("number").getAsInt(), object);
+	    	list.add(issue);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	public List<GitHubIssue> getIssues(final GitHubLabel label, final GitHubMilestone milestone) throws IllegalAccessException {
+		GitHubObject issues = new GitHubObject(api, this, "/issues") {
+			
+			@Override
+			public Map<String, String> getParameters() {
+				Map<String, String> params = new HashMap<String, String>();
+				
+				params.put("state", "all");
+				params.put("labels", label.getURLEncodedParameter());
+				try {
+					params.put("milestone", String.valueOf(milestone.getNumber()));
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				
+				return params;
+			}
+			
+		};
+		JsonElement response = issues.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubIssue issue = new GitHubIssue(api, this, object.get("number").getAsInt(), object);
+	    	list.add(issue);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	public List<GitHubIssue> getIssues(final RepositoryFeature.State state, final GitHubLabel label, final GitHubMilestone milestone) throws IllegalAccessException {
+		GitHubObject issues = new GitHubObject(api, this, "/issues") {
+			
+			@Override
+			public Map<String, String> getParameters() {
+				Map<String, String> params = new HashMap<String, String>();
+				
+				params.put("state", state.toString().toLowerCase());
+				params.put("labels", label.getURLEncodedParameter());
+				try {
+					params.put("milestone", String.valueOf(milestone.getNumber()));
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
 				
 				return params;
 			}
@@ -625,6 +808,14 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	public GitHubIssue getIssue(int number) throws IllegalAccessException {
 		return new GitHubIssue(api, this, number);
+	}
+
+	public GitHubPullRequest getPullRequest(int number) throws IllegalAccessException {
+		return new GitHubPullRequest(api, this, number);
+	}
+
+	public GitHubMilestone getMilestone(int number) throws IllegalAccessException {
+		return new GitHubMilestone(api, this, number);
 	}
 
 	public GitHubLabel getLabel(String name) throws IllegalAccessException, UnsupportedEncodingException {

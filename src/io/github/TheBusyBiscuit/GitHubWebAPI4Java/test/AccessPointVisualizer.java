@@ -77,8 +77,8 @@ public class AccessPointVisualizer {
 		analyseObject(api, gson, branch);
 		analyseObject(api, gson, commit);
 		analyseObject(api, gson, tree);
-		analyseObject(api, gson, pr);
 		analyseObject(api, gson, issue);
+		analyseObject(api, gson, pr);
 		analyseObject(api, gson, org);
 		
 		System.out.println("Preparing UI...");

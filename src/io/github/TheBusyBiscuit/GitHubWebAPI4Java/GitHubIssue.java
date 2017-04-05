@@ -35,6 +35,30 @@ public class GitHubIssue extends RepositoryFeature {
 	public String getRawURL() {
 		return ".*repos/.*/.*/issues/.*";
 	}
+
+	@GitHubAccessPoint(path = "@user", type = GitHubUser.class)
+	public GitHubUser getUser() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
+	}
+
+	@GitHubAccessPoint(path = "@locked", type = Boolean.class)
+	public boolean isLocked() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "locked") ? false: response.get("locked").getAsBoolean();
+	}
 	
 	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class)
 	public GitHubRepository getRepository() {
@@ -72,6 +96,18 @@ public class GitHubIssue extends RepositoryFeature {
 		JsonObject response = element.getAsJsonObject();
 		
 		return isInvalid(response, "closed_by") ? null: new GitHubUser(api, response.get("closed_by").getAsJsonObject().get("login").getAsString(), response.get("closed_by").getAsJsonObject());
+	}
+
+	@GitHubAccessPoint(path = "@milestone", type = GitHubMilestone.class)
+	public GitHubMilestone getMilestone() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "milestone") ? null: new GitHubMilestone(api, getRepository(), response.get("milestone").getAsJsonObject().get("number").getAsInt(), response.get("milestone").getAsJsonObject());
 	}
 
 }

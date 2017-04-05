@@ -15,6 +15,12 @@ public class GitHubPullRequest extends RepositoryFeature {
 	
 	GitHubRepository repo;
 	
+	public GitHubPullRequest(GitHubWebAPI api, GitHubRepository repo, int id) {
+		super(api, repo, "/pulls/" + id);
+		
+		this.repo = repo;
+	}
+	
 	public GitHubPullRequest(GitHubWebAPI api, GitHubRepository repo, int id, JsonElement response) {
 		super(api, repo, "/pulls/" + id);
 		
@@ -33,6 +39,30 @@ public class GitHubPullRequest extends RepositoryFeature {
 	@Override
 	public String getRawURL() {
 		return ".*repos/.*/.*/pulls/.*";
+	}
+
+	@GitHubAccessPoint(path = "@user", type = GitHubUser.class)
+	public GitHubUser getUser() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
+	}
+
+	@GitHubAccessPoint(path = "@locked", type = Boolean.class)
+	public boolean isLocked() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "locked") ? false: response.get("locked").getAsBoolean();
 	}
 	
 	@GitHubAccessPoint(path = "@base/user", type = GitHubUser.class)
@@ -243,6 +273,42 @@ public class GitHubPullRequest extends RepositoryFeature {
 		JsonObject response = element.getAsJsonObject();
 		
 		return isInvalid(response, "merged_by") ? null: new GitHubUser(api, response.get("merged_by").getAsJsonObject().get("login").getAsString(), response.get("closed_by").getAsJsonObject());
+	}
+
+	@GitHubAccessPoint(path = "@milestone", type = GitHubMilestone.class)
+	public GitHubMilestone getMilestone() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "milestone") ? null: new GitHubMilestone(api, getRepository(), response.get("milestone").getAsJsonObject().get("number").getAsInt(), response.get("milestone").getAsJsonObject());
+	}
+	
+	@GitHubAccessPoint(path = "@merged", type = Boolean.class)
+	public boolean isMerged() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "merged") ? false: response.get("merged").getAsBoolean();
+	}
+	
+	@GitHubAccessPoint(path = "@mergeable", type = Boolean.class)
+	public boolean isMergeable() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "mergeable") ? false: response.get("mergeable").getAsBoolean();
 	}
 	
 	public GitHubIssue toIssue() throws IllegalAccessException {
