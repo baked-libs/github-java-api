@@ -45,6 +45,12 @@ public class GitHubFileChange extends GitHubBlob {
 		return isInvalid(obj, "status") ? null: Status.valueOf(obj.get("status").getAsString().toUpperCase());
 	}
 	
+	@Override
+	@GitHubAccessPoint(path = "@filename", type = String.class)
+	public String getFile() throws IllegalAccessException {
+		return isInvalid(obj, "filename") ? null: obj.get("filename").getAsString();
+	}
+	
 	public enum Status {
 		
 		REMOVED,
