@@ -28,12 +28,14 @@ import com.google.gson.JsonObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubBranch;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubCommit;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubFileTree;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubIssue;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubOrganization;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubPullRequest;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubRepository;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubUser;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.RepositoryFeature.State;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
 public class AccessPointVisualizer {
@@ -56,6 +58,7 @@ public class AccessPointVisualizer {
 		GitHubCommit commit = null;
 		GitHubFileTree tree = null;
 		GitHubPullRequest pr = null;
+		GitHubIssue issue = null;
 		
 		try {
 			branch = repo.getDefaultBranch();
@@ -63,6 +66,7 @@ public class AccessPointVisualizer {
 			tree = commit.getFileTree();
 			
 			pr = repo.getPullRequests().get(0);
+			issue = repo.getIssues(State.OPEN).get(0);
 		} catch (IllegalAccessException e) {
 			System.err.println("Connection failed.");
 			System.exit(0);
@@ -74,6 +78,7 @@ public class AccessPointVisualizer {
 		analyseObject(api, gson, commit);
 		analyseObject(api, gson, tree);
 		analyseObject(api, gson, pr);
+		analyseObject(api, gson, issue);
 		analyseObject(api, gson, org);
 		
 		System.out.println("Preparing UI...");

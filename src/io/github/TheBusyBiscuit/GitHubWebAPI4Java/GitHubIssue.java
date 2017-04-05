@@ -62,4 +62,16 @@ public class GitHubIssue extends RepositoryFeature {
 		return labels;
 	}
 
+	@GitHubAccessPoint(path = "@closed_by", type = GitHubUser.class)
+	public GitHubUser getClosedBy() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "closed_by") ? null: new GitHubUser(api, response.get("closed_by").getAsJsonObject().get("login").getAsString(), response.get("closed_by").getAsJsonObject());
+	}
+
 }
