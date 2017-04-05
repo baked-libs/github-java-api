@@ -794,6 +794,18 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "has_pages") ? false: response.get("has_pages").getAsBoolean();
 	}
 
+	@GitHubAccessPoint(path = "@has_projects", type = Boolean.class)
+	public boolean hasProjects() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "has_projects") ? false: response.get("has_projects").getAsBoolean();
+	}
+
 	@GitHubAccessPoint(path = "@homepage", type = String.class)
 	public String getWebsite() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
