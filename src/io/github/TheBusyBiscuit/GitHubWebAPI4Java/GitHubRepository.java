@@ -564,6 +564,84 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
+	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class)
+	public List<GitHubPullRequest> getPullRequests(final GitHubMilestone milestone) throws IllegalAccessException {
+		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
+			
+			
+			@Override
+			public Map<String, String> getParameters() {
+				Map<String, String> params = new HashMap<String, String>();
+				
+				params.put("state", "all");
+				try {
+					params.put("milestone", String.valueOf(milestone.getNumber()));
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				
+				return params;
+			}
+			
+		};
+		JsonElement response = issues.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubPullRequest> list = new ArrayList<GitHubPullRequest>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubPullRequest pr = new GitHubPullRequest(api, this, object.get("number").getAsInt(), object);
+	    	list.add(pr);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class)
+	public List<GitHubPullRequest> getPullRequests(final RepositoryFeature.State state, final GitHubMilestone milestone) throws IllegalAccessException {
+		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
+			
+			
+			@Override
+			public Map<String, String> getParameters() {
+				Map<String, String> params = new HashMap<String, String>();
+				
+				params.put("state", state.toString().toLowerCase());
+				try {
+					params.put("milestone", String.valueOf(milestone.getNumber()));
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				
+				return params;
+			}
+			
+		};
+		JsonElement response = issues.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubPullRequest> list = new ArrayList<GitHubPullRequest>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubPullRequest pr = new GitHubPullRequest(api, this, object.get("number").getAsInt(), object);
+	    	list.add(pr);
+	    }
+		
+		return list;
+	}
+
 	@GitHubAccessPoint(path = "/labels", type = GitHubLabel.class)
 	public List<GitHubLabel> getLabels() throws IllegalAccessException, UnsupportedEncodingException {
 		GitHubObject labels = new GitHubObject(api, this, "/labels");
@@ -581,6 +659,28 @@ public class GitHubRepository extends UniqueGitHubObject {
 	    	
 	    	GitHubLabel issue = new GitHubLabel(api, this, object.get("name").getAsString(), object);
 	    	list.add(issue);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/milestones", type = GitHubMilestone.class)
+	public List<GitHubMilestone> getMilestones() throws IllegalAccessException, UnsupportedEncodingException {
+		GitHubObject labels = new GitHubObject(api, this, "/milestones");
+		JsonElement response = labels.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubMilestone> list = new ArrayList<GitHubMilestone>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubMilestone milestone = new GitHubMilestone(api, this, object.get("number").getAsInt(), object);
+	    	list.add(milestone);
 	    }
 		
 		return list;

@@ -1,6 +1,7 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java.test;
 
 import java.awt.Color;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -29,6 +30,7 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubBranch;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubCommit;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubFileTree;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubIssue;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubMilestone;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubOrganization;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubPullRequest;
@@ -59,6 +61,7 @@ public class AccessPointVisualizer {
 		GitHubFileTree tree = null;
 		GitHubPullRequest pr = null;
 		GitHubIssue issue = null;
+		GitHubMilestone milestone = null;
 		
 		try {
 			branch = repo.getDefaultBranch();
@@ -67,8 +70,12 @@ public class AccessPointVisualizer {
 			
 			pr = repo.getPullRequests().get(0);
 			issue = repo.getIssues(State.OPEN).get(0);
+			milestone = repo.getMilestones().get(0);
 		} catch (IllegalAccessException e) {
 			System.err.println("Connection failed.");
+			System.exit(0);
+		} catch (UnsupportedEncodingException e) {
+			System.err.println("Encoding failed.");
 			System.exit(0);
 		}
 		
@@ -79,6 +86,7 @@ public class AccessPointVisualizer {
 		analyseObject(api, gson, tree);
 		analyseObject(api, gson, issue);
 		analyseObject(api, gson, pr);
+		analyseObject(api, gson, milestone);
 		analyseObject(api, gson, org);
 		
 		System.out.println("Preparing UI...");
