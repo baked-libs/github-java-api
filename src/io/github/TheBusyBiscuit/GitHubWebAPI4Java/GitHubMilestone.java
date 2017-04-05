@@ -113,7 +113,7 @@ public class GitHubMilestone extends RepositoryFeature {
 	
 	@GitHubAccessPoint(path = "@due_on", type = Date.class)
 	public Date getDueDate() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
+		JsonElement element = getResponse(false);
 		
 		if (element == null) {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
