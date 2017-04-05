@@ -94,20 +94,31 @@ public class AccessPointVisualizer {
 		children:
 		for (Map.Entry<String, JCallbackDisplay> child: panes.entrySet()) {
 			System.out.println(child.getKey());
+			
+			String dominantParent = "";
+			
 			for (Map.Entry<String, JCallbackDisplay> parent: panes.entrySet()) {
 				if (child.getKey().equals(parent.getKey())) {
 					continue;
 				}
-				if (child.getKey().split(" | ")[0].startsWith(parent.getKey().split(" | ")[0])) {
-					List<String> list = new ArrayList<String>();
-					if (categories.containsKey(parent.getKey())) {
-						list = categories.get(parent.getKey());
+				String path_child = child.getKey().split(" | ")[0];
+				String path_parent = child.getKey().split(" | ")[0];
+				if (path_child.startsWith(path_parent)) {
+					if (path_parent.length() > dominantParent.length()) {
+						dominantParent = path_parent;
 					}
-					list.add(child.getKey());
-					categories.put(parent.getKey(), list);
-					
-					continue children;
 				}
+			}
+			
+			if (!dominantParent.equals("")) {
+				List<String> list = new ArrayList<String>();
+				if (categories.containsKey(dominantParent)) {
+					list = categories.get(dominantParent);
+				}
+				list.add(child.getKey());
+				categories.put(dominantParent, list);
+				
+				continue children;
 			}
 			
 			if (!categories.containsKey(child.getKey())) {
