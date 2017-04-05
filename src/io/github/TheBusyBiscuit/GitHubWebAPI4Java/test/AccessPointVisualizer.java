@@ -49,16 +49,19 @@ public class AccessPointVisualizer {
 	
 	public static Map<Class<?>, List<String>> blacklist = new HashMap<Class<?>, List<String>>();
 	
-	public static void main(String[] args) {
+	private static void setupBlacklist() {
 		blacklist.put(GitHubCommit.class, Arrays.asList("commit/committer", "commit/author"));
 		blacklist.put(GitHubRepository.class, Arrays.asList("forks", "watchers", "open_issues", "permissions"));
 		blacklist.put(GitHubIssue.class, Arrays.asList("assignee"));
 		blacklist.put(GitHubPullRequest.class, Arrays.asList("assignee"));
-		
+	}
+	
+	public static void main(String[] args) {
 		run(true);
 	}
 	
 	protected static void run(boolean openVisualizer) {
+		setupBlacklist();
 		GitHubWebAPI api = new GitHubWebAPI();
 		Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 		
