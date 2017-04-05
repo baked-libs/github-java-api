@@ -77,7 +77,7 @@ public class GitHubCommit extends GitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "@stats/total", type = Integer.class)
-	public int getTotalModifications() throws IllegalAccessException {
+	public int getTotalChanges() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
 		if (element == null) {
@@ -155,6 +155,32 @@ public class GitHubCommit extends GitHubObject {
 		JsonObject response = element.getAsJsonObject().get("commit").getAsJsonObject().get("tree").getAsJsonObject();
 		
 		return isInvalid(response, "sha") ? null: new GitHubFileTree(api, repo, response.get("sha").getAsString(), true);
+	}
+
+	@GitHubAccessPoint(path = "@files", type = GitHubFileChange.class)
+	public List<GitHubFileChange> getFileChanges() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		JsonObject response = element.getAsJsonObject();
+		
+		List<GitHubFileChange> files = new ArrayList<GitHubFileChange>();
+		
+		JsonArray array = response.get("files").getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+			JsonObject obj = array.get(i).getAsJsonObject();
+			JsonObject json = new JsonObject();
+			json.addProperty("sha", obj.get("sha").getAsString());
+			json.addProperty("type", "blob");
+			json.addProperty("path", obj.get("filename").getAsString());
+			files.add(new GitHubFileChange(api, getRepository(), obj, json));
+		}
+		
+		return files;
 	}
 
 	public RepositorySnapshot getSnapshot() {

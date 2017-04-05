@@ -36,4 +36,28 @@ public class GitHubBlob extends GitHubFile {
 
 		return isInvalid(response, "size") ? null: response.get("size").getAsInt();
 	}
+
+	@GitHubAccessPoint(path = "@content", type = String.class)
+	public String getFileContent() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "content") ? null: response.get("content").getAsString();
+	}
+
+	@GitHubAccessPoint(path = "@encoding", type = String.class)
+	public String getEncoding() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "encoding") ? null: response.get("encoding").getAsString();
+	}
 }

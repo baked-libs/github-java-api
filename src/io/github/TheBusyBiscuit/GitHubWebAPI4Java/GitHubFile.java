@@ -67,18 +67,6 @@ public class GitHubFile extends GitHubObject {
 		
 		return isInvalid(response, "type") ? null: response.get("type").getAsString();
 	}
-
-	@GitHubAccessPoint(path = "@mode", type = Integer.class)
-	public int getMode() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "mode") ? null: response.get("mode").getAsInt();
-	}
 	
 	@GitHubAccessPoint(path = "@size", type = Integer.class)
 	public int getSize() throws IllegalAccessException {
