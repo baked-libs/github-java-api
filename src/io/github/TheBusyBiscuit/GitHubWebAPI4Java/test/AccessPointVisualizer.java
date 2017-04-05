@@ -91,34 +91,20 @@ public class AccessPointVisualizer {
 		
 		System.out.println("Preparing UI...");
 		
-		children:
 		for (Map.Entry<String, JCallbackDisplay> child: panes.entrySet()) {
 			System.out.println(child.getKey());
 			
-			String dominantParent = "";
+			String parent = findDominantParent(child.getKey());
 			
-			for (Map.Entry<String, JCallbackDisplay> parent: panes.entrySet()) {
-				if (child.getKey().equals(parent.getKey())) {
-					continue;
-				}
-				String path_child = child.getKey().split(" | ")[0];
-				String path_parent = parent.getKey().split(" | ")[0];
-				if (path_child.startsWith(path_parent)) {
-					if (path_parent.length() > dominantParent.split(" | ")[0].length()) {
-						dominantParent = parent.getKey();
-					}
-				}
-			}
-			
-			if (!dominantParent.equals("")) {
+			if (!parent.equals("")) {
 				List<String> list = new ArrayList<String>();
-				if (categories.containsKey(dominantParent)) {
-					list = categories.get(dominantParent);
+				if (categories.containsKey(parent)) {
+					list = categories.get(parent);
 				}
 				list.add(child.getKey());
-				categories.put(dominantParent, list);
+				categories.put(parent, list);
 				
-				continue children;
+				continue;
 			}
 			
 			if (!categories.containsKey(child.getKey())) {
@@ -132,10 +118,16 @@ public class AccessPointVisualizer {
 
 			@Override
 			public int compare(String o1, String o2) {
-				if (o1.split(" | ")[2].equals("Organization") && !o2.split(" | ")[2].equals("Organization")) {
+				if (!o1.split(" | ")[2].equals("User") && o2.split(" | ")[2].equals("User")) {
 					return 1;
 				}
-				else if (!o1.split(" | ")[2].equals("Organization") && o2.split(" | ")[2].equals("Organization")) {
+				else if (!o1.split(" | ")[2].equals("Repository") && o2.split(" | ")[2].equals("Repository")) {
+					return 1;
+				}
+				else if (o1.split(" | ")[2].equals("User") && !o2.split(" | ")[2].equals("User")) {
+					return -1;
+				}
+				else if (o1.split(" | ")[2].equals("Repository") && !o2.split(" | ")[2].equals("Repository")) {
 					return -1;
 				}
 				else {
@@ -157,7 +149,7 @@ public class AccessPointVisualizer {
 				if (!value.isEmpty()) {
 					JTabbedPane sub = new JTabbedPane();
 					
-					sub.add("Main", panes.get(key));
+					sub.add("Main", new JCallbackDisplay(panes.get(key).raw));
 					
 					for (String child: value) {
 						JScrollPane pane = new JScrollPane(panes.get(child));
@@ -182,6 +174,47 @@ public class AccessPointVisualizer {
 			
 			frame.setVisible(true);
 		}
+	}
+	
+	private static String findDominantParent(String key) {
+		List<String> family = new ArrayList<String>();
+		
+		String parent = findNextFamilyMember(key);
+		
+		while (!parent.equals("")) {
+			family.add(parent);
+			
+			parent = findNextFamilyMember(parent);
+		}
+		
+		if (family.size() > 1) {
+			return family.get(family.size() - 2);
+		}
+		else if (family.size() > 0) {
+			return family.get(0);
+		}
+		else {
+			return "";
+		}
+	}
+
+	private static String findNextFamilyMember(String key) {
+		String dominantParent = "";
+		
+		for (Map.Entry<String, JCallbackDisplay> parent: panes.entrySet()) {
+			if (key.equals(parent.getKey())) {
+				continue;
+			}
+			String path_child = key.split(" | ")[0];
+			String path_parent = parent.getKey().split(" | ")[0];
+			if (path_child.startsWith(path_parent)) {
+				if (path_parent.length() > dominantParent.split(" | ")[0].length()) {
+					dominantParent = parent.getKey();
+				}
+			}
+		}
+		
+		return dominantParent;
 	}
 
 	private static void analyseObject(GitHubWebAPI api, Gson gson, GitHubObject object) {
