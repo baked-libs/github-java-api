@@ -5,7 +5,9 @@ import java.util.Map;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class GitHubObject {
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+
+public class GitHubObject extends Object {
 	
 	protected GitHubWebAPI api;
 	protected GitHubObject parent;
@@ -30,6 +32,7 @@ public class GitHubObject {
 		return this.getURL(suffix);
 	}
 
+	@GitHubAccessPoint(path = "@url", type = String.class)
 	protected String getURL(String suffix) {
 		if (parent == null) {
 			return suffix;
@@ -122,5 +125,5 @@ public class GitHubObject {
 	public Map<String, String> getParameters() {
 		return null;
 	}
-
+	
 }

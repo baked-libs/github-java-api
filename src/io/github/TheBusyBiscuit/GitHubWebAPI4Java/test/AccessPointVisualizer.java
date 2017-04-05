@@ -400,7 +400,7 @@ public class AccessPointVisualizer {
 		
 	    Class<?> c = object.getClass();
 	    
-	    while (c != GitHubObject.class) {
+	    while (c != Object.class) {
 	        for (final Method method : c.getDeclaredMethods()) {
 	            if (method.isAnnotationPresent(GitHubAccessPoint.class)) {
 	                Annotation annotation = method.getAnnotation(GitHubAccessPoint.class);
@@ -416,9 +416,6 @@ public class AccessPointVisualizer {
 	        
 	        c = c.getSuperclass();
 	    }
-	    
-	    String p = "@" + (path == "" ? "": (path + "/")) + "url";
-        queries.put(object.getURL() + p + " | " + object.getRawURL() + p + ".*", null);
 	    
 	    return queries;
 	}

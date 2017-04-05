@@ -30,6 +30,7 @@ public class GitHubBranch extends GitHubObject {
 	}
 	
 	@Override
+	@GitHubAccessPoint(path = "@_links/self", type = String.class)
 	public String getRawURL() {
 		return ".*repos/.*/.*/branches/.*";
 	}

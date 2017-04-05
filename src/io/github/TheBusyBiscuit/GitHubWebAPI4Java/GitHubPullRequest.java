@@ -37,6 +37,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 	}
 	
 	@Override
+	@GitHubAccessPoint(path = "@_links/self/href", type = String.class)
 	public String getRawURL() {
 		return ".*repos/.*/.*/pulls/.*";
 	}
@@ -63,6 +64,18 @@ public class GitHubPullRequest extends RepositoryFeature {
 		JsonObject response = element.getAsJsonObject();
 
 		return isInvalid(response, "locked") ? false: response.get("locked").getAsBoolean();
+	}
+	
+	@GitHubAccessPoint(path = "@base/label", type = String.class)
+	public String getBaseLabel() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject().get("base").getAsJsonObject();
+		
+		return isInvalid(response, "label") ? null: response.get("label").getAsString();
 	}
 	
 	@GitHubAccessPoint(path = "@base/user", type = GitHubUser.class)
@@ -113,6 +126,18 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "sha") ? null: new GitHubCommit(api, getBaseRepository(), response.get("sha").getAsString());
 	}
 	
+	@GitHubAccessPoint(path = "@head/label", type = String.class)
+	public String getHeadLabel() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject().get("head").getAsJsonObject();
+		
+		return isInvalid(response, "label") ? null: response.get("label").getAsString();
+	}
+	
 	@GitHubAccessPoint(path = "@head/user", type = GitHubUser.class)
 	public GitHubUser getHeadUser() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
@@ -161,7 +186,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "sha") ? null: new GitHubCommit(api, getHeadRepository(), response.get("sha").getAsString());
 	}
 
-	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "@_links/self/commits", type = GitHubCommit.class)
 	public List<GitHubCommit> getCommits() throws IllegalAccessException {
 		return this.getCommits(1);
 	}
@@ -322,7 +347,8 @@ public class GitHubPullRequest extends RepositoryFeature {
 
 		return isInvalid(response, "body") ? null: response.get("body").getAsString();
 	}
-	
+
+	@GitHubAccessPoint(path = "@_links/issue/href", type = String.class)
 	public GitHubIssue toIssue() throws IllegalAccessException {
 		return new GitHubIssue(api, getRepository(), getNumber());
 	}
