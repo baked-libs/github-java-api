@@ -102,10 +102,10 @@ public class AccessPointVisualizer {
 					continue;
 				}
 				String path_child = child.getKey().split(" | ")[0];
-				String path_parent = child.getKey().split(" | ")[0];
+				String path_parent = parent.getKey().split(" | ")[0];
 				if (path_child.startsWith(path_parent)) {
-					if (path_parent.length() > dominantParent.length()) {
-						dominantParent = path_parent;
+					if (path_parent.length() > dominantParent.split(" | ")[0].length()) {
+						dominantParent = parent.getKey();
 					}
 				}
 			}
