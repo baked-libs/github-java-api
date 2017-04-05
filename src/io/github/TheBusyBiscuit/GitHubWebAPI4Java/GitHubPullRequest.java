@@ -244,4 +244,8 @@ public class GitHubPullRequest extends RepositoryFeature {
 		
 		return isInvalid(response, "merged_by") ? null: new GitHubUser(api, response.get("merged_by").getAsJsonObject().get("login").getAsString(), response.get("closed_by").getAsJsonObject());
 	}
+	
+	public GitHubIssue toIssue() throws IllegalAccessException {
+		return new GitHubIssue(api, getRepository(), getNumber());
+	}
 }

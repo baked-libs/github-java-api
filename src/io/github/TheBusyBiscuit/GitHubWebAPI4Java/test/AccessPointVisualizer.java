@@ -209,6 +209,11 @@ public class AccessPointVisualizer {
 	private static void colorize(GitHubWebAPI api, Gson gson, GitHubObject object, String path, String dir, JsonElement element) throws Exception {
 		if (element.isJsonArray()) {
 			JsonArray array = element.getAsJsonArray();
+			
+			while (array.size() > 1) {
+				array.remove(1);
+			}
+			
 			for (int i = 0; i < array.size(); i++) {
 				colorize(api, gson, object, path, dir, array.get(i));
 			}
