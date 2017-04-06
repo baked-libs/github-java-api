@@ -53,7 +53,7 @@ public class AccessPointVisualizer {
 		blacklist.put(GitHubCommit.class, Arrays.asList("commit/committer", "commit/author"));
 		blacklist.put(GitHubRepository.class, Arrays.asList("forks", "watchers", "open_issues", "permissions"));
 		blacklist.put(GitHubIssue.class, Arrays.asList("assignee"));
-		blacklist.put(GitHubPullRequest.class, Arrays.asList("assignee"));
+		blacklist.put(GitHubPullRequest.class, Arrays.asList("assignee", "_links/issue"));
 	}
 	
 	public static void main(String[] args) {

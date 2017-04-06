@@ -2,6 +2,7 @@ package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -348,14 +349,23 @@ public class GitHubPullRequest extends RepositoryFeature {
 
 		return isInvalid(response, "body") ? null: response.get("body").getAsString();
 	}
+	
+	@GitHubAccessPoint(path = "@merged_at", type = Date.class)
+	public Date getMergedDate() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
 
-	@GitHubAccessPoint(path = "@_links/issue/href", type = GitHubIssue.class)
-	public GitHubIssue toIssue() throws IllegalAccessException {
-		return new GitHubIssue(api, getRepository(), getNumber());
+		return isInvalid(response, "merged_at") ? null: GitHubDate.parse(response.get("merged_at").getAsString());
 	}
 
 	@GitHubAccessPoint(path = "@issue_url", type = GitHubIssue.class)
-	private void _ping_issueurl() {};
+	public GitHubIssue toIssue() throws IllegalAccessException {
+		return new GitHubIssue(api, getRepository(), getNumber());
+	}
 
 	@GitHubAccessPoint(path = "@assignees", type = GitHubUser.class)
 	public List<GitHubUser> getAssignees() throws IllegalAccessException, UnsupportedEncodingException {

@@ -51,6 +51,11 @@ public class GitHubFileChange extends GitHubBlob {
 		return isInvalid(obj, "filename") ? null: obj.get("filename").getAsString();
 	}
 	
+	@GitHubAccessPoint(path = "@blob_url", type = GitHubBlob.class)
+	public GitHubBlob getAsBlob() {
+		return this;
+	}
+	
 	public enum Status {
 		
 		REMOVED,

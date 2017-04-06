@@ -36,6 +36,7 @@ public class GitHubCommit extends GitHubObject {
 	}
 	
 	@Override
+	@GitHubAccessPoint(path = "@commit/url", type = String.class)
 	public String getRawURL() {
 		return ".*repos/.*/.*/commits/.*";
 	}
