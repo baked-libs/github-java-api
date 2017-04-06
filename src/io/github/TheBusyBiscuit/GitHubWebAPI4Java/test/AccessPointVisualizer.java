@@ -290,10 +290,11 @@ public class AccessPointVisualizer {
 			
 			if (blacklist.containsKey(object.getClass())) {
 				for (String hidden: blacklist.get(object.getClass())) {
+					String h = (dir == "" ? "": (dir + "/")) + hidden;
 					for (Map.Entry<String, JsonElement> json: new HashSet<Map.Entry<String, JsonElement>>(obj.entrySet())) {
 						String p = path + (path == "" ? "": "/") + json.getKey();
 						
-						if (p.equals(hidden)) {
+						if (p.equals(h)) {
 							obj.remove(json.getKey());
 						}
 					}
