@@ -105,7 +105,8 @@ public class AccessPointExporter {
 		StringBuilder builder = new StringBuilder();
 		
 		for (String segment: url.split("/")) {
-			if (Pattern.matches("[0-9]+", segment)) {
+			if (segment.equals(""));
+			else if (Pattern.matches("[0-9]+", segment)) {
 				builder.append("/");
 				builder.append("[##]");
 			}
