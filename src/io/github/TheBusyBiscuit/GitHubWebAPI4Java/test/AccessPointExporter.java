@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -65,7 +66,9 @@ public class AccessPointExporter {
 				
 				for (String child: values) {
 					JsonObject obj = new JsonObject();
-					
+
+					obj.addProperty("type", key.split(" | ")[2]);
+					obj.addProperty("key", toKey(child.split(" | ")[0].replace(key.split(" | ")[0], "")));
 					obj.addProperty("url", child.split(" | ")[0].replace(key.split(" | ")[0], ""));
 					obj.addProperty("file", i + ".txt");
 					
@@ -96,6 +99,27 @@ public class AccessPointExporter {
 			x.printStackTrace();
 			System.exit(0);
 		}
+	}
+
+	private static String toKey(String url) {
+		StringBuilder builder = new StringBuilder();
+		
+		for (String segment: url.split("/")) {
+			if (Pattern.matches("[0-9]+", segment)) {
+				builder.append("/");
+				builder.append("[##]");
+			}
+			else if (segment.length() == 40 && Pattern.matches("[0-9a-f]+", segment)) {
+				builder.append("/");
+				builder.append("[##]");
+			}
+			else {
+				builder.append("/");
+				builder.append(segment);
+			}
+		}
+		
+		return builder.toString();
 	}
 
 }
