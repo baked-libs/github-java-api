@@ -50,7 +50,7 @@ public class GitHubMilestone extends RepositoryFeature {
 		}
 		JsonObject response = element.getAsJsonObject();
 		
-		return isInvalid(response, "creator") ? null: new GitHubUser(api, response.get("creator").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
+		return isInvalid(response, "creator") ? null: new GitHubUser(api, response.get("creator").getAsJsonObject().get("login").getAsString(), response.get("creator").getAsJsonObject());
 	}
 
 	@GitHubAccessPoint(path = "@description", type = String.class)

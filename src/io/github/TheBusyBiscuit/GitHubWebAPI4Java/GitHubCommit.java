@@ -184,6 +184,32 @@ public class GitHubCommit extends GitHubObject {
 		return files;
 	}
 
+	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class)
+	public List<GitHubComment> getComments() throws IllegalAccessException {
+		GitHubObject repos = new GitHubObject(api, this, "/comments");
+		JsonElement response = repos.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubComment> list = new ArrayList<GitHubComment>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubComment comment = new GitHubComment(api, getRepository(), object.get("id").getAsInt(), object);
+	    	list.add(comment);
+	    }
+		
+		return list;
+	}
+
+	public GitHubComment getComment(int id) throws IllegalAccessException {
+		return new GitHubComment(api, getRepository(), id);
+	}
+
 	public RepositorySnapshot getSnapshot() {
 		return new RepositorySnapshot(this);
 	}
