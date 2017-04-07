@@ -413,4 +413,16 @@ public class GitHubPullRequest extends RepositoryFeature {
 	public GitHubComment getComment(int id) throws IllegalAccessException {
 		return new GitHubComment(api, getRepository(), id);
 	}
+
+	@GitHubAccessPoint(path = "@comments", type = Integer.class)
+	public int getCommentsAmount() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, "comments") ? null: response.get("comments").getAsInt();
+	}
 }

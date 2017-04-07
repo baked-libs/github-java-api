@@ -210,6 +210,18 @@ public class GitHubCommit extends GitHubObject {
 		return new GitHubComment(api, getRepository(), id);
 	}
 
+	@GitHubAccessPoint(path = "@commit/comment_count", type = Integer.class)
+	public int getCommentsAmount() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject().get("commit").getAsJsonObject();
+
+		return isInvalid(response, "comment_count") ? null: response.get("comment_count").getAsInt();
+	}
+
 	public RepositorySnapshot getSnapshot() {
 		return new RepositorySnapshot(this);
 	}
