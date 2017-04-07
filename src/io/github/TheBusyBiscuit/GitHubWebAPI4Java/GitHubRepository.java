@@ -970,8 +970,8 @@ public class GitHubRepository extends UniqueGitHubObject {
 	
 	@GitHubAccessPoint(path = "/git/refs", type = GitHubReference.class)
 	public List<GitHubReference> getReferences() throws IllegalAccessException {
-		GitHubObject repos = new GitHubObject(api, this, "/git/refs");
-		JsonElement response = repos.getResponse(true);
+		GitHubObject refs = new GitHubObject(api, this, "/git/refs");
+		JsonElement response = refs.getResponse(true);
 		
 		if (response == null) {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
@@ -985,6 +985,50 @@ public class GitHubRepository extends UniqueGitHubObject {
 	    	
 	    	GitHubReference ref = new GitHubReference(api, this, object.get("ref").getAsString(), object);
 	    	list.add(ref);
+	    }
+		
+		return list;
+	}
+	
+	@GitHubAccessPoint(path = "/tags", type = GitHubTag.class)
+	public List<GitHubTag> getTags() throws IllegalAccessException {
+		GitHubObject tags = new GitHubObject(api, this, "/tags");
+		JsonElement response = tags.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubTag> list = new ArrayList<GitHubTag>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubTag tag = new GitHubTag(api, this, object);
+	    	list.add(tag);
+	    }
+		
+		return list;
+	}
+	
+	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class)
+	public List<GitHubComment> getCommitComments() throws IllegalAccessException {
+		GitHubObject comments = new GitHubObject(api, this, "/comments");
+		JsonElement response = comments.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubComment> list = new ArrayList<GitHubComment>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubComment comment = new GitHubComment(api, this, object.get("id").getAsInt(), object);
+	    	list.add(comment);
 	    }
 		
 		return list;
