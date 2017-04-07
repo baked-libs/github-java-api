@@ -967,5 +967,26 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 		return isInvalid(response, "pushed_at") ? null: GitHubDate.parse(response.get("pushed_at").getAsString());
 	}
-
+	
+	@GitHubAccessPoint(path = "/git/refs", type = GitHubReference.class)
+	public List<GitHubReference> getReferences() throws IllegalAccessException {
+		GitHubObject repos = new GitHubObject(api, this, "/git/refs");
+		JsonElement response = repos.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubReference> list = new ArrayList<GitHubReference>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubReference ref = new GitHubReference(api, this, object.get("ref").getAsString(), object);
+	    	list.add(ref);
+	    }
+		
+		return list;
+	}
 }
