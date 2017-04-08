@@ -1,10 +1,14 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java.test;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,13 +61,16 @@ public class AccessPointVisualizer {
 		blacklist.put(GitHubPullRequest.class, Arrays.asList("assignee", "_links/issue", "_links/comments", "_links/commits"));
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		run(true);
 	}
 	
-	protected static void run(boolean openVisualizer) {
+	protected static void run(boolean openVisualizer) throws IOException {
 		setupBlacklist();
-		GitHubWebAPI api = new GitHubWebAPI();
+		
+		String token = new String(Files.readAllBytes(Paths.get("E:\\Projects\\Eclipse\\GitHubWebAPI4Java\\ACCESS_TOKEN")), StandardCharsets.UTF_8);
+		
+		GitHubWebAPI api = new GitHubWebAPI(token);
 		Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 		
 		GitHubUser user = api.getUser("TheBusyBiscuit");
@@ -409,17 +416,17 @@ public class AccessPointVisualizer {
 
 				@Override
 				public int compare(String o1, String o2) {
-					if (o1.contains("\"GITHUB_ACCESS_POINT\"") && !o2.contains("\"GITHUB_ACCESS_POINT\"")) {
-						return -1;
-					}
-					else if (o1.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"") && !o2.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"")) {
-						return -1;
-					}
-					else if (!o1.contains("\"GITHUB_ACCESS_POINT\"") && o2.contains("\"GITHUB_ACCESS_POINT\"")) {
+					if (!o1.contains("\"GITHUB_ACCESS_POINT\"") && o2.contains("\"GITHUB_ACCESS_POINT\"")) {
 						return 1;
 					}
 					else if (!o1.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"") && o2.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"")) {
 						return 1;
+					}
+					else if (o1.contains("\"GITHUB_ACCESS_POINT\"") && !o2.contains("\"GITHUB_ACCESS_POINT\"")) {
+						return -1;
+					}
+					else if (o1.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"") && !o2.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"")) {
+						return -1;
 					}
 					else {
 						return 0;

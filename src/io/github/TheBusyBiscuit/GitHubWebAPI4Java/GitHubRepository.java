@@ -148,6 +148,28 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
+	@GitHubAccessPoint(path = "/collaborators", type = GitHubCollaborator.class, requiresAccessToken = true)
+	public List<GitHubCollaborator> getCollaborators() throws IllegalAccessException {
+		GitHubObject users = new GitHubObject(api, this, "/collaborators");
+		JsonElement response = users.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubCollaborator> list = new ArrayList<GitHubCollaborator>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubCollaborator user = new GitHubCollaborator(api, object.get("login").getAsString(), object);
+	    	list.add(user);
+	    }
+		
+		return list;
+	}
+
 	@GitHubAccessPoint(path = "/languages", type = GitHubLanguage.class, requiresAccessToken = false)
 	public List<GitHubLanguage> getLanguages() throws IllegalAccessException {
 		GitHubObject langs = new GitHubObject(api, this, "/languages");

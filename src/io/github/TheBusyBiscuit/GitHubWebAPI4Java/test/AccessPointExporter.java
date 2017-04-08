@@ -1,6 +1,7 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java.test;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,7 +15,7 @@ import com.google.gson.JsonObject;
 
 public class AccessPointExporter {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 		
 		AccessPointVisualizer.run(false);
