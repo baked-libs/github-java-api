@@ -32,7 +32,7 @@ public class GitHubObject extends Object {
 		return this.getURL(suffix);
 	}
 
-	@GitHubAccessPoint(path = "@url", type = String.class)
+	@GitHubAccessPoint(path = "@url", type = String.class, requiresAccessToken = false)
 	protected String getURL(String suffix) {
 		if (parent == null) {
 			return suffix;

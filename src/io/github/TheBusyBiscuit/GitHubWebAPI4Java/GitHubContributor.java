@@ -15,7 +15,7 @@ public class GitHubContributor extends GitHubUser {
 		super(obj);
 	}
 
-	@GitHubAccessPoint(path = "@contributions", type = Integer.class)
+	@GitHubAccessPoint(path = "@contributions", type = Integer.class, requiresAccessToken = false)
 	public int getContributionsAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

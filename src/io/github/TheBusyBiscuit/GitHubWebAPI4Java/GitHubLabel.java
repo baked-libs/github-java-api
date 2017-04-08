@@ -37,7 +37,7 @@ public class GitHubLabel extends GitHubObject {
 		return ".*repos/.*/.*/labels/.*";
 	}
 	
-	@GitHubAccessPoint(path = "@id", type = Integer.class)
+	@GitHubAccessPoint(path = "@id", type = Integer.class, requiresAccessToken = false)
 	public int getID() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -49,7 +49,7 @@ public class GitHubLabel extends GitHubObject {
 		return isInvalid(response, "id") ? null: response.get("id").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@name", type = String.class)
+	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -61,7 +61,7 @@ public class GitHubLabel extends GitHubObject {
 		return isInvalid(response, "name") ? null: response.get("name").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@color", type = String.class)
+	@GitHubAccessPoint(path = "@color", type = String.class, requiresAccessToken = false)
 	public String getColor() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -73,7 +73,7 @@ public class GitHubLabel extends GitHubObject {
 		return isInvalid(response, "color") ? null: response.get("color").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@default", type = Boolean.class)
+	@GitHubAccessPoint(path = "@default", type = Boolean.class, requiresAccessToken = false)
 	public boolean isDefaultLabel() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

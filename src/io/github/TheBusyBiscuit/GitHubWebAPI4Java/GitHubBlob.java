@@ -25,7 +25,7 @@ public class GitHubBlob extends GitHubFile {
 	}
 
 	@Override
-	@GitHubAccessPoint(path = "@size", type = Integer.class)
+	@GitHubAccessPoint(path = "@size", type = Integer.class, requiresAccessToken = false)
 	public int getSize() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -37,7 +37,7 @@ public class GitHubBlob extends GitHubFile {
 		return isInvalid(response, "size") ? null: response.get("size").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@content", type = String.class)
+	@GitHubAccessPoint(path = "@content", type = String.class, requiresAccessToken = false)
 	public String getFileContent() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -49,7 +49,7 @@ public class GitHubBlob extends GitHubFile {
 		return isInvalid(response, "content") ? null: response.get("content").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@encoding", type = String.class)
+	@GitHubAccessPoint(path = "@encoding", type = String.class, requiresAccessToken = false)
 	public String getEncoding() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		

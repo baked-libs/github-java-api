@@ -39,12 +39,12 @@ public class GitHubPullRequest extends RepositoryFeature {
 	}
 	
 	@Override
-	@GitHubAccessPoint(path = "@_links/self/href", type = String.class)
+	@GitHubAccessPoint(path = "@_links/self/href", type = String.class, requiresAccessToken = false)
 	public String getRawURL() {
 		return ".*repos/.*/.*/pulls/.*";
 	}
 
-	@GitHubAccessPoint(path = "@user", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@user", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getUser() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -56,7 +56,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@locked", type = Boolean.class)
+	@GitHubAccessPoint(path = "@locked", type = Boolean.class, requiresAccessToken = false)
 	public boolean isLocked() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -68,7 +68,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "locked") ? false: response.get("locked").getAsBoolean();
 	}
 	
-	@GitHubAccessPoint(path = "@base/label", type = String.class)
+	@GitHubAccessPoint(path = "@base/label", type = String.class, requiresAccessToken = false)
 	public String getBaseLabel() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -80,7 +80,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "label") ? null: response.get("label").getAsString();
 	}
 	
-	@GitHubAccessPoint(path = "@base/user", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@base/user", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getBaseUser() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -92,7 +92,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
 	}
 	
-	@GitHubAccessPoint(path = "@base/repo", type = GitHubRepository.class)
+	@GitHubAccessPoint(path = "@base/repo", type = GitHubRepository.class, requiresAccessToken = false)
 	public GitHubRepository getBaseRepository() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -104,7 +104,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "repo") ? null: new GitHubRepository(api, response.get("repo").getAsJsonObject().get("full_name").getAsString(), response.get("repo").getAsJsonObject());
 	}
 	
-	@GitHubAccessPoint(path = "@base/ref", type = GitHubBranch.class)
+	@GitHubAccessPoint(path = "@base/ref", type = GitHubBranch.class, requiresAccessToken = false)
 	public GitHubBranch getBaseBranch() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -116,7 +116,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "ref") ? null: new GitHubBranch(api, getBaseRepository(), response.get("ref").getAsString());
 	}
 	
-	@GitHubAccessPoint(path = "@base/sha", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "@base/sha", type = GitHubCommit.class, requiresAccessToken = false)
 	public GitHubCommit getBaseCommit() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -128,7 +128,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "sha") ? null: new GitHubCommit(api, getBaseRepository(), response.get("sha").getAsString());
 	}
 	
-	@GitHubAccessPoint(path = "@head/label", type = String.class)
+	@GitHubAccessPoint(path = "@head/label", type = String.class, requiresAccessToken = false)
 	public String getHeadLabel() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -140,7 +140,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "label") ? null: response.get("label").getAsString();
 	}
 	
-	@GitHubAccessPoint(path = "@head/user", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@head/user", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getHeadUser() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -152,7 +152,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
 	}
 	
-	@GitHubAccessPoint(path = "@head/repo", type = GitHubRepository.class)
+	@GitHubAccessPoint(path = "@head/repo", type = GitHubRepository.class, requiresAccessToken = false)
 	public GitHubRepository getHeadRepository() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -164,7 +164,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "repo") ? null: new GitHubRepository(api, response.get("repo").getAsJsonObject().get("full_name").getAsString(), response.get("repo").getAsJsonObject());
 	}
 	
-	@GitHubAccessPoint(path = "@head/ref", type = GitHubBranch.class)
+	@GitHubAccessPoint(path = "@head/ref", type = GitHubBranch.class, requiresAccessToken = false)
 	public GitHubBranch getHeadBranch() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -176,7 +176,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "ref") ? null: new GitHubBranch(api, getHeadRepository(), response.get("ref").getAsString());
 	}
 	
-	@GitHubAccessPoint(path = "@head/sha", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "@head/sha", type = GitHubCommit.class, requiresAccessToken = false)
 	public GitHubCommit getHeadCommit() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -188,12 +188,12 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "sha") ? null: new GitHubCommit(api, getHeadRepository(), response.get("sha").getAsString());
 	}
 
-	@GitHubAccessPoint(path = "@_links/self/commits", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "@_links/self/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getCommits() throws IllegalAccessException {
 		return this.getCommits(1);
 	}
 
-	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getAllCommits() throws IllegalAccessException {
 		List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
 		
@@ -210,7 +210,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return commits;
 	}
 
-	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getCommits(int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
@@ -242,7 +242,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "@changed_files", type = Integer.class)
+	@GitHubAccessPoint(path = "@changed_files", type = Integer.class, requiresAccessToken = false)
 	public int getFileChanges() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -254,7 +254,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "changed_files") ? null: response.get("changed_files").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@additions", type = Integer.class)
+	@GitHubAccessPoint(path = "@additions", type = Integer.class, requiresAccessToken = false)
 	public int getAdditions() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -266,7 +266,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "additions") ? null: response.get("additions").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@deletions", type = Integer.class)
+	@GitHubAccessPoint(path = "@deletions", type = Integer.class, requiresAccessToken = false)
 	public int getDeletions() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -278,7 +278,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "deletions") ? null: response.get("deletions").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@commits", type = Integer.class)
+	@GitHubAccessPoint(path = "@commits", type = Integer.class, requiresAccessToken = false)
 	public int getCommitsAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -290,7 +290,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "commits") ? null: response.get("commits").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@merged_by", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@merged_by", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getMergedBy() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -302,7 +302,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "merged_by") ? null: new GitHubUser(api, response.get("merged_by").getAsJsonObject().get("login").getAsString(), response.get("closed_by").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@milestone", type = GitHubMilestone.class)
+	@GitHubAccessPoint(path = "@milestone", type = GitHubMilestone.class, requiresAccessToken = false)
 	public GitHubMilestone getMilestone() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -314,7 +314,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "milestone") ? null: new GitHubMilestone(api, getRepository(), response.get("milestone").getAsJsonObject().get("number").getAsInt(), response.get("milestone").getAsJsonObject());
 	}
 	
-	@GitHubAccessPoint(path = "@merged", type = Boolean.class)
+	@GitHubAccessPoint(path = "@merged", type = Boolean.class, requiresAccessToken = false)
 	public boolean isMerged() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -326,7 +326,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "merged") ? false: response.get("merged").getAsBoolean();
 	}
 	
-	@GitHubAccessPoint(path = "@mergeable", type = Boolean.class)
+	@GitHubAccessPoint(path = "@mergeable", type = Boolean.class, requiresAccessToken = false)
 	public boolean isMergeable() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -338,7 +338,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "mergeable") ? false: response.get("mergeable").getAsBoolean();
 	}
 
-	@GitHubAccessPoint(path = "@body", type = String.class)
+	@GitHubAccessPoint(path = "@body", type = String.class, requiresAccessToken = false)
 	public String getMessageBody() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -350,7 +350,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "body") ? null: response.get("body").getAsString();
 	}
 	
-	@GitHubAccessPoint(path = "@merged_at", type = Date.class)
+	@GitHubAccessPoint(path = "@merged_at", type = Date.class, requiresAccessToken = false)
 	public Date getMergedDate() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -362,12 +362,12 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return isInvalid(response, "merged_at") ? null: GitHubDate.parse(response.get("merged_at").getAsString());
 	}
 
-	@GitHubAccessPoint(path = "@issue_url", type = GitHubIssue.class)
+	@GitHubAccessPoint(path = "@issue_url", type = GitHubIssue.class, requiresAccessToken = false)
 	public GitHubIssue toIssue() throws IllegalAccessException {
 		return new GitHubIssue(api, getRepository(), getNumber());
 	}
 
-	@GitHubAccessPoint(path = "@assignees", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@assignees", type = GitHubUser.class, requiresAccessToken = false)
 	public List<GitHubUser> getAssignees() throws IllegalAccessException, UnsupportedEncodingException {
 		JsonElement element = getResponse(false);
 		
@@ -388,7 +388,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return users;
 	}
 
-	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class)
+	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class, requiresAccessToken = false)
 	public List<GitHubComment> getComments() throws IllegalAccessException {
 		GitHubObject repos = new GitHubObject(api, this, "/comments");
 		JsonElement response = repos.getResponse(true);
@@ -414,7 +414,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 		return new GitHubComment(api, getRepository(), id);
 	}
 
-	@GitHubAccessPoint(path = "@comments", type = Integer.class)
+	@GitHubAccessPoint(path = "@comments", type = Integer.class, requiresAccessToken = false)
 	public int getCommentsAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

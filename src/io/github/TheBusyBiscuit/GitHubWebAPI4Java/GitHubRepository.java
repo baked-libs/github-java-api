@@ -38,7 +38,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return ".*repos/.*/.*";
 	}
 
-	@GitHubAccessPoint(path = "/forks", type = GitHubRepository.class)
+	@GitHubAccessPoint(path = "/forks", type = GitHubRepository.class, requiresAccessToken = false)
 	public List<GitHubRepository> getForks() throws IllegalAccessException {
 		GitHubObject repos = new GitHubObject(api, this, "/forks");
 		JsonElement response = repos.getResponse(true);
@@ -60,7 +60,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class)
+	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class, requiresAccessToken = false)
 	public List<GitHubBranch> getBranches() throws IllegalAccessException {
 		GitHubObject branches = new GitHubObject(api, this, "/branches");
 		JsonElement response = branches.getResponse(true);
@@ -82,7 +82,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/stargazers", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "/stargazers", type = GitHubUser.class, requiresAccessToken = false)
 	public List<GitHubUser> getStargazers() throws IllegalAccessException {
 		GitHubObject users = new GitHubObject(api, this, "/stargazers");
 		JsonElement response = users.getResponse(true);
@@ -104,7 +104,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/subscribers", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "/subscribers", type = GitHubUser.class, requiresAccessToken = false)
 	public List<GitHubUser> getSubscribers() throws IllegalAccessException {
 		GitHubObject users = new GitHubObject(api, this, "/subscribers");
 		JsonElement response = users.getResponse(true);
@@ -126,7 +126,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/contributors", type = GitHubContributor.class)
+	@GitHubAccessPoint(path = "/contributors", type = GitHubContributor.class, requiresAccessToken = false)
 	public List<GitHubContributor> getContributors() throws IllegalAccessException {
 		GitHubObject users = new GitHubObject(api, this, "/contributors");
 		JsonElement response = users.getResponse(true);
@@ -148,7 +148,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/languages", type = GitHubLanguage.class)
+	@GitHubAccessPoint(path = "/languages", type = GitHubLanguage.class, requiresAccessToken = false)
 	public List<GitHubLanguage> getLanguages() throws IllegalAccessException {
 		GitHubObject langs = new GitHubObject(api, this, "/languages");
 		JsonElement response = langs.getResponse(true);
@@ -167,7 +167,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/assignees", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "/assignees", type = GitHubUser.class, requiresAccessToken = false)
 	public List<GitHubUser> getAvailableAssignees() throws IllegalAccessException {
 		GitHubObject users = new GitHubObject(api, this, "/assignees");
 		JsonElement response = users.getResponse(true);
@@ -189,12 +189,12 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getCommits() throws IllegalAccessException {
 		return this.getCommits(1);
 	}
 
-	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getAllCommits() throws IllegalAccessException {
 		List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
 		
@@ -211,7 +211,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return commits;
 	}
 
-	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getCommits(int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
@@ -243,7 +243,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/downloads", type = GitHubDownload.class)
+	@GitHubAccessPoint(path = "/downloads", type = GitHubDownload.class, requiresAccessToken = false)
 	public List<GitHubDownload> getDownloads() throws IllegalAccessException {
 		GitHubObject downloads = new GitHubObject(api, this, "/downloads");
 		JsonElement response = downloads.getResponse(true);
@@ -265,7 +265,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues() throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
@@ -300,7 +300,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
@@ -333,7 +333,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final GitHubLabel label) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
@@ -367,7 +367,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state, final GitHubLabel label) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
@@ -401,7 +401,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final GitHubMilestone milestone) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
@@ -439,7 +439,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final GitHubLabel label, final GitHubMilestone milestone) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
@@ -478,7 +478,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class)
+	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state, final GitHubLabel label, final GitHubMilestone milestone) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
@@ -517,7 +517,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 	
-	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class)
+	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests() throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
 			
@@ -552,7 +552,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class)
+	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests(final RepositoryFeature.State state) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
 			
@@ -586,7 +586,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class)
+	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests(final GitHubMilestone milestone) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
 			
@@ -625,7 +625,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class)
+	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests(final RepositoryFeature.State state, final GitHubMilestone milestone) throws IllegalAccessException {
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
 			
@@ -664,7 +664,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/labels", type = GitHubLabel.class)
+	@GitHubAccessPoint(path = "/labels", type = GitHubLabel.class, requiresAccessToken = false)
 	public List<GitHubLabel> getLabels() throws IllegalAccessException, UnsupportedEncodingException {
 		GitHubObject labels = new GitHubObject(api, this, "/labels");
 		JsonElement response = labels.getResponse(true);
@@ -686,7 +686,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/milestones", type = GitHubMilestone.class)
+	@GitHubAccessPoint(path = "/milestones", type = GitHubMilestone.class, requiresAccessToken = false)
 	public List<GitHubMilestone> getMilestones() throws IllegalAccessException, UnsupportedEncodingException {
 		GitHubObject labels = new GitHubObject(api, this, "/milestones");
 		JsonElement response = labels.getResponse(true);
@@ -708,7 +708,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "@owner", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@owner", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getOwner() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -720,7 +720,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "owner") ? null: new GitHubUser(api, response.get("owner").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@name", type = String.class)
+	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -732,7 +732,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "name") ? null: response.get("name").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@full_name", type = String.class)
+	@GitHubAccessPoint(path = "@full_name", type = String.class, requiresAccessToken = false)
 	public String getFullName() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -744,7 +744,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "full_name") ? null: response.get("full_name").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@description", type = String.class)
+	@GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
 	public String getDescription() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -756,7 +756,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "description") ? null: response.get("description").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@fork", type = Boolean.class)
+	@GitHubAccessPoint(path = "@fork", type = Boolean.class, requiresAccessToken = false)
 	public boolean isFork() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -768,7 +768,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "fork") ? false: response.get("fork").getAsBoolean();
 	}
 
-	@GitHubAccessPoint(path = "@has_issues", type = Boolean.class)
+	@GitHubAccessPoint(path = "@has_issues", type = Boolean.class, requiresAccessToken = false)
 	public boolean hasIssues() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -780,7 +780,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "has_issues") ? false: response.get("has_issues").getAsBoolean();
 	}
 
-	@GitHubAccessPoint(path = "@has_downloads", type = Boolean.class)
+	@GitHubAccessPoint(path = "@has_downloads", type = Boolean.class, requiresAccessToken = false)
 	public boolean hasDownloads() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -792,7 +792,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "has_downloads") ? false: response.get("has_downloads").getAsBoolean();
 	}
 
-	@GitHubAccessPoint(path = "@has_wiki", type = Boolean.class)
+	@GitHubAccessPoint(path = "@has_wiki", type = Boolean.class, requiresAccessToken = false)
 	public boolean hasWiki() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -804,7 +804,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "has_wiki") ? false: response.get("has_wiki").getAsBoolean();
 	}
 
-	@GitHubAccessPoint(path = "@has_pages", type = Boolean.class)
+	@GitHubAccessPoint(path = "@has_pages", type = Boolean.class, requiresAccessToken = false)
 	public boolean hasPages() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -816,7 +816,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "has_pages") ? false: response.get("has_pages").getAsBoolean();
 	}
 
-	@GitHubAccessPoint(path = "@has_projects", type = Boolean.class)
+	@GitHubAccessPoint(path = "@has_projects", type = Boolean.class, requiresAccessToken = false)
 	public boolean hasProjects() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -828,7 +828,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "has_projects") ? false: response.get("has_projects").getAsBoolean();
 	}
 
-	@GitHubAccessPoint(path = "@homepage", type = String.class)
+	@GitHubAccessPoint(path = "@homepage", type = String.class, requiresAccessToken = false)
 	public String getWebsite() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -840,7 +840,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "homepage") ? null: response.get("homepage").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@size", type = Integer.class)
+	@GitHubAccessPoint(path = "@size", type = Integer.class, requiresAccessToken = false)
 	public int getSize() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -852,7 +852,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "size") ? null: response.get("size").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@stargazers_count", type = Integer.class)
+	@GitHubAccessPoint(path = "@stargazers_count", type = Integer.class, requiresAccessToken = false)
 	public int getStargazersAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -864,7 +864,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "stargazers_count") ? null: response.get("stargazers_count").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@watchers_count", type = Integer.class)
+	@GitHubAccessPoint(path = "@watchers_count", type = Integer.class, requiresAccessToken = false)
 	public int getWatchersAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -876,7 +876,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "watchers_count") ? null: response.get("watchers_count").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@forks_count", type = Integer.class)
+	@GitHubAccessPoint(path = "@forks_count", type = Integer.class, requiresAccessToken = false)
 	public int getForksAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -888,7 +888,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "forks_count") ? null: response.get("forks_count").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@open_issues_count", type = Integer.class)
+	@GitHubAccessPoint(path = "@open_issues_count", type = Integer.class, requiresAccessToken = false)
 	public int getOpenIssuesAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -900,7 +900,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "open_issues_count") ? null: response.get("open_issues_count").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@subscribers_count", type = Integer.class)
+	@GitHubAccessPoint(path = "@subscribers_count", type = Integer.class, requiresAccessToken = false)
 	public int getSubscribersAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -912,7 +912,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "subscribers_count") ? null: response.get("subscribers_count").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@language", type = GitHubLanguage.class)
+	@GitHubAccessPoint(path = "@language", type = GitHubLanguage.class, requiresAccessToken = false)
 	public GitHubLanguage getDominantLanguage() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -924,7 +924,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "language") ? null: new GitHubLanguage(api, this, response.get("language").getAsString());
 	}
 
-	@GitHubAccessPoint(path = "@default_branch", type = GitHubBranch.class)
+	@GitHubAccessPoint(path = "@default_branch", type = GitHubBranch.class, requiresAccessToken = false)
 	public GitHubBranch getDefaultBranch() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -956,7 +956,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return new GitHubLabel(api, this, name);
 	}
 
-	@GitHubAccessPoint(path = "@pushed_at", type = Date.class)
+	@GitHubAccessPoint(path = "@pushed_at", type = Date.class, requiresAccessToken = false)
 	public Date getLastPushedDate() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -968,7 +968,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "pushed_at") ? null: GitHubDate.parse(response.get("pushed_at").getAsString());
 	}
 	
-	@GitHubAccessPoint(path = "/git/refs", type = GitHubReference.class)
+	@GitHubAccessPoint(path = "/git/refs", type = GitHubReference.class, requiresAccessToken = false)
 	public List<GitHubReference> getReferences() throws IllegalAccessException {
 		GitHubObject refs = new GitHubObject(api, this, "/git/refs");
 		JsonElement response = refs.getResponse(true);
@@ -990,7 +990,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 	
-	@GitHubAccessPoint(path = "/tags", type = GitHubTag.class)
+	@GitHubAccessPoint(path = "/tags", type = GitHubTag.class, requiresAccessToken = false)
 	public List<GitHubTag> getTags() throws IllegalAccessException {
 		GitHubObject tags = new GitHubObject(api, this, "/tags");
 		JsonElement response = tags.getResponse(true);
@@ -1012,7 +1012,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 	
-	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class)
+	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class, requiresAccessToken = false)
 	public List<GitHubComment> getCommitComments() throws IllegalAccessException {
 		GitHubObject comments = new GitHubObject(api, this, "/comments");
 		JsonElement response = comments.getResponse(true);

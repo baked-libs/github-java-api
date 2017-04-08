@@ -35,7 +35,7 @@ public class GitHubTag extends GitHubObject {
 		return ".*repos/.*/.*/tags.*";
 	}
 
-	@GitHubAccessPoint(path = "@name", type = String.class)
+	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
 		if (minimal == null) {
 			throw new IllegalAccessException("Invalid GitHubTag Instance.");
@@ -46,7 +46,7 @@ public class GitHubTag extends GitHubObject {
 		return isInvalid(response, "name") ? null: response.get("name").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@commit", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "@commit", type = GitHubCommit.class, requiresAccessToken = false)
 	public GitHubCommit getCommit() throws IllegalAccessException {
 		if (minimal == null) {
 			throw new IllegalAccessException("Invalid GitHubTag Instance.");

@@ -36,7 +36,7 @@ public class GitHubIssue extends RepositoryFeature {
 		return ".*repos/.*/.*/issues/.*";
 	}
 
-	@GitHubAccessPoint(path = "@user", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@user", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getUser() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -48,7 +48,7 @@ public class GitHubIssue extends RepositoryFeature {
 		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@locked", type = Boolean.class)
+	@GitHubAccessPoint(path = "@locked", type = Boolean.class, requiresAccessToken = false)
 	public boolean isLocked() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -60,12 +60,12 @@ public class GitHubIssue extends RepositoryFeature {
 		return isInvalid(response, "locked") ? false: response.get("locked").getAsBoolean();
 	}
 	
-	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class)
+	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class, requiresAccessToken = false)
 	public GitHubRepository getRepository() {
 		return this.repo;
 	}
 
-	@GitHubAccessPoint(path = "@labels", type = GitHubLabel.class)
+	@GitHubAccessPoint(path = "@labels", type = GitHubLabel.class, requiresAccessToken = false)
 	public List<GitHubLabel> getLabels() throws IllegalAccessException, UnsupportedEncodingException {
 		JsonElement element = getResponse(false);
 		
@@ -86,7 +86,7 @@ public class GitHubIssue extends RepositoryFeature {
 		return labels;
 	}
 
-	@GitHubAccessPoint(path = "@closed_by", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@closed_by", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getClosedBy() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -98,7 +98,7 @@ public class GitHubIssue extends RepositoryFeature {
 		return isInvalid(response, "closed_by") ? null: new GitHubUser(api, response.get("closed_by").getAsJsonObject().get("login").getAsString(), response.get("closed_by").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@milestone", type = GitHubMilestone.class)
+	@GitHubAccessPoint(path = "@milestone", type = GitHubMilestone.class, requiresAccessToken = false)
 	public GitHubMilestone getMilestone() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -110,7 +110,7 @@ public class GitHubIssue extends RepositoryFeature {
 		return isInvalid(response, "milestone") ? null: new GitHubMilestone(api, getRepository(), response.get("milestone").getAsJsonObject().get("number").getAsInt(), response.get("milestone").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@body", type = String.class)
+	@GitHubAccessPoint(path = "@body", type = String.class, requiresAccessToken = false)
 	public String getMessageBody() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -122,7 +122,7 @@ public class GitHubIssue extends RepositoryFeature {
 		return isInvalid(response, "body") ? null: response.get("body").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@assignees", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@assignees", type = GitHubUser.class, requiresAccessToken = false)
 	public List<GitHubUser> getAssignees() throws IllegalAccessException, UnsupportedEncodingException {
 		JsonElement element = getResponse(false);
 		
@@ -143,7 +143,7 @@ public class GitHubIssue extends RepositoryFeature {
 		return users;
 	}
 
-	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class)
+	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class, requiresAccessToken = false)
 	public List<GitHubComment> getComments() throws IllegalAccessException {
 		GitHubObject repos = new GitHubObject(api, this, "/comments");
 		JsonElement response = repos.getResponse(true);
@@ -169,7 +169,7 @@ public class GitHubIssue extends RepositoryFeature {
 		return new GitHubComment(api, getRepository(), id);
 	}
 
-	@GitHubAccessPoint(path = "@comments", type = Integer.class)
+	@GitHubAccessPoint(path = "@comments", type = Integer.class, requiresAccessToken = false)
 	public int getCommentsAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

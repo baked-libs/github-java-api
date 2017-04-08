@@ -10,5 +10,6 @@ public @interface GitHubAccessPoint {
 	
 	String path();
 	Class<?> type();
-
+	boolean requiresAccessToken();
+	
 }

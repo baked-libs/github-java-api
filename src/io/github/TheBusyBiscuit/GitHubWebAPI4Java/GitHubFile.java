@@ -30,7 +30,7 @@ public class GitHubFile extends GitHubObject {
 		return this.repo;
 	}
 
-	@GitHubAccessPoint(path = "@sha", type = String.class)
+	@GitHubAccessPoint(path = "@sha", type = String.class, requiresAccessToken = false)
 	public String getID() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -42,7 +42,7 @@ public class GitHubFile extends GitHubObject {
 		return isInvalid(response, "sha") ? null: response.get("sha").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@path", type = String.class)
+	@GitHubAccessPoint(path = "@path", type = String.class, requiresAccessToken = false)
 	public String getFile() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -55,7 +55,7 @@ public class GitHubFile extends GitHubObject {
 		return isInvalid(response, "path") ? null: response.get("path").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@type", type = String.class)
+	@GitHubAccessPoint(path = "@type", type = String.class, requiresAccessToken = false)
 	public String getType() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -68,7 +68,7 @@ public class GitHubFile extends GitHubObject {
 		return isInvalid(response, "type") ? null: response.get("type").getAsString();
 	}
 	
-	@GitHubAccessPoint(path = "@size", type = Integer.class)
+	@GitHubAccessPoint(path = "@size", type = Integer.class, requiresAccessToken = false)
 	public int getSize() throws IllegalAccessException {
 		return 0;
 	}

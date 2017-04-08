@@ -17,7 +17,7 @@ public class UniqueGitHubObject extends GitHubObject {
 		super(obj);
 	}
 
-	@GitHubAccessPoint(path = "@id", type = Integer.class)
+	@GitHubAccessPoint(path = "@id", type = Integer.class, requiresAccessToken = false)
 	public int getID() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -29,7 +29,7 @@ public class UniqueGitHubObject extends GitHubObject {
 		return isInvalid(response, "id") ? null: response.get("id").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@created_at", type = Date.class)
+	@GitHubAccessPoint(path = "@created_at", type = Date.class, requiresAccessToken = false)
 	public Date getCreationDate() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -41,7 +41,7 @@ public class UniqueGitHubObject extends GitHubObject {
 		return isInvalid(response, "created_at") ? null: GitHubDate.parse(response.get("created_at").getAsString());
 	}
 
-	@GitHubAccessPoint(path = "@updated_at", type = Date.class)
+	@GitHubAccessPoint(path = "@updated_at", type = Date.class, requiresAccessToken = false)
 	public Date getLastUpdatedDate() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		

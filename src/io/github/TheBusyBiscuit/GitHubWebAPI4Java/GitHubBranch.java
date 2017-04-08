@@ -30,12 +30,11 @@ public class GitHubBranch extends GitHubObject {
 	}
 	
 	@Override
-	@GitHubAccessPoint(path = "@_links/self", type = String.class)
 	public String getRawURL() {
 		return ".*repos/.*/.*/branches/.*";
 	}
 	
-	@GitHubAccessPoint(path = "@name", type = String.class)
+	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -47,7 +46,7 @@ public class GitHubBranch extends GitHubObject {
 		return isInvalid(response, "name") ? null: response.get("name").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@commit", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "@commit", type = GitHubCommit.class, requiresAccessToken = false)
 	public GitHubCommit getLastCommit() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -73,7 +72,7 @@ public class GitHubBranch extends GitHubObject {
 		return name.equals(getRepository().getDefaultBranch().name);
 	}
 
-	@GitHubAccessPoint(path = "@_links/self", type = String.class)
+	@GitHubAccessPoint(path = "@_links/self", type = String.class, requiresAccessToken = false)
 	@Override
 	public String getURL() {
 		return super.getURL();

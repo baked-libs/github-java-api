@@ -28,7 +28,7 @@ public class GitHubGist extends GitHubObject {
 		return ".*gists/.*";
 	}
 
-	@GitHubAccessPoint(path = "@id", type = String.class)
+	@GitHubAccessPoint(path = "@id", type = String.class, requiresAccessToken = false)
 	public String getID() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -40,7 +40,7 @@ public class GitHubGist extends GitHubObject {
 		return isInvalid(response, "id") ? null: response.get("id").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@created_at", type = Date.class)
+	@GitHubAccessPoint(path = "@created_at", type = Date.class, requiresAccessToken = false)
 	public Date getCreationDate() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -52,7 +52,7 @@ public class GitHubGist extends GitHubObject {
 		return isInvalid(response, "created_at") ? null: GitHubDate.parse(response.get("created_at").getAsString());
 	}
 
-	@GitHubAccessPoint(path = "@updated_at", type = Date.class)
+	@GitHubAccessPoint(path = "@updated_at", type = Date.class, requiresAccessToken = false)
 	public Date getLastUpdatedDate() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -64,7 +64,7 @@ public class GitHubGist extends GitHubObject {
 		return isInvalid(response, "updated_at") ? null: GitHubDate.parse(response.get("updated_at").getAsString());
 	}
 
-	@GitHubAccessPoint(path = "@owner", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@owner", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getOwner() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -76,7 +76,7 @@ public class GitHubGist extends GitHubObject {
 		return isInvalid(response, "owner") ? null: new GitHubUser(api, response.get("owner").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@description", type = String.class)
+	@GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
 	public String getDescription() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

@@ -17,7 +17,7 @@ public class RepositoryFeature extends UniqueGitHubObject {
 		super(obj);
 	}
 	
-	@GitHubAccessPoint(path = "@number", type = Integer.class)
+	@GitHubAccessPoint(path = "@number", type = Integer.class, requiresAccessToken = false)
 	public int getNumber() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -29,7 +29,7 @@ public class RepositoryFeature extends UniqueGitHubObject {
 		return isInvalid(response, "number") ? null: response.get("number").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@title", type = String.class)
+	@GitHubAccessPoint(path = "@title", type = String.class, requiresAccessToken = false)
 	public String getTitle() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -41,7 +41,7 @@ public class RepositoryFeature extends UniqueGitHubObject {
 		return isInvalid(response, "title") ? null: response.get("title").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@state", type = State.class)
+	@GitHubAccessPoint(path = "@state", type = State.class, requiresAccessToken = false)
 	public State getState() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -53,7 +53,7 @@ public class RepositoryFeature extends UniqueGitHubObject {
 		return isInvalid(response, "state") ? null: State.valueOf(response.get("state").getAsString().toUpperCase());
 	}
 	
-	@GitHubAccessPoint(path = "@closed_at", type = Date.class)
+	@GitHubAccessPoint(path = "@closed_at", type = Date.class, requiresAccessToken = false)
 	public Date getClosedDate() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		

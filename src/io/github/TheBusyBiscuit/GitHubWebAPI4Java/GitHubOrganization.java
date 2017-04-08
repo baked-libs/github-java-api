@@ -30,7 +30,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return ".*orgs/.*";
 	}
 
-	@GitHubAccessPoint(path = "/repos", type = GitHubRepository.class)
+	@GitHubAccessPoint(path = "/repos", type = GitHubRepository.class, requiresAccessToken = false)
 	public List<GitHubRepository> getRepositories() throws IllegalAccessException {
 		GitHubObject repos = new GitHubObject(api, this, "/repos");
 		JsonElement response = repos.getResponse(true);
@@ -52,7 +52,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "/members", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "/members", type = GitHubUser.class, requiresAccessToken = false)
 	public List<GitHubUser> getMembers() throws IllegalAccessException {
 		GitHubObject users = new GitHubObject(api, this, "/members");
 		JsonElement response = users.getResponse(true);
@@ -74,7 +74,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "@name", type = String.class)
+	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -86,7 +86,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return isInvalid(response, "name") ? null: response.get("name").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@login", type = String.class)
+	@GitHubAccessPoint(path = "@login", type = String.class, requiresAccessToken = false)
 	public String getUsername() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -98,7 +98,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return isInvalid(response, "login") ? null: response.get("login").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@description", type = String.class)
+	@GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
 	public String getDescription() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -110,7 +110,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return isInvalid(response, "description") ? null: response.get("description").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@avatar_url", type = String.class)
+	@GitHubAccessPoint(path = "@avatar_url", type = String.class, requiresAccessToken = false)
 	public String getAvatarURL() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -122,7 +122,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return isInvalid(response, "avatar_url") ? null: response.get("avatar_url").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@type", type = String.class)
+	@GitHubAccessPoint(path = "@type", type = String.class, requiresAccessToken = false)
 	public String getType() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -134,7 +134,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return isInvalid(response, "type") ? null: response.get("type").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@blog", type = String.class)
+	@GitHubAccessPoint(path = "@blog", type = String.class, requiresAccessToken = false)
 	public String getWebsite() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -146,7 +146,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return isInvalid(response, "blog") ? null: response.get("blog").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@company", type = String.class)
+	@GitHubAccessPoint(path = "@company", type = String.class, requiresAccessToken = false)
 	public String getCompany() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -158,7 +158,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return isInvalid(response, "company") ? null: response.get("company").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@location", type = String.class)
+	@GitHubAccessPoint(path = "@location", type = String.class, requiresAccessToken = false)
 	public String getLocation() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -170,7 +170,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 		return isInvalid(response, "location") ? null: response.get("location").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@email", type = String.class)
+	@GitHubAccessPoint(path = "@email", type = String.class, requiresAccessToken = false)
 	public String getEmailAdress() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		

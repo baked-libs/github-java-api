@@ -25,33 +25,33 @@ public class GitHubFileChange extends GitHubBlob {
 		super(obj);
 	}
 	
-	@GitHubAccessPoint(path = "@changes", type = Integer.class)
+	@GitHubAccessPoint(path = "@changes", type = Integer.class, requiresAccessToken = false)
 	public int getTotalChanges() throws IllegalAccessException {
 		return isInvalid(obj, "changes") ? null: obj.get("changes").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@additions", type = Integer.class)
+	@GitHubAccessPoint(path = "@additions", type = Integer.class, requiresAccessToken = false)
 	public int getAdditions() throws IllegalAccessException {
 		return isInvalid(obj, "additions") ? null: obj.get("additions").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@deletions", type = Integer.class)
+	@GitHubAccessPoint(path = "@deletions", type = Integer.class, requiresAccessToken = false)
 	public int getDeletions() throws IllegalAccessException {
 		return isInvalid(obj, "deletions") ? null: obj.get("deletions").getAsInt();
 	}
 	
-	@GitHubAccessPoint(path = "@status", type = Status.class)
+	@GitHubAccessPoint(path = "@status", type = Status.class, requiresAccessToken = false)
 	public Status getStatus() throws IllegalAccessException {
 		return isInvalid(obj, "status") ? null: Status.valueOf(obj.get("status").getAsString().toUpperCase());
 	}
 	
 	@Override
-	@GitHubAccessPoint(path = "@filename", type = String.class)
+	@GitHubAccessPoint(path = "@filename", type = String.class, requiresAccessToken = false)
 	public String getFile() throws IllegalAccessException {
 		return isInvalid(obj, "filename") ? null: obj.get("filename").getAsString();
 	}
 	
-	@GitHubAccessPoint(path = "@blob_url", type = GitHubBlob.class)
+	@GitHubAccessPoint(path = "@blob_url", type = GitHubBlob.class, requiresAccessToken = false)
 	public GitHubBlob getAsBlob() {
 		return this;
 	}

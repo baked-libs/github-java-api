@@ -31,12 +31,12 @@ public class GitHubReference extends GitHubObject {
 	}
 	
 	@Override
-	@GitHubAccessPoint(path = "@object/url", type = String.class)
+	@GitHubAccessPoint(path = "@object/url", type = String.class, requiresAccessToken = false)
 	public String getRawURL() {
 		return ".*repos/.*/.*/git/refs/.*";
 	}
 
-	@GitHubAccessPoint(path = "@ref", type = String.class)
+	@GitHubAccessPoint(path = "@ref", type = String.class, requiresAccessToken = false)
 	public String getID() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -48,7 +48,7 @@ public class GitHubReference extends GitHubObject {
 		return isInvalid(response, "ref") ? null: response.get("ref").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@object/type", type = ReferenceType.class)
+	@GitHubAccessPoint(path = "@object/type", type = ReferenceType.class, requiresAccessToken = false)
 	public ReferenceType getType() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -60,7 +60,7 @@ public class GitHubReference extends GitHubObject {
 		return isInvalid(response, "type") ? null: ReferenceType.valueOf(response.get("type").getAsString().toUpperCase());
 	}
 
-	@GitHubAccessPoint(path = "@object/sha", type = String.class)
+	@GitHubAccessPoint(path = "@object/sha", type = String.class, requiresAccessToken = false)
 	public String getSHA() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

@@ -41,7 +41,7 @@ public class GitHubMilestone extends RepositoryFeature {
 		return ".*repos/.*/.*/milestones/.*";
 	}
 	
-	@GitHubAccessPoint(path = "@creator", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@creator", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getCreator() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -53,7 +53,7 @@ public class GitHubMilestone extends RepositoryFeature {
 		return isInvalid(response, "creator") ? null: new GitHubUser(api, response.get("creator").getAsJsonObject().get("login").getAsString(), response.get("creator").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@description", type = String.class)
+	@GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
 	public String getDescription() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -65,7 +65,7 @@ public class GitHubMilestone extends RepositoryFeature {
 		return isInvalid(response, "description") ? null: response.get("description").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "/labels", type = GitHubLabel.class)
+	@GitHubAccessPoint(path = "/labels", type = GitHubLabel.class, requiresAccessToken = false)
 	public List<GitHubLabel> getLabels() throws IllegalAccessException, UnsupportedEncodingException {
 		GitHubObject repos = new GitHubObject(api, this, "/labels");
 		JsonElement response = repos.getResponse(true);
@@ -87,7 +87,7 @@ public class GitHubMilestone extends RepositoryFeature {
 		return list;
 	}
 
-	@GitHubAccessPoint(path = "@open_issues", type = Integer.class)
+	@GitHubAccessPoint(path = "@open_issues", type = Integer.class, requiresAccessToken = false)
 	public int getOpenIssuesAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -99,7 +99,7 @@ public class GitHubMilestone extends RepositoryFeature {
 		return isInvalid(response, "open_issues") ? null: response.get("open_issues").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@closed_issues", type = Integer.class)
+	@GitHubAccessPoint(path = "@closed_issues", type = Integer.class, requiresAccessToken = false)
 	public int getClosedIssuesAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -111,7 +111,7 @@ public class GitHubMilestone extends RepositoryFeature {
 		return isInvalid(response, "closed_issues") ? null: response.get("closed_issues").getAsInt();
 	}
 	
-	@GitHubAccessPoint(path = "@due_on", type = Date.class)
+	@GitHubAccessPoint(path = "@due_on", type = Date.class, requiresAccessToken = false)
 	public Date getDueDate() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

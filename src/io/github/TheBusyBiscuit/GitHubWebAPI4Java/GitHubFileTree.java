@@ -45,7 +45,7 @@ public class GitHubFileTree extends GitHubFile {
 		return params;
 	}
 
-	@GitHubAccessPoint(path = "@tree", type = GitHubFile.class)
+	@GitHubAccessPoint(path = "@tree", type = GitHubFile.class, requiresAccessToken = false)
 	public List<GitHubFile> getFiles() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		

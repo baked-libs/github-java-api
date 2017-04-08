@@ -26,7 +26,7 @@ public class GitHubComment extends UniqueGitHubObject {
 		return ".*repos/.*/.*/comments/.*";
 	}
 	
-	@GitHubAccessPoint(path = "@user", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@user", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getUser() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -38,7 +38,7 @@ public class GitHubComment extends UniqueGitHubObject {
 		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("user").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@body", type = String.class)
+	@GitHubAccessPoint(path = "@body", type = String.class, requiresAccessToken = false)
 	public String getMessageBody() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

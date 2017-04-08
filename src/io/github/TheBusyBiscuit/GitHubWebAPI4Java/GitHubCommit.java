@@ -36,12 +36,12 @@ public class GitHubCommit extends GitHubObject {
 	}
 	
 	@Override
-	@GitHubAccessPoint(path = "@commit/url", type = String.class)
+	@GitHubAccessPoint(path = "@commit/url", type = String.class, requiresAccessToken = false)
 	public String getRawURL() {
 		return ".*repos/.*/.*/commits/.*";
 	}
 
-	@GitHubAccessPoint(path = "@sha", type = String.class)
+	@GitHubAccessPoint(path = "@sha", type = String.class, requiresAccessToken = false)
 	public String getID() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -53,7 +53,7 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "sha") ? null: response.get("sha").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@author", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@author", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getAuthor() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -65,7 +65,7 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "author") ? null: new GitHubUser(api, response.get("author").getAsJsonObject().get("login").getAsString(), response.get("author").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@committer", type = GitHubUser.class)
+	@GitHubAccessPoint(path = "@committer", type = GitHubUser.class, requiresAccessToken = false)
 	public GitHubUser getCommitter() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -77,7 +77,7 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "committer") ? null: new GitHubUser(api, response.get("committer").getAsJsonObject().get("login").getAsString(), response.get("committer").getAsJsonObject());
 	}
 
-	@GitHubAccessPoint(path = "@stats/total", type = Integer.class)
+	@GitHubAccessPoint(path = "@stats/total", type = Integer.class, requiresAccessToken = false)
 	public int getTotalChanges() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -89,7 +89,7 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "total") ? null: response.get("total").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@stats/additions", type = Integer.class)
+	@GitHubAccessPoint(path = "@stats/additions", type = Integer.class, requiresAccessToken = false)
 	public int getAdditions() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -101,7 +101,7 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "additions") ? null: response.get("additions").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@stats/deletions", type = Integer.class)
+	@GitHubAccessPoint(path = "@stats/deletions", type = Integer.class, requiresAccessToken = false)
 	public int getDeletions() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -113,7 +113,7 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "deletions") ? null: response.get("deletions").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@parents", type = GitHubCommit.class)
+	@GitHubAccessPoint(path = "@parents", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getParents() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -134,7 +134,7 @@ public class GitHubCommit extends GitHubObject {
 		return parents;
 	}
 
-	@GitHubAccessPoint(path = "@commit/message", type = String.class)
+	@GitHubAccessPoint(path = "@commit/message", type = String.class, requiresAccessToken = false)
 	public String getMessage() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -146,7 +146,7 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "message") ? null: response.get("message").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@commit/tree", type = GitHubFileTree.class)
+	@GitHubAccessPoint(path = "@commit/tree", type = GitHubFileTree.class, requiresAccessToken = false)
 	public GitHubFileTree getFileTree() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -158,7 +158,7 @@ public class GitHubCommit extends GitHubObject {
 		return isInvalid(response, "sha") ? null: new GitHubFileTree(api, repo, response.get("sha").getAsString(), true);
 	}
 
-	@GitHubAccessPoint(path = "@files", type = GitHubFileChange.class)
+	@GitHubAccessPoint(path = "@files", type = GitHubFileChange.class, requiresAccessToken = false)
 	public List<GitHubFileChange> getFileChanges() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -184,7 +184,7 @@ public class GitHubCommit extends GitHubObject {
 		return files;
 	}
 
-	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class)
+	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class, requiresAccessToken = false)
 	public List<GitHubComment> getComments() throws IllegalAccessException {
 		GitHubObject repos = new GitHubObject(api, this, "/comments");
 		JsonElement response = repos.getResponse(true);
@@ -210,7 +210,7 @@ public class GitHubCommit extends GitHubObject {
 		return new GitHubComment(api, getRepository(), id);
 	}
 
-	@GitHubAccessPoint(path = "@commit/comment_count", type = Integer.class)
+	@GitHubAccessPoint(path = "@commit/comment_count", type = Integer.class, requiresAccessToken = false)
 	public int getCommentsAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		

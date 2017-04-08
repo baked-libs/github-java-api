@@ -28,7 +28,7 @@ public class GitHubDownload extends GitHubObject {
 		return ".*repos/.*/.*/downloads/.*";
 	}
 
-	@GitHubAccessPoint(path = "@id", type = Integer.class)
+	@GitHubAccessPoint(path = "@id", type = Integer.class, requiresAccessToken = false)
 	public int getID() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -40,7 +40,7 @@ public class GitHubDownload extends GitHubObject {
 		return isInvalid(response, "id") ? null: response.get("id").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@created_at", type = Date.class)
+	@GitHubAccessPoint(path = "@created_at", type = Date.class, requiresAccessToken = false)
 	public Date getCreationDate() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
@@ -52,7 +52,7 @@ public class GitHubDownload extends GitHubObject {
 		return isInvalid(response, "created_at") ? null: GitHubDate.parse(response.get("created_at").getAsString());
 	}
 	
-	@GitHubAccessPoint(path = "@size", type = Integer.class)
+	@GitHubAccessPoint(path = "@size", type = Integer.class, requiresAccessToken = false)
 	public int getSize() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -64,7 +64,7 @@ public class GitHubDownload extends GitHubObject {
 		return isInvalid(response, "size") ? null: response.get("size").getAsInt();
 	}
 	
-	@GitHubAccessPoint(path = "@download_count", type = Integer.class)
+	@GitHubAccessPoint(path = "@download_count", type = Integer.class, requiresAccessToken = false)
 	public int getDownloads() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -76,7 +76,7 @@ public class GitHubDownload extends GitHubObject {
 		return isInvalid(response, "download_count") ? null: response.get("download_count").getAsInt();
 	}
 
-	@GitHubAccessPoint(path = "@content_type", type = String.class)
+	@GitHubAccessPoint(path = "@content_type", type = String.class, requiresAccessToken = false)
 	public String getContentType() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -88,7 +88,7 @@ public class GitHubDownload extends GitHubObject {
 		return isInvalid(response, "content_type") ? null: response.get("content_type").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@name", type = String.class)
+	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
@@ -100,7 +100,7 @@ public class GitHubDownload extends GitHubObject {
 		return isInvalid(response, "name") ? null: response.get("name").getAsString();
 	}
 
-	@GitHubAccessPoint(path = "@description", type = String.class)
+	@GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
 	public String getDescription() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
