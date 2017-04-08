@@ -240,9 +240,12 @@ public class AccessPointVisualizer {
 		
 		return dominantParent;
 	}
+	
+	static int o = 0;
 
 	private static void analyseObject(GitHubWebAPI api, Gson gson, GitHubObject object) {
-		System.out.println("Scanning '" + object.getURL() + "'...");
+		System.out.println("(" + o + ") Scanning '" + object.getURL() + "'...");
+		o++;
 		JsonElement element = object.getRawResponseAsJson();
 		
 		if (element == null) {
