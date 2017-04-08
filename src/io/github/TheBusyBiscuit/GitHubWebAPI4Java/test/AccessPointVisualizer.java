@@ -50,6 +50,7 @@ public class AccessPointVisualizer {
 	public static Map<Class<?>, List<String>> blacklist = new HashMap<Class<?>, List<String>>();
 	
 	private static void setupBlacklist() {
+		blacklist.put(GitHubUser.class, Arrays.asList("plan", "two_factor_authentication"));
 		blacklist.put(GitHubCommit.class, Arrays.asList("commit/committer", "commit/author"));
 		blacklist.put(GitHubRepository.class, Arrays.asList("forks", "watchers", "open_issues", "permissions", "trees_url"));
 		blacklist.put(GitHubIssue.class, Arrays.asList("assignee", "labels_url"));
@@ -256,6 +257,9 @@ public class AccessPointVisualizer {
 			if (line.contains("\\\"GITHUB_ACCESS_POINT\\\"")) {
 				builder.append("<font color=#44FF44>" + line.replace("\\\"GITHUB_ACCESS_POINT\\\"", "") + "</font><br>");
 			}
+			else if (line.contains("\\\"GITHUB_AUTHENTICATED_ACCESS_POINT\\\"")) {
+				builder.append("<font color=#FFCE00>" + line.replace("\\\"GITHUB_AUTHENTICATED_ACCESS_POINT\\\"", "") + "</font><br>");
+			}
 			else if (line.endsWith("{") || line.endsWith("}") || line.endsWith("},")) {
 				builder.append("<font color=#DDDDDD>" + line + "</font><br>");
 			}
@@ -306,7 +310,7 @@ public class AccessPointVisualizer {
 			Map<String, JsonElement> content = new HashMap<String, JsonElement>();
 			
 			for (Map.Entry<String, JsonElement> json: obj.entrySet()) {
-				boolean colored = false;
+				GitHubAccessPoint ap = null;
 				
 				String p = path + (path == "" ? "": "/") + json.getKey();
 				
@@ -319,7 +323,7 @@ public class AccessPointVisualizer {
 						if (url.contains("@")) {
 							String attribute = url.split("@")[1];
 							if (attribute.equals(p)) {
-								colored = true;
+								ap = entry.getValue();
 								break query;
 							}
 						}
@@ -327,7 +331,7 @@ public class AccessPointVisualizer {
 							Pattern pattern = Pattern.compile(regex);
 							final Matcher matcher = pattern.matcher(json.getValue().getAsString());
 							if (matcher.matches()) {
-								colored = true;
+								ap = entry.getValue();
 								
 								if (entry.getValue() != null) {
 									Class<?> c = entry.getValue().type();
@@ -386,8 +390,13 @@ public class AccessPointVisualizer {
 					}
 				}
 				
-				if (colored) {
-					content.put("\"GITHUB_ACCESS_POINT\"" + json.getKey(), json.getValue());
+				if (ap != null) {
+					if (ap.requiresAccessToken()) {
+						content.put("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"" + json.getKey(), json.getValue());
+					}
+					else {
+						content.put("\"GITHUB_ACCESS_POINT\"" + json.getKey(), json.getValue());
+					}
 				}
 				else {
 					content.put(json.getKey(), json.getValue());
@@ -403,7 +412,13 @@ public class AccessPointVisualizer {
 					if (o1.contains("\"GITHUB_ACCESS_POINT\"") && !o2.contains("\"GITHUB_ACCESS_POINT\"")) {
 						return -1;
 					}
+					else if (o1.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"") && !o2.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"")) {
+						return -1;
+					}
 					else if (!o1.contains("\"GITHUB_ACCESS_POINT\"") && o2.contains("\"GITHUB_ACCESS_POINT\"")) {
+						return 1;
+					}
+					else if (!o1.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"") && o2.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"")) {
 						return 1;
 					}
 					else {
@@ -415,6 +430,9 @@ public class AccessPointVisualizer {
 			for (String key: keys) {
 				if (key.contains("\"GITHUB_ACCESS_POINT\"")) {
 					obj.remove(key.replace("\"GITHUB_ACCESS_POINT\"", ""));
+				}
+				else if (key.contains("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"")) {
+					obj.remove(key.replace("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"", ""));
 				}
 				else {
 					obj.remove(key);
