@@ -241,9 +241,13 @@ public class AccessPointVisualizer {
 		return dominantParent;
 	}
 	
-	static int o = 0;
+	static int o = 1;
 
 	private static void analyseObject(GitHubWebAPI api, Gson gson, GitHubObject object) {
+		analyseObject(api, gson, object, false);
+	}
+
+	private static void analyseObject(GitHubWebAPI api, Gson gson, GitHubObject object, boolean requiresAccessToken) {
 		System.out.println("(" + o + ") Scanning '" + object.getURL() + "'...");
 		o++;
 		JsonElement element = object.getRawResponseAsJson();
@@ -255,7 +259,7 @@ public class AccessPointVisualizer {
 		}
 		
 		try {
-			colorize(api, gson, object, "", "", element);
+			colorize(api, gson, object, "", "", element, requiresAccessToken);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -287,7 +291,7 @@ public class AccessPointVisualizer {
 		data.put(label, builder.toString());
 	}
 	
-	private static void colorize(GitHubWebAPI api, Gson gson, GitHubObject object, String path, String dir, JsonElement element) throws Exception {
+	private static void colorize(GitHubWebAPI api, Gson gson, GitHubObject object, String path, String dir, JsonElement element, boolean requiresAccessToken) throws Exception {
 		if (element.isJsonArray()) {
 			JsonArray array = element.getAsJsonArray();
 			
@@ -296,7 +300,7 @@ public class AccessPointVisualizer {
 			}
 			
 			for (int i = 0; i < array.size(); i++) {
-				colorize(api, gson, object, path, dir, array.get(i));
+				colorize(api, gson, object, path, dir, array.get(i), requiresAccessToken);
 			}
 		}
 		else if (element.isJsonObject()) {
@@ -353,7 +357,7 @@ public class AccessPointVisualizer {
 											GitHubObject o = new GitHubObject(api, null, url);
 											
 											try {
-												analyseObject(api, gson, (GitHubObject) constructor.newInstance(o));
+												analyseObject(api, gson, (GitHubObject) constructor.newInstance(o), ap.requiresAccessToken());
 											} catch (Exception e) {
 												e.printStackTrace();
 											}
@@ -385,7 +389,7 @@ public class AccessPointVisualizer {
 											GitHubObject o = new GitHubObject(api, null, object.getURL());
 											GitHubObject dummy = (GitHubObject) constructor.newInstance(o);
 											
-											colorize(api, gson, dummy, p, p, json.getValue());
+											colorize(api, gson, dummy, p, p, json.getValue(), requiresAccessToken);
 										}
 									}
 								}
@@ -393,7 +397,7 @@ public class AccessPointVisualizer {
 								break query;
 							}
 							else if (attribute.contains("/") && attribute.startsWith(p + "/")) {
-								colorize(api, gson, object, p, dir, json.getValue());
+								colorize(api, gson, object, p, dir, json.getValue(), requiresAccessToken);
 								break query;
 							}
 						}
@@ -401,7 +405,7 @@ public class AccessPointVisualizer {
 				}
 				
 				if (ap != null) {
-					if (ap.requiresAccessToken()) {
+					if (requiresAccessToken || ap.requiresAccessToken()) {
 						content.put("\"GITHUB_AUTHENTICATED_ACCESS_POINT\"" + json.getKey(), json.getValue());
 					}
 					else {
