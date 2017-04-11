@@ -241,7 +241,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
-	public List<GitHubCommit> getCommits(int page) throws IllegalAccessException {
+	public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
 		
@@ -253,6 +253,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			}
 			
 		};
+		
 		JsonElement response = commits.getResponse(true);
 		
 		if (response == null) {

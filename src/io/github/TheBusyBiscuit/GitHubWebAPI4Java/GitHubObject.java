@@ -31,6 +31,22 @@ public class GitHubObject extends Object {
 	public String getURL() {
 		return this.getURL(suffix);
 	}
+	
+	protected String getFullURL() {
+		String query = getURL();
+		
+		if (getParameters() != null) {
+			boolean first = true;
+			
+			for (Map.Entry<String, String> parameter: getParameters().entrySet()) {
+				query += (first ? "?": "&") + parameter.getKey() + "=" + parameter.getValue();
+				
+				first = false;
+			}
+		}
+		
+		return query;
+	}
 
 	@GitHubAccessPoint(path = "@url", type = String.class, requiresAccessToken = false)
 	protected String getURL(String suffix) {
@@ -73,8 +89,8 @@ public class GitHubObject extends Object {
 			return response;
 		}
 		
-		if (api.cache.containsKey(getURL())) {
-			response = api.cache.get(getURL());
+		if (api.cache.containsKey(getFullURL())) {
+			response = api.cache.get(getFullURL());
 		}
 		else {
 			this.response = api.call(this);
@@ -83,7 +99,7 @@ public class GitHubObject extends Object {
 				return null;
 			}
 			
-			api.cache.put(getURL(), response);
+			api.cache.put(getFullURL(), response);
 		}
 		
 		return response;
