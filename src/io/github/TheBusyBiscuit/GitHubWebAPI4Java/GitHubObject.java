@@ -76,7 +76,7 @@ public class GitHubObject extends Object {
 		return this.getResponse(true);
 	}
 	
-	protected JsonElement getResponse(boolean full) {
+	public JsonElement getResponse(boolean full) {
 		if (!full && minimal != null) {
 			return minimal;
 		}
