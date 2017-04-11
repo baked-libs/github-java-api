@@ -128,7 +128,7 @@ public class GitHubCommit extends GitHubObject {
 		
 		for (int i = 0; i < array.size(); i++) {
 			JsonObject obj = array.get(i).getAsJsonObject();
-			parents.add(new GitHubCommit(api, repo, obj.get("sha").getAsString(), obj));
+			parents.add(new GitHubCommit(api, repo, obj.get("sha").getAsString()));
 		}
 		
 		return parents;
