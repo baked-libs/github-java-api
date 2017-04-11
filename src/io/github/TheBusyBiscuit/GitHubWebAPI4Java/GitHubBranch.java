@@ -57,7 +57,7 @@ public class GitHubBranch extends GitHubObject {
 		
 		if (!isInvalid(response, "commit")) {
 			if (!isInvalid(response.getAsJsonObject().get("commit").getAsJsonObject(), "sha")) {
-				return new GitHubCommit(api, getRepository(), response.getAsJsonObject().get("commit").getAsJsonObject().get("sha").getAsString(), response.getAsJsonObject().get("commit").getAsJsonObject());
+				return new GitHubCommit(api, getRepository(), response.getAsJsonObject().get("commit").getAsJsonObject().get("sha").getAsString());
 			}
 		}
 		
