@@ -47,8 +47,41 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/forks", type = GitHubRepository.class, requiresAccessToken = false)
 	public List<GitHubRepository> getForks() throws IllegalAccessException {
-		GitHubObject repos = new GitHubObject(api, this, "/forks");
-		JsonElement response = repos.getResponse(true);
+		return getForks(1);
+	}
+
+	@GitHubAccessPoint(path = "/forks", type = GitHubRepository.class, requiresAccessToken = false)
+	public List<GitHubRepository> getAllForks() throws IllegalAccessException {
+		List<GitHubRepository> forks = new ArrayList<GitHubRepository>();
+		
+		int i = 2;
+		List<GitHubRepository> temp = getForks(1);
+		
+		while (!temp.isEmpty()) {
+			forks.addAll(temp);
+			
+			temp = getForks(i);
+			i++;
+		}
+		
+		return forks;
+	}
+
+	@GitHubAccessPoint(path = "/forks", type = GitHubRepository.class, requiresAccessToken = false)
+	public List<GitHubRepository> getForks(final int page) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("page", String.valueOf(page));
+		
+		GitHubObject forks = new GitHubObject(api, this, "/forks") {
+			
+			@Override
+			public Map<String, String> getParameters() {
+				return params;
+			}
+			
+		};
+		
+		JsonElement response = forks.getResponse(true);
 		
 		if (response == null) {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
