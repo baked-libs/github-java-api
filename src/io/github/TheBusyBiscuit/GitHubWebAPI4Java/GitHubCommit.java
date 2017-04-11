@@ -161,7 +161,7 @@ public class GitHubCommit extends GitHubObject {
 
 	@GitHubAccessPoint(path = "@commit/committer/date", type = Date.class, requiresAccessToken = false)
 	public Date getDate() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
+		JsonElement element = getResponse(false);
 		
 		if (element == null) {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
