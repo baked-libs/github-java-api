@@ -214,6 +214,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 	public List<GitHubCommit> getCommits(int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
+		params.put("per_page", "100");
 		
 		GitHubObject commits = new GitHubObject(api, this, "/commits") {
 			

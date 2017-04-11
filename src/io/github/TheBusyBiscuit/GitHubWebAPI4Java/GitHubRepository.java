@@ -71,6 +71,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	public List<GitHubRepository> getForks(final int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
+		params.put("per_page", "100");
 		
 		GitHubObject forks = new GitHubObject(api, this, "/forks") {
 			
@@ -277,6 +278,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
+		params.put("per_page", "100");
 		
 		GitHubObject commits = new GitHubObject(api, this, "/commits") {
 			
