@@ -988,6 +988,10 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return new GitHubLabel(api, this, name);
 	}
 
+	public GitHubCommit getCommit(String sha) throws IllegalAccessException {
+		return new GitHubCommit(api, this, sha);
+	}
+
 	@GitHubAccessPoint(path = "@pushed_at", type = Date.class, requiresAccessToken = false)
 	public Date getLastPushedDate() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
