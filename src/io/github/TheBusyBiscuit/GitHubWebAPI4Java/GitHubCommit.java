@@ -135,6 +135,27 @@ public class GitHubCommit extends GitHubObject {
 		return parents;
 	}
 
+	@GitHubAccessPoint(path = "@parents", type = String.class, requiresAccessToken = false)
+	public List<String> getParentHashes() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		List<String> parents = new ArrayList<String>();
+		
+		JsonArray array = response.get("parents").getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+			JsonObject obj = array.get(i).getAsJsonObject();
+			parents.add(obj.get("sha").getAsString());
+		}
+		
+		return parents;
+	}
+
 	@GitHubAccessPoint(path = "@commit/message", type = String.class, requiresAccessToken = false)
 	public String getMessage() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
