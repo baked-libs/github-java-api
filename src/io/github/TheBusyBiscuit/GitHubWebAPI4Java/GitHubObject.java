@@ -32,7 +32,7 @@ public class GitHubObject extends Object {
 		return this.getURL(suffix);
 	}
 	
-	protected String getFullURL() {
+	public String getFullURL() {
 		String query = getURL();
 		
 		if (getParameters() != null) {
