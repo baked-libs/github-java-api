@@ -1,6 +1,7 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -156,6 +157,18 @@ public class GitHubCommit extends GitHubObject {
 		JsonObject response = element.getAsJsonObject().get("commit").getAsJsonObject().get("tree").getAsJsonObject();
 		
 		return isInvalid(response, "sha") ? null: new GitHubFileTree(api, repo, response.get("sha").getAsString(), true);
+	}
+
+	@GitHubAccessPoint(path = "@commit/committer/date", type = Date.class, requiresAccessToken = false)
+	public Date getDate() throws IllegalAccessException {
+		JsonElement element = getResponse(true);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject().get("commit").getAsJsonObject().get("committer").getAsJsonObject();
+
+		return isInvalid(response, "date") ? null: GitHubDate.parse(response.get("date").getAsString());
 	}
 
 	@GitHubAccessPoint(path = "@files", type = GitHubFileChange.class, requiresAccessToken = false)
