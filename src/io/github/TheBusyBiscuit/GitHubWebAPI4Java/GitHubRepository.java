@@ -15,12 +15,18 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
 public class GitHubRepository extends UniqueGitHubObject {
 	
+	String fullname = null;
+	
 	public GitHubRepository(GitHubWebAPI api, String username, String repo) {
 		super(api, null, "repos/" + username + "/" + repo);
+		
+		this.fullname = username + "/" + repo;
 	}
 	
 	public GitHubRepository(GitHubWebAPI api, String name) {
 		super(api, null, "repos/" + name);
+		
+		this.fullname = name;
 	}
 
 	public GitHubRepository(GitHubObject obj) {
@@ -30,6 +36,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	public GitHubRepository(GitHubWebAPI api, String name, JsonElement response) {
 		super(api, null, "repos/" + name);
 		
+		this.fullname = name;
 		this.minimal = response;
 	}
 	
@@ -756,6 +763,8 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "@full_name", type = String.class, requiresAccessToken = false)
 	public String getFullName() throws IllegalAccessException {
+		if (fullname != null) return this.fullname;
+		
 		JsonElement element = getResponse(false);
 		
 		if (element == null) {
