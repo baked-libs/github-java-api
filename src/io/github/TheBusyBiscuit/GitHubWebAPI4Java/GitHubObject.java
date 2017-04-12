@@ -15,6 +15,8 @@ public class GitHubObject extends Object {
 	
 	protected JsonElement response = null;
 	protected JsonElement minimal = null;
+	
+	private boolean debug = false;
 
 	public GitHubObject(GitHubWebAPI api, GitHubObject parent, String suffix) {
 		this.api = api;
@@ -26,6 +28,10 @@ public class GitHubObject extends Object {
 		this.api = object.api;
 		this.parent = object.parent;
 		this.suffix = object.suffix;
+	}
+	
+	public void debug(boolean debug) {
+		this.debug = debug;
 	}
 
 	public String getURL() {
@@ -77,34 +83,48 @@ public class GitHubObject extends Object {
 	}
 	
 	public JsonElement getResponse(boolean full) {
+		log("Pinging '" + getFullURL() + "'");
 		if (!full && minimal != null) {
+			log(" Returned locally cached (minfiied!) version.");
 			return minimal;
 		}
 		
 		if (response != null) {
 			if (response.isJsonObject() && ((JsonObject) response).has("documentation_url")) {
+				log(" Connection failed!");
 				return null;
 			}
-			
+
+			log(" Returned locally cached (full!) version.");
 			return response;
 		}
 		
 		if (api.cache.containsKey(getFullURL())) {
+			log(" Returned globally cached (full!) version.");
 			response = api.cache.get(getFullURL());
 		}
 		else {
+			log(" Establishing Connection...");
 			this.response = api.call(this);
 			
 			if (response.isJsonObject() && ((JsonObject) response).has("documentation_url")) {
+				log(" Connection failed!");
 				return null;
 			}
-			
+
+			log(" Caching Object.");
 			api.cache.put(getFullURL(), response);
 		}
 		
 		return response;
 	}
 	
+	protected void log(String message) {
+		if (debug) {
+			System.out.println(message);
+		}
+	}
+
 	protected boolean isInvalid(JsonObject response, String key) {
 		if (!response.has(key)) {
 			return true;
@@ -128,7 +148,7 @@ public class GitHubObject extends Object {
 	}
 	
 	public void clearCache() {
-		String url = getURL();
+		String url = getFullURL();
 		if (api.cache.containsKey(url)) {
 			api.cache.remove(url);
 		}
