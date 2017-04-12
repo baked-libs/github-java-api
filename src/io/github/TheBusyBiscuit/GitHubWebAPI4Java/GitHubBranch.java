@@ -69,6 +69,24 @@ public class GitHubBranch extends GitHubObject {
 		
 		return null;
 	}
+
+	@GitHubAccessPoint(path = "@commit/sha", type = String.class, requiresAccessToken = false)
+	public String getLastCommitSHA() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		if (!isInvalid(response, "commit")) {
+			if (!isInvalid(response.getAsJsonObject().get("commit").getAsJsonObject(), "sha")) {
+				return response.getAsJsonObject().get("commit").getAsJsonObject().get("sha").getAsString();
+			}
+		}
+		
+		return null;
+	}
 	
 	public GitHubRepository getRepository() {
 		return this.repo;
