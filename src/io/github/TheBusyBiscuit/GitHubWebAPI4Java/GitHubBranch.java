@@ -112,7 +112,7 @@ public class GitHubBranch extends GitHubObject {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("sha", this.getName());
 		params.put("page", String.valueOf(page));
-		params.put("per_page", "100");
+		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
 		
 		GitHubObject commits = new GitHubObject(api, getRepository(), "/commits") {
 			

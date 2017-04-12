@@ -18,6 +18,8 @@ public class GitHubWebAPI {
 	private String token = "";
 	public Map<String, JsonElement> cache = new HashMap<String, JsonElement>();
 	
+	public static int ITEMS_PER_PAGE = 100;
+	
 	public GitHubWebAPI() {
 		
 	}

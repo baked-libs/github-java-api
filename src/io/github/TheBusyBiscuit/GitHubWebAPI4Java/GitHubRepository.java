@@ -71,7 +71,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	public List<GitHubRepository> getForks(final int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
-		params.put("per_page", "100");
+		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
 		
 		GitHubObject forks = new GitHubObject(api, this, "/forks") {
 			
@@ -127,7 +127,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	public List<GitHubBranch> getBranches(final int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
-		params.put("per_page", "100");
+		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
 		GitHubObject branches = new GitHubObject(api, this, "/branches") {
 			
 			@Override
@@ -314,7 +314,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
-		params.put("per_page", "100");
+		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
 		
 		GitHubObject commits = new GitHubObject(api, this, "/commits") {
 			
@@ -368,15 +368,14 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues() throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", "all");
+		
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", "all");
-				
 				return params;
 			}
 			
@@ -403,14 +402,13 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", state.toString().toLowerCase());
+		
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", state.toString().toLowerCase());
-				
 				return params;
 			}
 			
@@ -436,15 +434,14 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final GitHubLabel label) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", "all");
+		params.put("labels", label.getURLEncodedParameter());
+		
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", "all");
-				params.put("labels", label.getURLEncodedParameter());
-				
 				return params;
 			}
 			
@@ -470,15 +467,14 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state, final GitHubLabel label) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", state.toString().toLowerCase());
+		params.put("labels", label.getURLEncodedParameter());
+		
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", state.toString().toLowerCase());
-				params.put("labels", label.getURLEncodedParameter());
-				
 				return params;
 			}
 			
@@ -504,19 +500,18 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final GitHubMilestone milestone) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", "all");
+		try {
+			params.put("milestone", String.valueOf(milestone.getNumber()));
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", "all");
-				try {
-					params.put("milestone", String.valueOf(milestone.getNumber()));
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-				
 				return params;
 			}
 			
@@ -542,20 +537,19 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final GitHubLabel label, final GitHubMilestone milestone) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", "all");
+		params.put("labels", label.getURLEncodedParameter());
+		try {
+			params.put("milestone", String.valueOf(milestone.getNumber()));
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", "all");
-				params.put("labels", label.getURLEncodedParameter());
-				try {
-					params.put("milestone", String.valueOf(milestone.getNumber()));
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-				
 				return params;
 			}
 			
@@ -581,20 +575,19 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state, final GitHubLabel label, final GitHubMilestone milestone) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", state.toString().toLowerCase());
+		params.put("labels", label.getURLEncodedParameter());
+		try {
+			params.put("milestone", String.valueOf(milestone.getNumber()));
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", state.toString().toLowerCase());
-				params.put("labels", label.getURLEncodedParameter());
-				try {
-					params.put("milestone", String.valueOf(milestone.getNumber()));
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-				
 				return params;
 			}
 			
@@ -620,15 +613,14 @@ public class GitHubRepository extends UniqueGitHubObject {
 	
 	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests() throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", "all");
+		
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
 			
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", "all");
-				
 				return params;
 			}
 			
@@ -655,15 +647,13 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests(final RepositoryFeature.State state) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", state.toString().toLowerCase());
+		
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
-			
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", state.toString().toLowerCase());
-				
 				return params;
 			}
 			
@@ -689,20 +679,19 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests(final GitHubMilestone milestone) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", "all");
+		try {
+			params.put("milestone", String.valueOf(milestone.getNumber()));
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
 			
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", "all");
-				try {
-					params.put("milestone", String.valueOf(milestone.getNumber()));
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-				
 				return params;
 			}
 			
@@ -728,20 +717,18 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests(final RepositoryFeature.State state, final GitHubMilestone milestone) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("state", state.toString().toLowerCase());
+		try {
+			params.put("milestone", String.valueOf(milestone.getNumber()));
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
-			
 			
 			@Override
 			public Map<String, String> getParameters() {
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("state", state.toString().toLowerCase());
-				try {
-					params.put("milestone", String.valueOf(milestone.getNumber()));
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-				
 				return params;
 			}
 			
