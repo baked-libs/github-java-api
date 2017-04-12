@@ -100,10 +100,42 @@ public class GitHubRepository extends UniqueGitHubObject {
 		
 		return list;
 	}
-
+	
 	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class, requiresAccessToken = false)
 	public List<GitHubBranch> getBranches() throws IllegalAccessException {
-		GitHubObject branches = new GitHubObject(api, this, "/branches");
+		return getBranches(1);
+	}
+
+	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class, requiresAccessToken = false)
+	public List<GitHubBranch> getAllBranches() throws IllegalAccessException {
+		List<GitHubBranch> branches = new ArrayList<GitHubBranch>();
+		
+		int i = 2;
+		List<GitHubBranch> temp = getBranches(1);
+		
+		while (!temp.isEmpty()) {
+			branches.addAll(temp);
+			
+			temp = getBranches(i);
+			i++;
+		}
+		
+		return branches;
+	}
+
+	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class, requiresAccessToken = false)
+	public List<GitHubBranch> getBranches(final int page) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("page", String.valueOf(page));
+		params.put("per_page", "100");
+		GitHubObject branches = new GitHubObject(api, this, "/branches") {
+			
+			@Override
+			public Map<String, String> getParameters() {
+				return params;
+			}
+			
+		};
 		JsonElement response = branches.getResponse(true);
 		
 		if (response == null) {
