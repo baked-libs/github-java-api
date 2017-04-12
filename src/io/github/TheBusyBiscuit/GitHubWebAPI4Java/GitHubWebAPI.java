@@ -28,6 +28,10 @@ public class GitHubWebAPI {
 		this.token = access_token;
 	}
 	
+	public String getAccessToken() {
+		return this.token;
+	}
+	
 	public String getURL() {
 		return "https://api.github.com/";
 	}
@@ -47,7 +51,7 @@ public class GitHubWebAPI {
 	public JsonElement call(GitHubObject object) {
 		try {
 			String query = getURL() + object.getURL();
-			
+			String token = getAccessToken();
 			if (token != "") {
 				query += "?access_token=" + token;
 				
