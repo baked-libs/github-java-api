@@ -1,5 +1,11 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -76,5 +82,63 @@ public class GitHubBranch extends GitHubObject {
 	@Override
 	public String getURL() {
 		return super.getURL();
+	}
+
+	public List<GitHubCommit> getCommits() throws IllegalAccessException {
+		return this.getCommits(1);
+	}
+
+	public List<GitHubCommit> getAllCommits() throws IllegalAccessException {
+		List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
+		
+		int i = 2;
+		List<GitHubCommit> temp = getCommits(1);
+		
+		while (!temp.isEmpty()) {
+			commits.addAll(temp);
+			
+			temp = getCommits(i);
+			i++;
+		}
+		
+		return commits;
+	}
+
+	public GitHubCommit getCommit(String sha) throws IllegalAccessException {
+		return new GitHubCommit(api, getRepository(), sha);
+	}
+
+	public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("sha", this.getName());
+		params.put("page", String.valueOf(page));
+		params.put("per_page", "100");
+		
+		GitHubObject commits = new GitHubObject(api, getRepository(), "/commits") {
+			
+			@Override
+			public Map<String, String> getParameters() {
+				return params;
+			}
+			
+		};
+		
+		JsonElement response = commits.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubCommit> list = new ArrayList<GitHubCommit>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubCommit commit = new GitHubCommit(api, getRepository(), object.get("sha").getAsString(), object);
+	    	list.add(commit);
+	    }
+		
+		return list;
 	}
 }

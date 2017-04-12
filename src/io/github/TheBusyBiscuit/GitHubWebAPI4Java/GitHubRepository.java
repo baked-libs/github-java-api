@@ -274,6 +274,10 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return commits;
 	}
 
+	public GitHubCommit getCommit(String sha) throws IllegalAccessException {
+		return new GitHubCommit(api, this, sha);
+	}
+
 	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException {
 		final Map<String, String> params = new HashMap<String, String>();
@@ -1021,10 +1025,6 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	public GitHubLabel getLabel(String name) throws IllegalAccessException, UnsupportedEncodingException {
 		return new GitHubLabel(api, this, name);
-	}
-
-	public GitHubCommit getCommit(String sha) throws IllegalAccessException {
-		return new GitHubCommit(api, this, sha);
 	}
 
 	@GitHubAccessPoint(path = "@pushed_at", type = Date.class, requiresAccessToken = false)
