@@ -105,7 +105,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 	}
 	
 	@GitHubAccessPoint(path = "@base/ref", type = GitHubBranch.class, requiresAccessToken = false)
-	public GitHubBranch getBaseBranch() throws IllegalAccessException {
+	public GitHubBranch getBaseBranch() throws IllegalAccessException, UnsupportedEncodingException {
 		JsonElement element = getResponse(false);
 		
 		if (element == null) {
@@ -165,7 +165,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 	}
 	
 	@GitHubAccessPoint(path = "@head/ref", type = GitHubBranch.class, requiresAccessToken = false)
-	public GitHubBranch getHeadBranch() throws IllegalAccessException {
+	public GitHubBranch getHeadBranch() throws IllegalAccessException, UnsupportedEncodingException {
 		JsonElement element = getResponse(false);
 		
 		if (element == null) {

@@ -102,12 +102,12 @@ public class GitHubRepository extends UniqueGitHubObject {
 	}
 	
 	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class, requiresAccessToken = false)
-	public List<GitHubBranch> getBranches() throws IllegalAccessException {
+	public List<GitHubBranch> getBranches() throws IllegalAccessException, UnsupportedEncodingException {
 		return getBranches(1);
 	}
 
 	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class, requiresAccessToken = false)
-	public List<GitHubBranch> getAllBranches() throws IllegalAccessException {
+	public List<GitHubBranch> getAllBranches() throws IllegalAccessException, UnsupportedEncodingException {
 		List<GitHubBranch> branches = new ArrayList<GitHubBranch>();
 		
 		int i = 2;
@@ -124,7 +124,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class, requiresAccessToken = false)
-	public List<GitHubBranch> getBranches(final int page) throws IllegalAccessException {
+	public List<GitHubBranch> getBranches(final int page) throws IllegalAccessException, UnsupportedEncodingException {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
 		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
@@ -139,7 +139,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		JsonElement response = branches.getResponse(true);
 		
 		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+			throw new IllegalAccessException("Could not connect to '" + branches.getURL() + "'");
 		}
 		
 		List<GitHubBranch> list = new ArrayList<GitHubBranch>();
@@ -183,7 +183,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		JsonElement response = users.getResponse(true);
 		
 		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+			throw new IllegalAccessException("Could not connect to '" + users.getURL() + "'");
 		}
 		
 		List<GitHubUser> list = new ArrayList<GitHubUser>();
@@ -205,7 +205,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		JsonElement response = users.getResponse(true);
 		
 		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+			throw new IllegalAccessException("Could not connect to '" + users.getURL() + "'");
 		}
 		
 		List<GitHubContributor> list = new ArrayList<GitHubContributor>();
@@ -227,7 +227,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		JsonElement response = users.getResponse(true);
 		
 		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+			throw new IllegalAccessException("Could not connect to '" + users.getURL() + "'");
 		}
 		
 		List<GitHubCollaborator> list = new ArrayList<GitHubCollaborator>();
@@ -249,7 +249,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		JsonElement response = langs.getResponse(true);
 		
 		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+			throw new IllegalAccessException("Could not connect to '" + langs.getURL() + "'");
 		}
 		
 		List<GitHubLanguage> list = new ArrayList<GitHubLanguage>();
@@ -268,7 +268,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		JsonElement response = users.getResponse(true);
 		
 		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+			throw new IllegalAccessException("Could not connect to '" + users.getURL() + "'");
 		}
 		
 		List<GitHubUser> list = new ArrayList<GitHubUser>();
@@ -1015,7 +1015,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "@default_branch", type = GitHubBranch.class, requiresAccessToken = false)
-	public GitHubBranch getDefaultBranch() throws IllegalAccessException {
+	public GitHubBranch getDefaultBranch() throws IllegalAccessException, UnsupportedEncodingException {
 		JsonElement element = getResponse(false);
 		
 		if (element == null) {
@@ -1026,7 +1026,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return isInvalid(response, "default_branch") ? null: new GitHubBranch(api, this, response.get("default_branch").getAsString());
 	}
 
-	public GitHubBranch getBranch(String name) throws IllegalAccessException {
+	public GitHubBranch getBranch(String name) throws IllegalAccessException, UnsupportedEncodingException {
 		return new GitHubBranch(api, this, name);
 	}
 
