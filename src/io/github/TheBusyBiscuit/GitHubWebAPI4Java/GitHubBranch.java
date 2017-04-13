@@ -1,5 +1,7 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,15 +18,15 @@ public class GitHubBranch extends GitHubObject {
 	private GitHubRepository repo;
 	private String name;
 	
-	public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name) {
-		super(api, repo, "/branches/" + name);
+	public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name) throws UnsupportedEncodingException {
+		super(api, repo, "/branches/" + URLEncoder.encode(name, "utf-8"));
 		
 		this.name = name;
 		this.repo = repo;
 	}
 	
-	public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name, JsonElement response) {
-		super(api, repo, "/branches/" + name);
+	public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name, JsonElement response) throws UnsupportedEncodingException {
+		super(api, repo, "/branches/" + URLEncoder.encode(name, "utf-8"));
 
 		this.name = name;
 		this.repo = repo;
@@ -92,7 +94,7 @@ public class GitHubBranch extends GitHubObject {
 		return this.repo;
 	}
 	
-	public boolean isDefaultBranch() throws IllegalAccessException {
+	public boolean isDefaultBranch() throws IllegalAccessException, UnsupportedEncodingException {
 		return name.equals(getRepository().getDefaultBranch().name);
 	}
 
@@ -102,11 +104,11 @@ public class GitHubBranch extends GitHubObject {
 		return super.getURL();
 	}
 
-	public List<GitHubCommit> getCommits() throws IllegalAccessException {
+	public List<GitHubCommit> getCommits() throws IllegalAccessException, UnsupportedEncodingException {
 		return this.getCommits(1);
 	}
 
-	public List<GitHubCommit> getAllCommits() throws IllegalAccessException {
+	public List<GitHubCommit> getAllCommits() throws IllegalAccessException, UnsupportedEncodingException {
 		List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
 		
 		int i = 2;
@@ -126,9 +128,9 @@ public class GitHubBranch extends GitHubObject {
 		return new GitHubCommit(api, getRepository(), sha);
 	}
 
-	public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException {
+	public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException, UnsupportedEncodingException {
 		final Map<String, String> params = new HashMap<String, String>();
-		params.put("sha", this.getName());
+		params.put("sha", URLEncoder.encode(this.getName(), "utf-8"));
 		params.put("page", String.valueOf(page));
 		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
 		
