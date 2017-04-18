@@ -1123,4 +1123,32 @@ public class GitHubRepository extends UniqueGitHubObject {
 		
 		return list;
 	}
+	
+	@GitHubAccessPoint(path = "@parent", type = GitHubRepository.class, requiresAccessToken = false)
+	public GitHubRepository getForkParent() throws IllegalAccessException {
+		if (!isFork()) return null;
+		
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "parent") ? null: new GitHubRepository(api, response.get("parent").getAsJsonObject().get("full_name").getAsString(), response.get("parent").getAsJsonObject());
+	}
+	
+	@GitHubAccessPoint(path = "@source", type = GitHubRepository.class, requiresAccessToken = false)
+	public GitHubRepository getForkSource() throws IllegalAccessException {
+		if (!isFork()) return null;
+		
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "source") ? null: new GitHubRepository(api, response.get("source").getAsJsonObject().get("full_name").getAsString(), response.get("source").getAsJsonObject());
+	}
 }
