@@ -1,11 +1,14 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.Base64url;
 
 public class GitHubObject extends Object {
 	
@@ -103,6 +106,23 @@ public class GitHubObject extends Object {
 			log(" Returned globally cached (full!) version.");
 			response = api.cache.get(getFullURL());
 		}
+		else if (api.hard_drive_cache != null && new File(api.hard_drive_cache + Base64url.encode(getFullURL()) + ".json").exists()) {
+			log(" Returned hard drive cached (full!) version.");
+			try {
+				response = api.readHardDriveCache(Base64url.encode(getFullURL()) + ".json");
+			} catch (IOException e) {
+				log(" Establishing Connection...");
+				this.response = api.call(this);
+				
+				if (response.isJsonObject() && ((JsonObject) response).has("documentation_url")) {
+					log(" Connection failed!");
+					return null;
+				}
+
+				log(" Caching Object.");
+				api.cache(getFullURL(), response);
+			}
+		}
 		else {
 			log(" Establishing Connection...");
 			this.response = api.call(this);
@@ -113,7 +133,7 @@ public class GitHubObject extends Object {
 			}
 
 			log(" Caching Object.");
-			api.cache.put(getFullURL(), response);
+			api.cache(getFullURL(), response);
 		}
 		
 		return response;

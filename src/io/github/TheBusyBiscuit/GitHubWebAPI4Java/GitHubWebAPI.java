@@ -1,21 +1,31 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.Base64url;
+
 public class GitHubWebAPI {
 	
 	private String token = "";
+	protected String hard_drive_cache = null;
 	public Map<String, JsonElement> cache = new HashMap<String, JsonElement>();
 	
 	public static int ITEMS_PER_PAGE = 100;
@@ -104,6 +114,7 @@ public class GitHubWebAPI {
 	        	JsonObject json = new JsonObject();
 	        	json.addProperty("message", connection.getResponseCode() + " - " + connection.getResponseMessage());
 	        	json.addProperty("documentation_url", "https://developer.github.com/v3");
+	        	json.addProperty("code", connection.getResponseCode());
 	        	
 	        	return json;
 	        }
@@ -111,12 +122,14 @@ public class GitHubWebAPI {
         	JsonObject json = new JsonObject();
         	json.addProperty("message", e.getClass().getName() + " - " + e.getLocalizedMessage());
         	json.addProperty("documentation_url", "404");
+        	json.addProperty("exception", e.getClass().getSimpleName());
         	
         	return json;
 		} catch (IOException e) {
         	JsonObject json = new JsonObject();
         	json.addProperty("message", e.getClass().getName() + " - " + e.getLocalizedMessage());
         	json.addProperty("documentation_url", "404");
+        	json.addProperty("exception", e.getClass().getSimpleName());
         	
         	return json;
 		}
@@ -126,4 +139,42 @@ public class GitHubWebAPI {
 		this.cache.clear();
 	}
 
+	public void cache(String url, JsonElement response) {
+		cache.put(url, response);
+		
+		if (hard_drive_cache != null) {
+			try {
+				saveHardDriveCache(Base64url.encode(url) + ".json", response);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	protected JsonElement readHardDriveCache(String file) throws IOException {
+		if (new File(hard_drive_cache + file).exists()) {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(hard_drive_cache + file)), StandardCharsets.UTF_8));
+			
+			String data = reader.readLine();
+			
+		    reader.close();
+			return new JsonParser().parse(data);
+		}
+		
+		return null;
+	}
+	
+	protected void saveHardDriveCache(String file, JsonElement json) throws FileNotFoundException {
+		Gson gson = new GsonBuilder().serializeNulls().create();
+	    PrintWriter writer = new PrintWriter(hard_drive_cache + file);
+	    writer.println(gson.toJson(json));
+	    writer.close();
+	}
+
+	public void setupHardDriveCache(String path) throws IOException {
+		File dir = new File(path);
+		if (!dir.exists()) dir.mkdirs();
+		
+		this.hard_drive_cache = path + "/";
+	}
 }
