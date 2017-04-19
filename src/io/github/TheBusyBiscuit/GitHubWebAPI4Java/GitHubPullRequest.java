@@ -388,6 +388,18 @@ public class GitHubPullRequest extends RepositoryFeature {
 		
 		return users;
 	}
+	
+	@GitHubAccessPoint(path = "@merge_commit_sha", type = GitHubCommit.class, requiresAccessToken = false)
+	public GitHubCommit getMergeCommit() throws IllegalAccessException {
+		JsonElement element = getResponse(false);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+		
+		return isInvalid(response, "merge_commit_sha") ? null: new GitHubCommit(api, getBaseRepository(), response.get("merge_commit_sha").getAsString());
+	}
 
 	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class, requiresAccessToken = false)
 	public List<GitHubComment> getComments() throws IllegalAccessException {
