@@ -306,6 +306,23 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return commits;
 	}
 
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
+	public List<GitHubCommit> getAllCommits(GitHubUser author) throws IllegalAccessException {
+		List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
+		
+		int i = 2;
+		List<GitHubCommit> temp = getCommits(1, author);
+		
+		while (!temp.isEmpty()) {
+			commits.addAll(temp);
+			
+			temp = getCommits(i, author);
+			i++;
+		}
+		
+		return commits;
+	}
+
 	public GitHubCommit getCommit(String sha) throws IllegalAccessException {
 		return new GitHubCommit(api, this, sha);
 	}
@@ -315,6 +332,41 @@ public class GitHubRepository extends UniqueGitHubObject {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put("page", String.valueOf(page));
 		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
+		
+		GitHubObject commits = new GitHubObject(api, this, "/commits") {
+			
+			@Override
+			public Map<String, String> getParameters() {
+				return params;
+			}
+			
+		};
+		
+		JsonElement response = commits.getResponse(true);
+		
+		if (response == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		
+		List<GitHubCommit> list = new ArrayList<GitHubCommit>();
+		JsonArray array = response.getAsJsonArray();
+		
+		for (int i = 0; i < array.size(); i++) {
+	    	JsonObject object = array.get(i).getAsJsonObject();
+	    	
+	    	GitHubCommit commit = new GitHubCommit(api, this, object.get("sha").getAsString(), object);
+	    	list.add(commit);
+	    }
+		
+		return list;
+	}
+
+	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
+	public List<GitHubCommit> getCommits(final int page, final GitHubUser author) throws IllegalAccessException {
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put("page", String.valueOf(page));
+		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
+		params.put("author", author.getUsername());
 		
 		GitHubObject commits = new GitHubObject(api, this, "/commits") {
 			

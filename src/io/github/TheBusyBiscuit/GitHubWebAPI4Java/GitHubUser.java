@@ -207,6 +207,10 @@ public class GitHubUser extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "@login", type = String.class, requiresAccessToken = false)
 	public String getUsername() throws IllegalAccessException {
+		if (this.username != null) {
+			return this.username;
+		}
+		
 		JsonElement element = getResponse(false);
 		
 		if (element == null) {
