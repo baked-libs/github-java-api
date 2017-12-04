@@ -22,21 +22,24 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.Base64url;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.CacheMode;
 
 public class GitHubWebAPI {
 	
 	private String token = "";
 	protected String hard_drive_cache = null;
+	protected CacheMode cache_mode;
 	public Map<String, JsonElement> cache = new HashMap<String, JsonElement>();
 	
 	public static int ITEMS_PER_PAGE = 100;
 	
 	public GitHubWebAPI() {
-		
+		this.cache_mode = CacheMode.RAM_CACHE;
 	}
 	
 	public GitHubWebAPI(String access_token) {
 		this.token = access_token;
+		this.cache_mode = CacheMode.RAM_CACHE;
 	}
 	
 	public String getAccessToken() {
@@ -148,13 +151,35 @@ public class GitHubWebAPI {
 	}
 
 	public void cache(String url, JsonElement response) {
-		cache.put(url, response);
-		
-		if (hard_drive_cache != null) {
-			try {
-				saveHardDriveCache(Base64url.encode(url) + ".json", response);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+		switch(this.cache_mode) {
+			case HARD_DRIVE_CACHE: {
+				if (hard_drive_cache != null) {
+					try {
+						saveHardDriveCache(Base64url.encode(url) + ".json", response);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+				break;
+			}
+			case RAM_AND_HARD_DRIVE_CACHE: {
+				cache.put(url, response);
+				
+				if (hard_drive_cache != null) {
+					try {
+						saveHardDriveCache(Base64url.encode(url) + ".json", response);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+				break;
+			}
+			case RAM_CACHE: {
+				cache.put(url, response);
+				break;
+			}
+			default: {
+				break;
 			}
 		}
 	}
@@ -184,5 +209,13 @@ public class GitHubWebAPI {
 		if (!dir.exists()) dir.mkdirs();
 		
 		this.hard_drive_cache = path + "/";
+	}
+	
+	public void setCacheMode(CacheMode mode) {
+		this.cache_mode = mode;
+	}
+	
+	public CacheMode getCacheMode() {
+		return this.cache_mode;
 	}
 }
