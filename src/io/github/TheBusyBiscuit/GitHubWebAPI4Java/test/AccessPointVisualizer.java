@@ -32,19 +32,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubBranch;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubCommit;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubFileTree;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubIssue;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubMilestone;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubObject;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubOrganization;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubPullRequest;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubRepository;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubUser;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.RepositoryFeature.State;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubBranch;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubCommit;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubFileTree;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubIssue;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubMilestone;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubPullRequest;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubRepository;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubOrganization;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
 public class AccessPointVisualizer {
 	

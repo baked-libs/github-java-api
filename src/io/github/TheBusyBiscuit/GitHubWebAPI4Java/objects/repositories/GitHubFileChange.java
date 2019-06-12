@@ -1,9 +1,11 @@
-package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
+package io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
 
 public class GitHubFileChange extends GitHubBlob {
 	

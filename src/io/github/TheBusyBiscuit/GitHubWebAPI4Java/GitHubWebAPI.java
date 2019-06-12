@@ -23,6 +23,10 @@ import com.google.gson.JsonParser;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.Base64url;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.CacheMode;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubRepository;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubOrganization;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
 public class GitHubWebAPI {
 	

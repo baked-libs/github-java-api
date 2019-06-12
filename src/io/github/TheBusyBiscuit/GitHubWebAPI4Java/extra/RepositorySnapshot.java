@@ -3,10 +3,10 @@ package io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubCommit;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubFile;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubRepository;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubUser;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubCommit;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubFile;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubRepository;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
 public class RepositorySnapshot {
 	

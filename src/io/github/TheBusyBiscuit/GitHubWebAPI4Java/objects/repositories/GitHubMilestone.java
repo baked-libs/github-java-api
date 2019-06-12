@@ -1,4 +1,4 @@
-package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
+package io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -9,8 +9,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.RepositoryFeature;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.GitHubDate;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
 public class GitHubMilestone extends RepositoryFeature {
 	

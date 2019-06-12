@@ -3,10 +3,10 @@ package io.github.TheBusyBiscuit.GitHubWebAPI4Java.events;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubObject;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubUser;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
 public class GitHubEvent extends GitHubObject {
 	
