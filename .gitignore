@@ -3,3 +3,4 @@
 .project
 /.settings/
 ACCESS_TOKEN
+/target/
