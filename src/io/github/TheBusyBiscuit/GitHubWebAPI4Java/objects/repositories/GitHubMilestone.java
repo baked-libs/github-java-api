@@ -60,14 +60,7 @@ public class GitHubMilestone extends RepositoryFeature {
 
 	@GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
 	public String getDescription() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "description") ? null: response.get("description").getAsString();
+		return getString("description", false);
 	}
 
 	@GitHubAccessPoint(path = "/labels", type = GitHubLabel.class, requiresAccessToken = false)
@@ -79,7 +72,7 @@ public class GitHubMilestone extends RepositoryFeature {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubLabel> list = new ArrayList<GitHubLabel>();
+		List<GitHubLabel> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {

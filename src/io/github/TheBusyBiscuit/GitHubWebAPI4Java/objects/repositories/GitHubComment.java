@@ -44,13 +44,6 @@ public class GitHubComment extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "@body", type = String.class, requiresAccessToken = false)
 	public String getMessageBody() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "body") ? null: response.get("body").getAsString();
+		return getString("body", false);
 	}
 }

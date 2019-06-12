@@ -46,14 +46,7 @@ public class GitHubBranch extends GitHubObject {
 	
 	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "name") ? null: response.get("name").getAsString();
+		return getString("name", false);
 	}
 
 	@GitHubAccessPoint(path = "@commit", type = GitHubCommit.class, requiresAccessToken = false)

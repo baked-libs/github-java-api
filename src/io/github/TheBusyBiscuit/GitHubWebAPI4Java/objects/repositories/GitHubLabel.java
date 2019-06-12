@@ -53,38 +53,17 @@ public class GitHubLabel extends GitHubObject {
 
 	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "name") ? null: response.get("name").getAsString();
+		return getString("name", false);
 	}
 
 	@GitHubAccessPoint(path = "@color", type = String.class, requiresAccessToken = false)
 	public String getColor() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "color") ? null: response.get("color").getAsString();
+		return getString("color", false);
 	}
 
 	@GitHubAccessPoint(path = "@default", type = Boolean.class, requiresAccessToken = false)
 	public boolean isDefaultLabel() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "default") ? false: response.get("default").getAsBoolean();
+		return getBoolean("default", false);
 	}
 	
 	public String getURLEncodedParameter() {

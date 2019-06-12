@@ -276,26 +276,12 @@ public class GitHubUser extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "@hireable", type = Boolean.class, requiresAccessToken = false)
 	public boolean isHireable() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "hireable") ? false: response.get("hireable").getAsBoolean();
+		return getBoolean("hireable", true);
 	}
 
 	@GitHubAccessPoint(path = "@site_admin", type = Boolean.class, requiresAccessToken = false)
 	public boolean isAdmin() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "site_admin") ? false: response.get("site_admin").getAsBoolean();
+		return getBoolean("site_admin", false);
 	}
 
 	@GitHubAccessPoint(path = "@bio", type = String.class, requiresAccessToken = false)

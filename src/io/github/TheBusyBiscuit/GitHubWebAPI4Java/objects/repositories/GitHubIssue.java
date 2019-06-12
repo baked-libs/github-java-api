@@ -156,7 +156,7 @@ public class GitHubIssue extends RepositoryFeature {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubComment> list = new ArrayList<GitHubComment>();
+		List<GitHubComment> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {

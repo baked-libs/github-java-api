@@ -41,25 +41,11 @@ public class GitHubBlob extends GitHubFile {
 
 	@GitHubAccessPoint(path = "@content", type = String.class, requiresAccessToken = false)
 	public String getFileContent() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "content") ? null: response.get("content").getAsString();
+		return getString("content", true);
 	}
 
 	@GitHubAccessPoint(path = "@encoding", type = String.class, requiresAccessToken = false)
 	public String getEncoding() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "encoding") ? null: response.get("encoding").getAsString();
+		return getString("encoding", true);
 	}
 }

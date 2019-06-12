@@ -183,4 +183,26 @@ public class GitHubObject extends Object {
 		return null;
 	}
 	
+	
+	protected boolean getBoolean(String attribute, boolean full) throws IllegalAccessException {
+		JsonElement element = getResponse(full);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, attribute) ? false: response.get(attribute).getAsBoolean();
+	}
+	
+	protected String getString(String attribute, boolean full) throws IllegalAccessException {
+		JsonElement element = getResponse(full);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, attribute) ? null: response.get(attribute).getAsString();
+	}
 }
