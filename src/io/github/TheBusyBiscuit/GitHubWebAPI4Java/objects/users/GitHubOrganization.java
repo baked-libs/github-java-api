@@ -43,7 +43,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubRepository> list = new ArrayList<GitHubRepository>();
+		List<GitHubRepository> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -65,7 +65,7 @@ public class GitHubOrganization extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubUser> list = new ArrayList<GitHubUser>();
+		List<GitHubUser> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -80,110 +80,47 @@ public class GitHubOrganization extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "name") ? null: response.get("name").getAsString();
+		return getString("name", true);
 	}
 
 	@GitHubAccessPoint(path = "@login", type = String.class, requiresAccessToken = false)
 	public String getUsername() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "login") ? null: response.get("login").getAsString();
+		return getString("login", false);
 	}
 
 	@GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
 	public String getDescription() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "description") ? null: response.get("description").getAsString();
+		return getString("description", false);
 	}
 
 	@GitHubAccessPoint(path = "@avatar_url", type = String.class, requiresAccessToken = false)
 	public String getAvatarURL() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "avatar_url") ? null: response.get("avatar_url").getAsString();
+		return getString("avatar_url", false);
 	}
 
 	@GitHubAccessPoint(path = "@type", type = String.class, requiresAccessToken = false)
 	public String getType() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "type") ? null: response.get("type").getAsString();
+		return getString("type", false);
 	}
 
 	@GitHubAccessPoint(path = "@blog", type = String.class, requiresAccessToken = false)
 	public String getWebsite() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "blog") ? null: response.get("blog").getAsString();
+		return getString("blog", true);
 	}
 
 	@GitHubAccessPoint(path = "@company", type = String.class, requiresAccessToken = false)
 	public String getCompany() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "company") ? null: response.get("company").getAsString();
+		return getString("company", true);
 	}
 
 	@GitHubAccessPoint(path = "@location", type = String.class, requiresAccessToken = false)
 	public String getLocation() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "location") ? null: response.get("location").getAsString();
+		return getString("location", true);
 	}
 
 	@GitHubAccessPoint(path = "@email", type = String.class, requiresAccessToken = false)
 	public String getEmailAdress() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "email") ? null: response.get("email").getAsString();
+		return getString("email", true);
 	}
 
 }

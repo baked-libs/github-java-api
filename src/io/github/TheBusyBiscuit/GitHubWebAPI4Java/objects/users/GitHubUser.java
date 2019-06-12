@@ -228,50 +228,22 @@ public class GitHubUser extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "@blog", type = String.class, requiresAccessToken = false)
 	public String getWebsite() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "blog") ? null: response.get("blog").getAsString();
+		return getString("blog", true);
 	}
 
 	@GitHubAccessPoint(path = "@company", type = String.class, requiresAccessToken = false)
 	public String getCompany() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "company") ? null: response.get("company").getAsString();
+		return getString("company", true);
 	}
 
 	@GitHubAccessPoint(path = "@location", type = String.class, requiresAccessToken = false)
 	public String getLocation() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "location") ? null: response.get("location").getAsString();
+		return getString("location", true);
 	}
 
 	@GitHubAccessPoint(path = "@email", type = String.class, requiresAccessToken = false)
 	public String getEmailAdress() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "email") ? null: response.get("email").getAsString();
+		return getString("email", true);
 	}
 
 	@GitHubAccessPoint(path = "@hireable", type = Boolean.class, requiresAccessToken = false)
@@ -286,38 +258,17 @@ public class GitHubUser extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "@bio", type = String.class, requiresAccessToken = false)
 	public String getDescription() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "bio") ? null: response.get("bio").getAsString();
+		return getString("bio", true);
 	}
 
 	@GitHubAccessPoint(path = "@avatar_url", type = String.class, requiresAccessToken = false)
 	public String getAvatarURL() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "avatar_url") ? null: response.get("avatar_url").getAsString();
+		return getString("avatar_url", false);
 	}
 
 	@GitHubAccessPoint(path = "@type", type = String.class, requiresAccessToken = false)
 	public String getType() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "type") ? null: response.get("type").getAsString();
+		return getString("type", false);
 	}
 
 	@GitHubAccessPoint(path = "@public_repos", type = Integer.class, requiresAccessToken = false)
