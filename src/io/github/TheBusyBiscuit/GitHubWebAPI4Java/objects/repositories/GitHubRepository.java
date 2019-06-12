@@ -14,7 +14,6 @@ import com.google.gson.JsonObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.RepositoryFeature;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.UniqueGitHubObject;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.RepositoryFeature.State;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.GitHubDate;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
@@ -1165,6 +1164,6 @@ public class GitHubRepository extends UniqueGitHubObject {
 		}
 		JsonObject response = element.getAsJsonObject();
 		
-		return isInvalid(response, "license") ? null: new GitHubLicense(api, response.get("license").getAsJsonObject().get("key").getAsString());
+		return isInvalid(response, "license") ? null: new GitHubLicense(api, response.get("license").getAsJsonObject().get("key").getAsString(), response.get("license").getAsJsonObject());
 	}
 }

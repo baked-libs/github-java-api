@@ -17,10 +17,11 @@ public class GitHubLicense extends GitHubObject {
 	
 	private String param;
 	
-	public GitHubLicense(GitHubWebAPI api, String key) throws UnsupportedEncodingException {
+	public GitHubLicense(GitHubWebAPI api, String key, JsonObject obj) throws UnsupportedEncodingException {
 		super(api, null, "/licenses/" + URLEncoder.encode(key, "utf-8"));
 		
 		this.param = URLEncoder.encode(key, "utf-8");
+		this.minimal = obj;
 	}
 
 	public GitHubLicense(GitHubObject obj) {
