@@ -48,10 +48,10 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
 public class AccessPointVisualizer {
 	
-	public static Map<String, String> data = new HashMap<String, String>();
-	public static Map<String, List<String>> categories = new HashMap<String, List<String>>();
+	public static Map<String, String> data = new HashMap<>();
+	public static Map<String, List<String>> categories = new HashMap<>();
 	
-	public static Map<Class<?>, List<String>> blacklist = new HashMap<Class<?>, List<String>>();
+	public static Map<Class<?>, List<String>> blacklist = new HashMap<>();
 	
 	private static void setupBlacklist() {
 		blacklist.put(GitHubUser.class, Arrays.asList("plan", "two_factor_authentication"));

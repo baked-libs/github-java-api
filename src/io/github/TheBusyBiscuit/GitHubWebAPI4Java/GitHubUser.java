@@ -48,7 +48,7 @@ public class GitHubUser extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubRepository> list = new ArrayList<GitHubRepository>();
+		List<GitHubRepository> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -70,7 +70,7 @@ public class GitHubUser extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubRepository> list = new ArrayList<GitHubRepository>();
+		List<GitHubRepository> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -92,7 +92,7 @@ public class GitHubUser extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubRepository> list = new ArrayList<GitHubRepository>();
+		List<GitHubRepository> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -114,7 +114,7 @@ public class GitHubUser extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubUser> list = new ArrayList<GitHubUser>();
+		List<GitHubUser> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -136,7 +136,7 @@ public class GitHubUser extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubUser> list = new ArrayList<GitHubUser>();
+		List<GitHubUser> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {

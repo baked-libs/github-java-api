@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.GitHubDate;
 
 public class RepositoryFeature extends UniqueGitHubObject {
 
@@ -65,7 +66,7 @@ public class RepositoryFeature extends UniqueGitHubObject {
 		return isInvalid(response, "closed_at") ? null: GitHubDate.parse(response.get("closed_at").getAsString());
 	}
 	
-	public enum State {
+	public static enum State {
 		
 		OPEN,
 		CLOSED;

@@ -29,12 +29,16 @@ public class GitHubWebAPI {
 	private String token = "";
 	protected String hard_drive_cache = null;
 	protected CacheMode cache_mode;
-	public Map<String, JsonElement> cache = new HashMap<String, JsonElement>();
+	public Map<String, JsonElement> cache = new HashMap<>();
 	
 	public static int ITEMS_PER_PAGE = 100;
 	
 	public GitHubWebAPI() {
 		this.cache_mode = CacheMode.RAM_CACHE;
+	}
+	
+	public GitHubWebAPI(CacheMode mode) {
+		this.cache_mode = mode;
 	}
 	
 	public GitHubWebAPI(String access_token) {
@@ -217,5 +221,9 @@ public class GitHubWebAPI {
 	
 	public CacheMode getCacheMode() {
 		return this.cache_mode;
+	}
+	
+	public void disableCaching() {
+		this.cache_mode = CacheMode.NO_CACHE;
 	}
 }

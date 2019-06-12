@@ -33,7 +33,7 @@ public class RepositorySnapshot {
 	}
 	
 	public List<String> getFiles() throws IllegalAccessException {
-		List<String> files = new ArrayList<String>();
+		List<String> files = new ArrayList<>();
 		
 		for (GitHubFile file: this.commit.getFileTree().getFiles()) {
 			files.add(file.getFile());

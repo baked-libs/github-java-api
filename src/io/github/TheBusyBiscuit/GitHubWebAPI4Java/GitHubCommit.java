@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.GitHubDate;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.RepositorySnapshot;
 
 public class GitHubCommit extends GitHubObject {

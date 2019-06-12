@@ -56,7 +56,7 @@ public class GitHubFileChange extends GitHubBlob {
 		return this;
 	}
 	
-	public enum Status {
+	public static enum Status {
 		
 		REMOVED,
 		ADDED,
