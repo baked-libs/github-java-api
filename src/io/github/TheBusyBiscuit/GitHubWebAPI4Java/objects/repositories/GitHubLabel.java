@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
@@ -40,15 +39,8 @@ public class GitHubLabel extends GitHubObject {
 	}
 	
 	@GitHubAccessPoint(path = "@id", type = Integer.class, requiresAccessToken = false)
-	public int getID() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "id") ? null: response.get("id").getAsInt();
+	public Integer getID() throws IllegalAccessException {
+		return getInteger("id", false);
 	}
 
 	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
@@ -62,7 +54,7 @@ public class GitHubLabel extends GitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "@default", type = Boolean.class, requiresAccessToken = false)
-	public boolean isDefaultLabel() throws IllegalAccessException {
+	public Boolean isDefaultLabel() throws IllegalAccessException {
 		return getBoolean("default", false);
 	}
 	

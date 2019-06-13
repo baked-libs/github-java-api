@@ -48,14 +48,7 @@ public class GitHubCommit extends GitHubObject {
 
 	@GitHubAccessPoint(path = "@sha", type = String.class, requiresAccessToken = false)
 	public String getID() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "sha") ? null: response.get("sha").getAsString();
+		return getString("sha", false);
 	}
 
 	@GitHubAccessPoint(path = "@author", type = GitHubUser.class, requiresAccessToken = false)
@@ -83,7 +76,7 @@ public class GitHubCommit extends GitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "@stats/total", type = Integer.class, requiresAccessToken = false)
-	public int getTotalChanges() throws IllegalAccessException {
+	public Integer getTotalChanges() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
 		if (element == null) {
@@ -95,7 +88,7 @@ public class GitHubCommit extends GitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "@stats/additions", type = Integer.class, requiresAccessToken = false)
-	public int getAdditions() throws IllegalAccessException {
+	public Integer getAdditions() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
 		if (element == null) {
@@ -107,7 +100,7 @@ public class GitHubCommit extends GitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "@stats/deletions", type = Integer.class, requiresAccessToken = false)
-	public int getDeletions() throws IllegalAccessException {
+	public Integer getDeletions() throws IllegalAccessException {
 		JsonElement element = getResponse(true);
 		
 		if (element == null) {
@@ -249,7 +242,7 @@ public class GitHubCommit extends GitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "@commit/comment_count", type = Integer.class, requiresAccessToken = false)
-	public int getCommentsAmount() throws IllegalAccessException {
+	public Integer getCommentsAmount() throws IllegalAccessException {
 		JsonElement element = getResponse(false);
 		
 		if (element == null) {

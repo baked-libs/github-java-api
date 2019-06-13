@@ -64,7 +64,7 @@ public class GitHubLicense extends GitHubObject {
 	}
 	
 	@GitHubAccessPoint(path = "@featured", type= Boolean.class, requiresAccessToken = false)
-	public boolean isFeatured() throws IllegalAccessException {
+	public Boolean isFeatured() throws IllegalAccessException {
 		return getBoolean("featured", true);
 	}
 	

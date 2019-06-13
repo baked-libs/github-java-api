@@ -11,7 +11,6 @@ import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.GitHubDate;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.RepositoryFeature;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
@@ -86,38 +85,17 @@ public class GitHubMilestone extends RepositoryFeature {
 	}
 
 	@GitHubAccessPoint(path = "@open_issues", type = Integer.class, requiresAccessToken = false)
-	public int getOpenIssuesAmount() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "open_issues") ? null: response.get("open_issues").getAsInt();
+	public Integer getOpenIssuesAmount() throws IllegalAccessException {
+		return getInteger("open_issues", false);
 	}
 
 	@GitHubAccessPoint(path = "@closed_issues", type = Integer.class, requiresAccessToken = false)
-	public int getClosedIssuesAmount() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "closed_issues") ? null: response.get("closed_issues").getAsInt();
+	public Integer getClosedIssuesAmount() throws IllegalAccessException {
+		return getInteger("closed_issues", false);
 	}
 	
 	@GitHubAccessPoint(path = "@due_on", type = Date.class, requiresAccessToken = false)
 	public Date getDueDate() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "due_on") ? null: GitHubDate.parse(response.get("due_on").getAsString());
+		return getDate("due_on", false);
 	}
 }

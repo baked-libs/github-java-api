@@ -1,7 +1,6 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
@@ -28,15 +27,8 @@ public class GitHubBlob extends GitHubFile {
 
 	@Override
 	@GitHubAccessPoint(path = "@size", type = Integer.class, requiresAccessToken = false)
-	public int getSize() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "size") ? null: response.get("size").getAsInt();
+	public Integer getSize() throws IllegalAccessException {
+		return getInteger("size", false);
 	}
 
 	@GitHubAccessPoint(path = "@content", type = String.class, requiresAccessToken = false)

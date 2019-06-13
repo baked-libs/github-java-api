@@ -1,7 +1,6 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
@@ -34,44 +33,21 @@ public class GitHubFile extends GitHubObject {
 
 	@GitHubAccessPoint(path = "@sha", type = String.class, requiresAccessToken = false)
 	public String getID() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "sha") ? null: response.get("sha").getAsString();
+		return getString("sha", false);
 	}
 
 	@GitHubAccessPoint(path = "@path", type = String.class, requiresAccessToken = false)
 	public String getFile() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			return null;
-		}
-		
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "path") ? null: response.get("path").getAsString();
+		return getString("path", false);
 	}
 
 	@GitHubAccessPoint(path = "@type", type = String.class, requiresAccessToken = false)
 	public String getType() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			return null;
-		}
-		
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "type") ? null: response.get("type").getAsString();
+		return getString("type", false);
 	}
 	
 	@GitHubAccessPoint(path = "@size", type = Integer.class, requiresAccessToken = false)
-	public int getSize() throws IllegalAccessException {
-		return 0;
+	public Integer getSize() throws IllegalAccessException {
+		return null;
 	}
 }

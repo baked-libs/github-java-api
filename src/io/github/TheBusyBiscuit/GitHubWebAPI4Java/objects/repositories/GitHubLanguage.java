@@ -1,7 +1,6 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
@@ -40,15 +39,8 @@ public class GitHubLanguage extends GitHubObject {
 		return this.name;
 	}
 
-	public int getSize() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, getName()) ? null: response.get(getName()).getAsInt();
+	public Integer getSize() throws IllegalAccessException {
+		return getInteger(getName(), false);
 	}
 
 }

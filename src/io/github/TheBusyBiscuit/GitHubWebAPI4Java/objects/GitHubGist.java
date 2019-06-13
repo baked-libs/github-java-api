@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.GitHubDate;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
 public class GitHubGist extends GitHubObject {
@@ -33,38 +32,17 @@ public class GitHubGist extends GitHubObject {
 
 	@GitHubAccessPoint(path = "@id", type = String.class, requiresAccessToken = false)
 	public String getID() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "id") ? null: response.get("id").getAsString();
+		return getString("id", false);
 	}
 
 	@GitHubAccessPoint(path = "@created_at", type = Date.class, requiresAccessToken = false)
 	public Date getCreationDate() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "created_at") ? null: GitHubDate.parse(response.get("created_at").getAsString());
+		return getDate("created_at", false);
 	}
 
 	@GitHubAccessPoint(path = "@updated_at", type = Date.class, requiresAccessToken = false)
 	public Date getLastUpdatedDate() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "updated_at") ? null: GitHubDate.parse(response.get("updated_at").getAsString());
+		return getDate("updated_at", false);
 	}
 
 	@GitHubAccessPoint(path = "@owner", type = GitHubUser.class, requiresAccessToken = false)
@@ -81,14 +59,7 @@ public class GitHubGist extends GitHubObject {
 
 	@GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
 	public String getDescription() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "description") ? null: response.get("description").getAsString();
+		return getString("description", false);
 	}
 
 }

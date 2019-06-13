@@ -178,14 +178,7 @@ public class GitHubUser extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
 	public String getName() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "name") ? null: response.get("name").getAsString();
+		return getString("name", true);
 	}
 
 	@GitHubAccessPoint(path = "/gists", type = GitHubGist.class, requiresAccessToken = false)
@@ -216,14 +209,7 @@ public class GitHubUser extends UniqueGitHubObject {
 			return this.username;
 		}
 		
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "login") ? null: response.get("login").getAsString();
+		return getString("login", false);
 	}
 
 	@GitHubAccessPoint(path = "@blog", type = String.class, requiresAccessToken = false)
@@ -272,51 +258,23 @@ public class GitHubUser extends UniqueGitHubObject {
 	}
 
 	@GitHubAccessPoint(path = "@public_repos", type = Integer.class, requiresAccessToken = false)
-	public int getRepositoriesAmount() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "public_repos") ? null: response.get("public_repos").getAsInt();
+	public Integer getRepositoriesAmount() throws IllegalAccessException {
+		return getInteger("public_repos", true);
 	}
 
 	@GitHubAccessPoint(path = "@public_gists", type = Integer.class, requiresAccessToken = false)
-	public int getGistsAmount() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "public_gists") ? null: response.get("public_gists").getAsInt();
+	public Integer getGistsAmount() throws IllegalAccessException {
+		return getInteger("public_gists", true);
 	}
 
 	@GitHubAccessPoint(path = "@followers", type = Integer.class, requiresAccessToken = false)
-	public int getFollowersAmount() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "followers") ? null: response.get("followers").getAsInt();
+	public Integer getFollowersAmount() throws IllegalAccessException {
+		return getInteger("followers", true);
 	}
 
 	@GitHubAccessPoint(path = "@following", type = Integer.class, requiresAccessToken = false)
-	public int getFollowingAmount() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "following") ? null: response.get("following").getAsInt();
+	public Integer getFollowingAmount() throws IllegalAccessException {
+		return getInteger("following", true);
 	}
 	
 	public GitHubOrganization toOrganization() throws IllegalAccessException {

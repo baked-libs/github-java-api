@@ -2,6 +2,7 @@ package io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import com.google.gson.JsonElement;
@@ -10,6 +11,7 @@ import com.google.gson.JsonObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.Base64url;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.GitHubDate;
 
 public class GitHubObject extends Object {
 	
@@ -184,7 +186,7 @@ public class GitHubObject extends Object {
 	}
 	
 	
-	protected boolean getBoolean(String attribute, boolean full) throws IllegalAccessException {
+	protected Boolean getBoolean(String attribute, boolean full) throws IllegalAccessException {
 		JsonElement element = getResponse(full);
 		
 		if (element == null) {
@@ -192,7 +194,18 @@ public class GitHubObject extends Object {
 		}
 		JsonObject response = element.getAsJsonObject();
 
-		return isInvalid(response, attribute) ? false: response.get(attribute).getAsBoolean();
+		return isInvalid(response, attribute) ? null: response.get(attribute).getAsBoolean();
+	}
+	
+	protected Integer getInteger(String attribute, boolean full) throws IllegalAccessException {
+		JsonElement element = getResponse(full);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, attribute) ? null: response.get(attribute).getAsInt();
 	}
 	
 	protected String getString(String attribute, boolean full) throws IllegalAccessException {
@@ -204,5 +217,16 @@ public class GitHubObject extends Object {
 		JsonObject response = element.getAsJsonObject();
 
 		return isInvalid(response, attribute) ? null: response.get(attribute).getAsString();
+	}
+	
+	protected Date getDate(String attribute, boolean full) throws IllegalAccessException {
+		JsonElement element = getResponse(full);
+		
+		if (element == null) {
+			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+		}
+		JsonObject response = element.getAsJsonObject();
+
+		return isInvalid(response, attribute) ? null: GitHubDate.parse(response.get(attribute).getAsString());
 	}
 }

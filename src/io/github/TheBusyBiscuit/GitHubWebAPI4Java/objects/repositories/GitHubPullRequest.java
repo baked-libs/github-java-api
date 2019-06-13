@@ -13,7 +13,6 @@ import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.GitHubDate;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.RepositoryFeature;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
@@ -62,7 +61,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 	}
 
 	@GitHubAccessPoint(path = "@locked", type = Boolean.class, requiresAccessToken = false)
-	public boolean isLocked() throws IllegalAccessException {
+	public Boolean isLocked() throws IllegalAccessException {
 		return getBoolean("locked", false);
 	}
 	
@@ -242,51 +241,23 @@ public class GitHubPullRequest extends RepositoryFeature {
 	}
 
 	@GitHubAccessPoint(path = "@changed_files", type = Integer.class, requiresAccessToken = false)
-	public int getFileChanges() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "changed_files") ? null: response.get("changed_files").getAsInt();
+	public Integer getFileChanges() throws IllegalAccessException {
+		return getInteger("changed_files", true);
 	}
 
 	@GitHubAccessPoint(path = "@additions", type = Integer.class, requiresAccessToken = false)
-	public int getAdditions() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "additions") ? null: response.get("additions").getAsInt();
+	public Integer getAdditions() throws IllegalAccessException {
+		return getInteger("additions", true);
 	}
 
 	@GitHubAccessPoint(path = "@deletions", type = Integer.class, requiresAccessToken = false)
-	public int getDeletions() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "deletions") ? null: response.get("deletions").getAsInt();
+	public Integer getDeletions() throws IllegalAccessException {
+		return getInteger("deletions", true);
 	}
 
 	@GitHubAccessPoint(path = "@commits", type = Integer.class, requiresAccessToken = false)
-	public int getCommitsAmount() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "commits") ? null: response.get("commits").getAsInt();
+	public Integer getCommitsAmount() throws IllegalAccessException {
+		return getInteger("commits", true);
 	}
 
 	@GitHubAccessPoint(path = "@merged_by", type = GitHubUser.class, requiresAccessToken = false)
@@ -314,12 +285,12 @@ public class GitHubPullRequest extends RepositoryFeature {
 	}
 	
 	@GitHubAccessPoint(path = "@merged", type = Boolean.class, requiresAccessToken = false)
-	public boolean isMerged() throws IllegalAccessException {
+	public Boolean isMerged() throws IllegalAccessException {
 		return getBoolean("merged", true);
 	}
 	
 	@GitHubAccessPoint(path = "@mergeable", type = Boolean.class, requiresAccessToken = false)
-	public boolean isMergeable() throws IllegalAccessException {
+	public Boolean isMergeable() throws IllegalAccessException {
 		return getBoolean("mergeable", true);
 	}
 
@@ -330,14 +301,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 	
 	@GitHubAccessPoint(path = "@merged_at", type = Date.class, requiresAccessToken = false)
 	public Date getMergedDate() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "merged_at") ? null: GitHubDate.parse(response.get("merged_at").getAsString());
+		return getDate("merged_at", true);
 	}
 
 	@GitHubAccessPoint(path = "@issue_url", type = GitHubIssue.class, requiresAccessToken = false)
@@ -405,14 +369,7 @@ public class GitHubPullRequest extends RepositoryFeature {
 	}
 
 	@GitHubAccessPoint(path = "@comments", type = Integer.class, requiresAccessToken = false)
-	public int getCommentsAmount() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "comments") ? null: response.get("comments").getAsInt();
+	public Integer getCommentsAmount() throws IllegalAccessException {
+		return getInteger("comments", false);
 	}
 }

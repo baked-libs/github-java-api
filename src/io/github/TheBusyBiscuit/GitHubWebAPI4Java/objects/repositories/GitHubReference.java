@@ -40,14 +40,7 @@ public class GitHubReference extends GitHubObject {
 
 	@GitHubAccessPoint(path = "@ref", type = String.class, requiresAccessToken = false)
 	public String getID() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "ref") ? null: response.get("ref").getAsString();
+		return getString("ref", false);
 	}
 
 	@GitHubAccessPoint(path = "@object/type", type = ReferenceType.class, requiresAccessToken = false)

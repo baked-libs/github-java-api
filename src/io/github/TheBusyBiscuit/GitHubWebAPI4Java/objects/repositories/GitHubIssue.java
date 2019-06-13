@@ -53,15 +53,8 @@ public class GitHubIssue extends RepositoryFeature {
 	}
 
 	@GitHubAccessPoint(path = "@locked", type = Boolean.class, requiresAccessToken = false)
-	public boolean isLocked() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "locked") ? false: response.get("locked").getAsBoolean();
+	public Boolean isLocked() throws IllegalAccessException {
+		return getBoolean("locked", false);
 	}
 	
 	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class, requiresAccessToken = false)
@@ -116,14 +109,7 @@ public class GitHubIssue extends RepositoryFeature {
 
 	@GitHubAccessPoint(path = "@body", type = String.class, requiresAccessToken = false)
 	public String getMessageBody() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "body") ? null: response.get("body").getAsString();
+		return getString("body", false);
 	}
 
 	@GitHubAccessPoint(path = "@assignees", type = GitHubUser.class, requiresAccessToken = false)
@@ -174,15 +160,8 @@ public class GitHubIssue extends RepositoryFeature {
 	}
 
 	@GitHubAccessPoint(path = "@comments", type = Integer.class, requiresAccessToken = false)
-	public int getCommentsAmount() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-
-		return isInvalid(response, "comments") ? null: response.get("comments").getAsInt();
+	public Integer getCommentsAmount() throws IllegalAccessException {
+		return getInteger("comments", false);
 	}
 
 }
