@@ -107,7 +107,7 @@ public class GitHubObject extends Object {
 			log(" Returned globally cached (full!) version.");
 			response = api.cache.get(getFullURL());
 		}
-		else if (api.hard_drive_cache != null && new File(api.hard_drive_cache + Base64url.encode(getFullURL()) + ".json").exists()) {
+		else if (api.getHardDriveCache() != null && new File(api.getHardDriveCache() + Base64url.encode(getFullURL()) + ".json").exists()) {
 			log(" Returned hard drive cached (full!) version.");
 			try {
 				response = api.readHardDriveCache(Base64url.encode(getFullURL()) + ".json");

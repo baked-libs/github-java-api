@@ -192,7 +192,11 @@ public class GitHubWebAPI {
 		}
 	}
 	
-	protected JsonElement readHardDriveCache(String file) throws IOException {
+	public String getHardDriveCache() {
+		return hard_drive_cache;
+	}
+	
+	public JsonElement readHardDriveCache(String file) throws IOException {
 		if (new File(hard_drive_cache + file).exists()) {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(hard_drive_cache + file)), StandardCharsets.UTF_8));
 			

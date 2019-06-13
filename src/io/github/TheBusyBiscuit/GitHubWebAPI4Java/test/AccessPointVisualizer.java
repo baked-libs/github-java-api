@@ -33,9 +33,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.RepositoryFeature.State;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.RepositoryFeature.State;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubBranch;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubCommit;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubFileTree;

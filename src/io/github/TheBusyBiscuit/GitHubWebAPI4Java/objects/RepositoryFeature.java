@@ -1,13 +1,13 @@
-package io.github.TheBusyBiscuit.GitHubWebAPI4Java;
+package io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects;
 
 import java.util.Date;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.extra.GitHubDate;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
 
 public class RepositoryFeature extends UniqueGitHubObject {
 

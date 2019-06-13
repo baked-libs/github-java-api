@@ -7,11 +7,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubGist;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
-import io.github.TheBusyBiscuit.GitHubWebAPI4Java.UniqueGitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubGist;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
+import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.UniqueGitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubRepository;
 
 public class GitHubUser extends UniqueGitHubObject {
