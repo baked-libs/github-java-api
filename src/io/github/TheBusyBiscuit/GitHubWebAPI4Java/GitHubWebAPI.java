@@ -74,7 +74,7 @@ public class GitHubWebAPI {
 		try {
 			String query = getURL() + object.getURL();
 			String token = getAccessToken();
-			if (token != "") {
+			if (token != null && !token.equals("")) {
 				query += "?access_token=" + token;
 				
 				if (object.getParameters() != null) {
@@ -198,11 +198,16 @@ public class GitHubWebAPI {
 	
 	public JsonElement readHardDriveCache(String file) throws IOException {
 		if (new File(hard_drive_cache + file).exists()) {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(hard_drive_cache + file)), StandardCharsets.UTF_8));
+			BufferedReader reader = null;
+			String data;
 			
-			String data = reader.readLine();
+			try {
+				reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(hard_drive_cache + file)), StandardCharsets.UTF_8));
+				data = reader.readLine();
+			} finally {
+				if (reader != null) reader.close();
+			}
 			
-		    reader.close();
 			return new JsonParser().parse(data);
 		}
 		
