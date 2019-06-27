@@ -18,20 +18,23 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.RepositoryFeature;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.UniqueGitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
+/**
+ * Represents a GitHub repository.
+ */
 public class GitHubRepository extends UniqueGitHubObject {
 	
-	String fullname = null;
+	private String fullName = null;
 	
 	public GitHubRepository(GitHubWebAPI api, String username, String repo) {
 		super(api, null, "repos/" + username + "/" + repo);
 		
-		this.fullname = username + "/" + repo;
+		this.fullName = username + "/" + repo;
 	}
 	
 	public GitHubRepository(GitHubWebAPI api, String name) {
 		super(api, null, "repos/" + name);
 		
-		this.fullname = name;
+		this.fullName = name;
 	}
 
 	public GitHubRepository(GitHubObject obj) {
@@ -41,7 +44,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	public GitHubRepository(GitHubWebAPI api, String name, JsonElement response) {
 		super(api, null, "repos/" + name);
 		
-		this.fullname = name;
+		this.fullName = name;
 		this.minimal = response;
 	}
 	
@@ -74,7 +77,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/forks", type = GitHubRepository.class, requiresAccessToken = false)
 	public List<GitHubRepository> getForks(final int page) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("page", String.valueOf(page));
 		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
 		
@@ -93,7 +96,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubRepository> list = new ArrayList<GitHubRepository>();
+		List<GitHubRepository> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -113,7 +116,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class, requiresAccessToken = false)
 	public List<GitHubBranch> getAllBranches() throws IllegalAccessException, UnsupportedEncodingException {
-		List<GitHubBranch> branches = new ArrayList<GitHubBranch>();
+		List<GitHubBranch> branches = new ArrayList<>();
 		
 		int i = 2;
 		List<GitHubBranch> temp = getBranches(1);
@@ -130,7 +133,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/branches", type = GitHubBranch.class, requiresAccessToken = false)
 	public List<GitHubBranch> getBranches(final int page) throws IllegalAccessException, UnsupportedEncodingException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("page", String.valueOf(page));
 		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
 		GitHubObject branches = new GitHubObject(api, this, "/branches") {
@@ -147,7 +150,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + branches.getURL() + "'");
 		}
 		
-		List<GitHubBranch> list = new ArrayList<GitHubBranch>();
+		List<GitHubBranch> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -169,7 +172,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubUser> list = new ArrayList<GitHubUser>();
+		List<GitHubUser> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -191,7 +194,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + users.getURL() + "'");
 		}
 		
-		List<GitHubUser> list = new ArrayList<GitHubUser>();
+		List<GitHubUser> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -213,7 +216,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + users.getURL() + "'");
 		}
 		
-		List<GitHubContributor> list = new ArrayList<GitHubContributor>();
+		List<GitHubContributor> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -235,7 +238,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + users.getURL() + "'");
 		}
 		
-		List<GitHubCollaborator> list = new ArrayList<GitHubCollaborator>();
+		List<GitHubCollaborator> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -257,7 +260,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + langs.getURL() + "'");
 		}
 		
-		List<GitHubLanguage> list = new ArrayList<GitHubLanguage>();
+		List<GitHubLanguage> list = new ArrayList<>();
 		JsonObject object = response.getAsJsonObject();
 		
 		for (Map.Entry<String, JsonElement> entry: object.entrySet()) {
@@ -276,7 +279,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + users.getURL() + "'");
 		}
 		
-		List<GitHubUser> list = new ArrayList<GitHubUser>();
+		List<GitHubUser> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -296,7 +299,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getAllCommits() throws IllegalAccessException {
-		List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
+		List<GitHubCommit> commits = new ArrayList<>();
 		
 		int i = 2;
 		List<GitHubCommit> temp = getCommits(1);
@@ -313,7 +316,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getAllCommits(GitHubUser author) throws IllegalAccessException {
-		List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
+		List<GitHubCommit> commits = new ArrayList<>();
 		
 		int i = 2;
 		List<GitHubCommit> temp = getCommits(1, author);
@@ -328,13 +331,13 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return commits;
 	}
 
-	public GitHubCommit getCommit(String sha) throws IllegalAccessException {
+	public GitHubCommit getCommit(String sha) {
 		return new GitHubCommit(api, this, sha);
 	}
 
 	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("page", String.valueOf(page));
 		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
 		
@@ -368,7 +371,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/commits", type = GitHubCommit.class, requiresAccessToken = false)
 	public List<GitHubCommit> getCommits(final int page, final GitHubUser author) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("page", String.valueOf(page));
 		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
 		params.put("author", author.getUsername());
@@ -388,7 +391,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubCommit> list = new ArrayList<GitHubCommit>();
+		List<GitHubCommit> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -410,7 +413,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubDownload> list = new ArrayList<GitHubDownload>();
+		List<GitHubDownload> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -425,7 +428,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues() throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("state", "all");
 		
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
@@ -444,7 +447,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		List<GitHubIssue> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -459,7 +462,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("state", state.toString().toLowerCase());
 		
 		GitHubObject issues = new GitHubObject(api, this, "/issues") {
@@ -476,7 +479,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		List<GitHubIssue> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -489,9 +492,15 @@ public class GitHubRepository extends UniqueGitHubObject {
 		return list;
 	}
 
+	/**
+	 * Returns a list of all the issues of this repository that are labelled with the corresponding {@link GitHubLabel}.
+	 * @param label the {@link GitHubLabel} to inquire, not null.
+	 * @return a list of all the issues that are labelled with the corresponding {@link GitHubLabel}, empty if none.
+	 * @throws IllegalAccessException if a connection could not be established.
+	 */
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final GitHubLabel label) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("state", "all");
 		params.put("labels", label.getURLEncodedParameter());
 		
@@ -509,7 +518,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		List<GitHubIssue> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -524,7 +533,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state, final GitHubLabel label) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("state", state.toString().toLowerCase());
 		params.put("labels", label.getURLEncodedParameter());
 		
@@ -542,7 +551,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		List<GitHubIssue> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -557,7 +566,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final GitHubMilestone milestone) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("state", "all");
 		try {
 			params.put("milestone", String.valueOf(milestone.getNumber()));
@@ -579,7 +588,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
 		}
 		
-		List<GitHubIssue> list = new ArrayList<GitHubIssue>();
+		List<GitHubIssue> list = new ArrayList<>();
 		JsonArray array = response.getAsJsonArray();
 		
 		for (int i = 0; i < array.size(); i++) {
@@ -594,7 +603,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final GitHubLabel label, final GitHubMilestone milestone) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("state", "all");
 		params.put("labels", label.getURLEncodedParameter());
 		try {
@@ -632,7 +641,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/issues", type = GitHubIssue.class, requiresAccessToken = false)
 	public List<GitHubIssue> getIssues(final RepositoryFeature.State state, final GitHubLabel label, final GitHubMilestone milestone) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("state", state.toString().toLowerCase());
 		params.put("labels", label.getURLEncodedParameter());
 		try {
@@ -670,7 +679,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	
 	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests() throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("state", "all");
 		
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {
@@ -704,7 +713,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 
 	@GitHubAccessPoint(path = "/pulls", type = GitHubPullRequest.class, requiresAccessToken = false)
 	public List<GitHubPullRequest> getPullRequests(final RepositoryFeature.State state) throws IllegalAccessException {
-		final Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("state", state.toString().toLowerCase());
 		
 		GitHubObject issues = new GitHubObject(api, this, "/pulls") {

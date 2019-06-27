@@ -6,6 +6,9 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
 
+/**
+ * Represents a file or a directory that is part of a {@link GitHubRepository}.
+ */
 public class GitHubFile extends GitHubObject {
 	
 	protected GitHubRepository repo;
