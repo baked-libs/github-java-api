@@ -63,7 +63,7 @@ public class GitHubFile extends GitHubObject {
 	
 	@GitHubAccessPoint(path = "@size", type = Integer.class, requiresAccessToken = false)
 	public Integer getSize() throws IllegalAccessException {
-		return null;
+		return getInteger("size", false);
 	}
 
 	/**
