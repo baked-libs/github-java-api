@@ -997,6 +997,16 @@ public class GitHubRepository extends UniqueGitHubObject {
 	public GitHubLabel getLabel(String name) throws IllegalAccessException, UnsupportedEncodingException {
 		return new GitHubLabel(api, this, name);
 	}
+	
+	/**
+	 * Returns the {@link GitHubFile} at the specified path in this repository.
+	 * @param path the path to query, not null.
+	 * @return the {@link GitHubFile} instance at the specified path in this repository.
+	 * @since 1.3.3
+	 */
+	public GitHubFile getContent(String path) {
+		return new GitHubFile(api, this, path);
+	}
 
 	@GitHubAccessPoint(path = "@pushed_at", type = Date.class, requiresAccessToken = false)
 	public Date getLastPushedDate() throws IllegalAccessException {
