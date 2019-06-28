@@ -1006,7 +1006,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	 */
 	@GitHubAccessPoint(path = "/contents", type = GitHubFile.class, requiresAccessToken = false)
 	public GitHubFile getContent(String path) {
-		return new GitHubFile(api, this, path);
+		return new GitHubFile(api, this, "/contents/" + path);
 	}
 
 	@GitHubAccessPoint(path = "@pushed_at", type = Date.class, requiresAccessToken = false)
