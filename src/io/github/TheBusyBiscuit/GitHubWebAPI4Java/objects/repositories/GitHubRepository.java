@@ -1004,6 +1004,7 @@ public class GitHubRepository extends UniqueGitHubObject {
 	 * @return the {@link GitHubFile} instance at the specified path in this repository.
 	 * @since 1.3.3
 	 */
+	@GitHubAccessPoint(path = "/contents", type = GitHubFile.class, requiresAccessToken = false)
 	public GitHubFile getContent(String path) {
 		return new GitHubFile(api, this, path);
 	}
