@@ -80,4 +80,14 @@ public class GitHubFile extends GitHubObject {
 		}
 		return suffix;
 	}
+
+	/**
+	 * Returns the content of this file.
+	 * @return the content of this file.
+	 * @throws IllegalAccessException if the connection to the GitHub API could not be established.
+	 * @since 1.3.3
+	 */
+	public String getContent() throws IllegalAccessException {
+		return getString("content", false);
+	}
 }
