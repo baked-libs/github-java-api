@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -1129,4 +1130,33 @@ public class GitHubRepository extends UniqueGitHubObject {
 		
 		return isInvalid(response, "license") ? null: new GitHubLicense(api, response.get("license").getAsJsonObject().get("key").getAsString(), response.get("license").getAsJsonObject());
 	}
+
+    /**
+     * Returns a list of thirty of the latest releases of this repository.
+     * The GitHub API does not return all the releases available on a repository, and the number of releases returned by this call might change in the future.
+     * @return a list of the latest releases of this repository.
+     * @throws IllegalAccessException
+     * @since 1.3.4
+     */
+	@GitHubAccessPoint(path = "/releases", type = GitHubRelease.class, requiresAccessToken = false)
+	public List<GitHubRelease> getReleases() throws IllegalAccessException {
+        GitHubObject releases = new GitHubObject(api, this, "/releases");
+        JsonElement response = releases.getResponse(true);
+
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+
+        List<GitHubRelease> list = new LinkedList<>();
+        JsonArray array = response.getAsJsonArray();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
+
+            GitHubRelease release = new GitHubRelease(api, this, object.get("id").getAsInt(), object);
+            list.add(release);
+        }
+
+        return list;
+    }
 }
