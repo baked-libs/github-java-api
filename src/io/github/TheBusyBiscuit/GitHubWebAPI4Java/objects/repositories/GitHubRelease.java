@@ -15,12 +15,12 @@ import java.util.Date;
  */
 public class GitHubRelease extends GitHubObject {
 
-    public GitHubRelease(GitHubWebAPI api, GitHubObject parent, int id) {
-        super(api, parent, "/releases/" + id);
+    public GitHubRelease(GitHubWebAPI api, GitHubRepository repo, int id) {
+        super(api, repo, "/releases/" + id);
     }
 
-    public GitHubRelease(GitHubWebAPI api, GitHubObject parent, int id, JsonElement response) {
-        super(api, parent, "/releases/" + id);
+    public GitHubRelease(GitHubWebAPI api, GitHubRepository repo, int id, JsonElement response) {
+        super(api, repo, "/releases/" + id);
 
         this.minimal = response;
     }
