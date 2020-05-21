@@ -1132,9 +1132,8 @@ public class GitHubRepository extends UniqueGitHubObject {
 	}
 
     /**
-     * Returns a list of thirty of the latest releases of this repository.
-     * The GitHub API does not return all the releases available on a repository, and the number of releases returned by this call might change in the future.
-     * @return a list of the latest releases of this repository.
+     * Returns a list of the releases of this repository.
+     * @return a list of the releases of this repository.
      * @throws IllegalAccessException
      * @since 1.3.4
      */
