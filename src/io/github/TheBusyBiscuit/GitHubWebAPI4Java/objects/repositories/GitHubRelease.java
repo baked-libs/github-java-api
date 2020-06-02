@@ -56,7 +56,7 @@ public class GitHubRelease extends GitHubObject {
      */
     @GitHubAccessPoint(path = "@prerelease", type = Boolean.class, requiresAccessToken = false)
     public boolean isPreRelease() throws IllegalAccessException {
-        return getBoolean("prerealease", false);
+        return getBoolean("prerelease", false);
     }
 
     /**
