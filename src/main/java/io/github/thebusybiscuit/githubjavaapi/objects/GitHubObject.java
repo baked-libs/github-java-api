@@ -10,8 +10,8 @@ import com.google.gson.JsonObject;
 
 import io.github.thebusybiscuit.githubjavaapi.GitHubWebAPI;
 import io.github.thebusybiscuit.githubjavaapi.annotations.GitHubAccessPoint;
-import io.github.thebusybiscuit.githubjavaapi.extra.Base64url;
-import io.github.thebusybiscuit.githubjavaapi.extra.GitHubDate;
+import io.github.thebusybiscuit.githubjavaapi.utils.Base64Url;
+import io.github.thebusybiscuit.githubjavaapi.utils.GitHubDate;
 
 public class GitHubObject extends Object {
 
@@ -108,10 +108,10 @@ public class GitHubObject extends Object {
         if (api.getMemoryCache().containsKey(getFullURL())) {
             log(" Returned globally cached (full!) version.");
             response = api.getMemoryCache().get(getFullURL());
-        } else if (api.getHardDriveCache() != null && new File(api.getHardDriveCache() + Base64url.encode(getFullURL()) + ".json").exists()) {
+        } else if (api.getHardDriveCache() != null && new File(api.getHardDriveCache() + Base64Url.encode(getFullURL()) + ".json").exists()) {
             log(" Returned hard drive cached (full!) version.");
             try {
-                response = api.readHardDriveCache(Base64url.encode(getFullURL()) + ".json");
+                response = api.readHardDriveCache(Base64Url.encode(getFullURL()) + ".json");
             } catch (IOException e) {
                 log(" Establishing Connection...");
                 this.response = api.call(this);

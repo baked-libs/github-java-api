@@ -1,4 +1,4 @@
-package io.github.thebusybiscuit.githubjavaapi.extra;
+package io.github.thebusybiscuit.githubjavaapi.utils;
 
 public enum CacheMode {
 

@@ -1,4 +1,4 @@
-package io.github.thebusybiscuit.githubjavaapi.extra;
+package io.github.thebusybiscuit.githubjavaapi.utils;
 
 import java.util.ArrayList;
 import java.util.List;

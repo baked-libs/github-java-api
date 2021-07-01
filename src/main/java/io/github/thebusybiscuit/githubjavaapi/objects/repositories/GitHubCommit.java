@@ -10,10 +10,10 @@ import com.google.gson.JsonObject;
 
 import io.github.thebusybiscuit.githubjavaapi.GitHubWebAPI;
 import io.github.thebusybiscuit.githubjavaapi.annotations.GitHubAccessPoint;
-import io.github.thebusybiscuit.githubjavaapi.extra.GitHubDate;
-import io.github.thebusybiscuit.githubjavaapi.extra.RepositorySnapshot;
 import io.github.thebusybiscuit.githubjavaapi.objects.GitHubObject;
 import io.github.thebusybiscuit.githubjavaapi.objects.users.GitHubUser;
+import io.github.thebusybiscuit.githubjavaapi.utils.GitHubDate;
+import io.github.thebusybiscuit.githubjavaapi.utils.RepositorySnapshot;
 
 public class GitHubCommit extends GitHubObject {
 

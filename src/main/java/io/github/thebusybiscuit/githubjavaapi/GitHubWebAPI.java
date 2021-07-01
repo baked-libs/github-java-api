@@ -24,12 +24,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import io.github.thebusybiscuit.githubjavaapi.extra.Base64url;
-import io.github.thebusybiscuit.githubjavaapi.extra.CacheMode;
 import io.github.thebusybiscuit.githubjavaapi.objects.GitHubObject;
 import io.github.thebusybiscuit.githubjavaapi.objects.repositories.GitHubRepository;
 import io.github.thebusybiscuit.githubjavaapi.objects.users.GitHubOrganization;
 import io.github.thebusybiscuit.githubjavaapi.objects.users.GitHubUser;
+import io.github.thebusybiscuit.githubjavaapi.utils.Base64Url;
+import io.github.thebusybiscuit.githubjavaapi.utils.CacheMode;
 
 public class GitHubWebAPI {
 
@@ -174,7 +174,7 @@ public class GitHubWebAPI {
             case HARD_DRIVE_CACHE:
                 if (hardDriveCachePath != null) {
                     try {
-                        saveHardDriveCache(Base64url.encode(url) + ".json", response);
+                        saveHardDriveCache(Base64Url.encode(url) + ".json", response);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -185,7 +185,7 @@ public class GitHubWebAPI {
 
                 if (hardDriveCachePath != null) {
                     try {
-                        saveHardDriveCache(Base64url.encode(url) + ".json", response);
+                        saveHardDriveCache(Base64Url.encode(url) + ".json", response);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
