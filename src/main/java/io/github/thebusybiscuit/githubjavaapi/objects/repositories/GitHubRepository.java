@@ -24,7 +24,7 @@ import io.github.thebusybiscuit.githubjavaapi.objects.users.GitHubUser;
  */
 public class GitHubRepository extends UniqueGitHubObject {
 
-    private String fullName = null;
+    private final String fullName;
 
     public GitHubRepository(GitHubWebAPI api, String username, String repo) {
         super(api, null, "repos/" + username + "/" + repo);
@@ -40,6 +40,8 @@ public class GitHubRepository extends UniqueGitHubObject {
 
     public GitHubRepository(GitHubObject obj) {
         super(obj);
+
+        this.fullName = null;
     }
 
     public GitHubRepository(GitHubWebAPI api, String name, JsonElement response) {

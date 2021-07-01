@@ -105,9 +105,9 @@ public class GitHubObject extends Object {
             return response;
         }
 
-        if (api.cache.containsKey(getFullURL())) {
+        if (api.getMemoryCache().containsKey(getFullURL())) {
             log(" Returned globally cached (full!) version.");
-            response = api.cache.get(getFullURL());
+            response = api.getMemoryCache().get(getFullURL());
         } else if (api.getHardDriveCache() != null && new File(api.getHardDriveCache() + Base64url.encode(getFullURL()) + ".json").exists()) {
             log(" Returned hard drive cached (full!) version.");
             try {
@@ -170,9 +170,8 @@ public class GitHubObject extends Object {
 
     public void clearCache() {
         String url = getFullURL();
-        if (api.cache.containsKey(url)) {
-            api.cache.remove(url);
-        }
+
+        api.getMemoryCache().remove(url);
 
         if (response != null) {
             response = null;

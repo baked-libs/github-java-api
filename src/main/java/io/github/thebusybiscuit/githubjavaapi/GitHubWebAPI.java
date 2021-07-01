@@ -15,6 +15,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -30,32 +33,34 @@ import io.github.thebusybiscuit.githubjavaapi.objects.users.GitHubUser;
 
 public class GitHubWebAPI {
 
-    private String token = "";
-    protected String hard_drive_cache = null;
-    protected CacheMode cache_mode;
-    public Map<String, JsonElement> cache = new HashMap<>();
-
+    private static final String API_URL = "https://api.github.com/";
     public static int ITEMS_PER_PAGE = 100;
 
+    private String accessToken = "";
+
+    protected CacheMode cachingMode;
+    protected String hardDriveCachePath = null;
+    private final Map<String, JsonElement> memoryCache = new HashMap<>();
+
     public GitHubWebAPI() {
-        this.cache_mode = CacheMode.RAM_CACHE;
+        this.cachingMode = CacheMode.RAM_CACHE;
     }
 
     public GitHubWebAPI(CacheMode mode) {
-        this.cache_mode = mode;
+        this.cachingMode = mode;
     }
 
-    public GitHubWebAPI(String access_token) {
-        this.token = access_token;
-        this.cache_mode = CacheMode.RAM_CACHE;
+    public GitHubWebAPI(String accessToken) {
+        this.accessToken = accessToken;
+        this.cachingMode = CacheMode.RAM_CACHE;
     }
 
     public String getAccessToken() {
-        return this.token;
+        return this.accessToken;
     }
 
-    public String getURL() {
-        return "https://api.github.com/";
+    public @Nonnull String getURL() {
+        return API_URL;
     }
 
     public GitHubUser getUser(String username) {
@@ -72,14 +77,21 @@ public class GitHubWebAPI {
 
     public JsonElement call(GitHubObject object) {
         try {
-            String query = getURL() + object.getURL();
+            StringBuilder query = new StringBuilder();
+            query.append(getURL());
+            query.append(object.getURL());
+
             String token = getAccessToken();
+
             if (token != null && !token.equals("")) {
-                query += "?access_token=" + token;
+                query.append("?access_token=" + token);
 
                 if (object.getParameters() != null) {
                     for (Map.Entry<String, String> parameter : object.getParameters().entrySet()) {
-                        query += "&" + parameter.getKey() + "=" + parameter.getValue();
+                        query.append("&");
+                        query.append(parameter.getKey());
+                        query.append("=");
+                        query.append(parameter.getValue());
                     }
                 }
             } else {
@@ -87,14 +99,17 @@ public class GitHubWebAPI {
                     boolean first = true;
 
                     for (Map.Entry<String, String> parameter : object.getParameters().entrySet()) {
-                        query += (first ? "?" : "&") + parameter.getKey() + "=" + parameter.getValue();
+                        query.append((first ? "?" : "&"));
+                        query.append(parameter.getKey());
+                        query.append("=");
+                        query.append(parameter.getValue());
 
                         first = false;
                     }
                 }
             }
 
-            URL website = new URL(query);
+            URL website = new URL(query.toString());
 
             HttpURLConnection connection = (HttpURLConnection) website.openConnection();
             connection.setConnectTimeout(5000);
@@ -115,9 +130,7 @@ public class GitHubWebAPI {
                 reader.close();
                 connection.disconnect();
 
-                JsonElement json = new JsonParser().parse(buffer.toString());
-
-                return json;
+                return JsonParser.parseString(buffer.toString());
             } else {
                 connection.disconnect();
 
@@ -153,13 +166,13 @@ public class GitHubWebAPI {
     }
 
     public void clearCache() {
-        this.cache.clear();
+        this.memoryCache.clear();
     }
 
     public void cache(String url, JsonElement response) {
-        switch (this.cache_mode) {
-            case HARD_DRIVE_CACHE: {
-                if (hard_drive_cache != null) {
+        switch (this.cachingMode) {
+            case HARD_DRIVE_CACHE:
+                if (hardDriveCachePath != null) {
                     try {
                         saveHardDriveCache(Base64url.encode(url) + ".json", response);
                     } catch (FileNotFoundException e) {
@@ -167,11 +180,10 @@ public class GitHubWebAPI {
                     }
                 }
                 break;
-            }
-            case RAM_AND_HARD_DRIVE_CACHE: {
-                cache.put(url, response);
+            case RAM_AND_HARD_DRIVE_CACHE:
+                memoryCache.put(url, response);
 
-                if (hard_drive_cache != null) {
+                if (hardDriveCachePath != null) {
                     try {
                         saveHardDriveCache(Base64url.encode(url) + ".json", response);
                     } catch (FileNotFoundException e) {
@@ -179,35 +191,29 @@ public class GitHubWebAPI {
                     }
                 }
                 break;
-            }
-            case RAM_CACHE: {
-                cache.put(url, response);
+            case RAM_CACHE:
+                memoryCache.put(url, response);
                 break;
-            }
-            default: {
+            default:
                 break;
-            }
         }
     }
 
     public String getHardDriveCache() {
-        return hard_drive_cache;
+        return hardDriveCachePath;
     }
 
-    public JsonElement readHardDriveCache(String file) throws IOException {
-        if (new File(hard_drive_cache + file).exists()) {
-            BufferedReader reader = null;
+    public @Nullable JsonElement readHardDriveCache(@Nonnull String file) throws IOException {
+        File cacheFile = new File(hardDriveCachePath + file);
+
+        if (cacheFile.exists()) {
             String data;
 
-            try {
-                reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(hard_drive_cache + file)), StandardCharsets.UTF_8));
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(cacheFile), StandardCharsets.UTF_8))) {
                 data = reader.readLine();
-            } finally {
-                if (reader != null)
-                    reader.close();
             }
 
-            return new JsonParser().parse(data);
+            return JsonParser.parseString(data);
         }
 
         return null;
@@ -215,7 +221,7 @@ public class GitHubWebAPI {
 
     protected void saveHardDriveCache(String file, JsonElement json) throws FileNotFoundException {
         Gson gson = new GsonBuilder().serializeNulls().create();
-        PrintWriter writer = new PrintWriter(hard_drive_cache + file);
+        PrintWriter writer = new PrintWriter(hardDriveCachePath + file);
         writer.println(gson.toJson(json));
         writer.close();
     }
@@ -225,18 +231,22 @@ public class GitHubWebAPI {
         if (!dir.exists())
             dir.mkdirs();
 
-        this.hard_drive_cache = path + "/";
+        this.hardDriveCachePath = path + '/';
     }
 
     public void setCacheMode(CacheMode mode) {
-        this.cache_mode = mode;
+        this.cachingMode = mode;
     }
 
     public CacheMode getCacheMode() {
-        return this.cache_mode;
+        return this.cachingMode;
     }
 
     public void disableCaching() {
-        this.cache_mode = CacheMode.NO_CACHE;
+        this.cachingMode = CacheMode.NO_CACHE;
+    }
+
+    public @Nonnull Map<String, JsonElement> getMemoryCache() {
+        return memoryCache;
     }
 }
