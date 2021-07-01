@@ -15,275 +15,274 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.UniqueGitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubRepository;
 
 public class GitHubUser extends UniqueGitHubObject {
-	
-	private String username;
 
-	public GitHubUser(GitHubWebAPI api, String username) {
-		super(api, null, "users/" + username);
-		
-		this.username = username;
-	}
+    private String username;
 
-	public GitHubUser(GitHubWebAPI api, String username, JsonElement response) {
-		super(api, null, "users/" + username);
-		
-		this.username = username;
-		this.minimal = response;
-	}
+    public GitHubUser(GitHubWebAPI api, String username) {
+        super(api, null, "users/" + username);
 
-	public GitHubUser(GitHubObject obj) {
-		super(obj);
-	}
-	
-	@Override
-	public String getRawURL() {
-		return ".*users/.*";
-	}
-	
-	public GitHubRepository getRepository(String repo) {
-		return new GitHubRepository(this.api, username, repo);
-	}
+        this.username = username;
+    }
 
-	@GitHubAccessPoint(path = "/repos", type = GitHubRepository.class, requiresAccessToken = false)
-	public List<GitHubRepository> getRepositories() throws IllegalAccessException {
-		GitHubObject repos = new GitHubObject(api, this, "/repos");
-		JsonElement response = repos.getResponse(true);
-		
-		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		
-		List<GitHubRepository> list = new ArrayList<>();
-		JsonArray array = response.getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-	    	JsonObject object = array.get(i).getAsJsonObject();
-	    	
-	    	GitHubRepository repo = new GitHubRepository(api, object.get("full_name").getAsString(), object);
-	    	list.add(repo);
-	    }
-		
-		return list;
-	}
+    public GitHubUser(GitHubWebAPI api, String username, JsonElement response) {
+        super(api, null, "users/" + username);
 
-	@GitHubAccessPoint(path = "/starred", type = GitHubRepository.class, requiresAccessToken = false)
-	public List<GitHubRepository> getStarredRepositories() throws IllegalAccessException {
-		GitHubObject repos = new GitHubObject(api, this, "/starred");
-		JsonElement response = repos.getResponse(true);
-		
-		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		
-		List<GitHubRepository> list = new ArrayList<>();
-		JsonArray array = response.getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-	    	JsonObject object = array.get(i).getAsJsonObject();
-	    	
-	    	GitHubRepository repo = new GitHubRepository(api, object.get("full_name").getAsString(), object);
-	    	list.add(repo);
-	    }
-		
-		return list;
-	}
+        this.username = username;
+        this.minimal = response;
+    }
 
-	@GitHubAccessPoint(path = "/subscriptions", type = GitHubRepository.class, requiresAccessToken = false)
-	public List<GitHubRepository> getSubscribedRepositories() throws IllegalAccessException {
-		GitHubObject repos = new GitHubObject(api, this, "/subscriptions");
-		JsonElement response = repos.getResponse(true);
-		
-		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		
-		List<GitHubRepository> list = new ArrayList<>();
-		JsonArray array = response.getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-	    	JsonObject object = array.get(i).getAsJsonObject();
-	    	
-	    	GitHubRepository repo = new GitHubRepository(api, object.get("full_name").getAsString(), object);
-	    	list.add(repo);
-	    }
-		
-		return list;
-	}
+    public GitHubUser(GitHubObject obj) {
+        super(obj);
+    }
 
-	@GitHubAccessPoint(path = "/followers", type = GitHubUser.class, requiresAccessToken = false)
-	public List<GitHubUser> getFollowers() throws IllegalAccessException {
-		GitHubObject users = new GitHubObject(api, this, "/followers");
-		JsonElement response = users.getResponse(true);
-		
-		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		
-		List<GitHubUser> list = new ArrayList<>();
-		JsonArray array = response.getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-	    	JsonObject object = array.get(i).getAsJsonObject();
-	    	
-	    	GitHubUser user = new GitHubUser(api, object.get("login").getAsString(), object);
-	    	list.add(user);
-	    }
-		
-		return list;
-	}
+    @Override
+    public String getRawURL() {
+        return ".*users/.*";
+    }
 
-	@GitHubAccessPoint(path = "/following", type = GitHubUser.class, requiresAccessToken = false)
-	public List<GitHubUser> getFollowing() throws IllegalAccessException {
-		GitHubObject users = new GitHubObject(api, this, "/following");
-		JsonElement response = users.getResponse(true);
-		
-		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		
-		List<GitHubUser> list = new ArrayList<>();
-		JsonArray array = response.getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-	    	JsonObject object = array.get(i).getAsJsonObject();
-	    	
-	    	GitHubUser user = new GitHubUser(api, object.get("login").getAsString(), object);
-	    	list.add(user);
-	    }
-		
-		return list;
-	}
+    public GitHubRepository getRepository(String repo) {
+        return new GitHubRepository(this.api, username, repo);
+    }
 
-	@GitHubAccessPoint(path = "/orgs", type = GitHubOrganization.class, requiresAccessToken = false)
-	public List<GitHubOrganization> getOrganizations() throws IllegalAccessException {
-		GitHubObject orgs = new GitHubObject(api, this, "/orgs");
-		JsonElement response = orgs.getResponse(true);
-		
-		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		
-		List<GitHubOrganization> list = new ArrayList<GitHubOrganization>();
-		JsonArray array = response.getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-	    	JsonObject object = array.get(i).getAsJsonObject();
-	    	
-	    	GitHubOrganization org = new GitHubOrganization(api, object.get("login").getAsString());
-	    	list.add(org);
-	    }
-		
-		return list;
-	}
+    @GitHubAccessPoint(path = "/repos", type = GitHubRepository.class, requiresAccessToken = false)
+    public List<GitHubRepository> getRepositories() throws IllegalAccessException {
+        GitHubObject repos = new GitHubObject(api, this, "/repos");
+        JsonElement response = repos.getResponse(true);
 
-	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
-	public String getName() throws IllegalAccessException {
-		return getString("name", true);
-	}
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
 
-	@GitHubAccessPoint(path = "/gists", type = GitHubGist.class, requiresAccessToken = false)
-	public List<GitHubGist> getPublicGists() throws IllegalAccessException {
-		GitHubObject gists = new GitHubObject(api, this, "/gists");
-		JsonElement response = gists.getResponse(true);
-		
-		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		
-		List<GitHubGist> list = new ArrayList<GitHubGist>();
-		JsonArray array = response.getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-	    	JsonObject object = array.get(i).getAsJsonObject();
-	    	
-	    	GitHubGist org = new GitHubGist(api, object.get("id").getAsString(), object);
-	    	list.add(org);
-	    }
-		
-		return list;
-	}
+        List<GitHubRepository> list = new ArrayList<>();
+        JsonArray array = response.getAsJsonArray();
 
-	@GitHubAccessPoint(path = "@login", type = String.class, requiresAccessToken = false)
-	public String getUsername() throws IllegalAccessException {
-		if (this.username != null) {
-			return this.username;
-		}
-		
-		return getString("login", false);
-	}
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
 
-	@GitHubAccessPoint(path = "@blog", type = String.class, requiresAccessToken = false)
-	public String getWebsite() throws IllegalAccessException {
-		return getString("blog", true);
-	}
+            GitHubRepository repo = new GitHubRepository(api, object.get("full_name").getAsString(), object);
+            list.add(repo);
+        }
 
-	@GitHubAccessPoint(path = "@company", type = String.class, requiresAccessToken = false)
-	public String getCompany() throws IllegalAccessException {
-		return getString("company", true);
-	}
+        return list;
+    }
 
-	@GitHubAccessPoint(path = "@location", type = String.class, requiresAccessToken = false)
-	public String getLocation() throws IllegalAccessException {
-		return getString("location", true);
-	}
+    @GitHubAccessPoint(path = "/starred", type = GitHubRepository.class, requiresAccessToken = false)
+    public List<GitHubRepository> getStarredRepositories() throws IllegalAccessException {
+        GitHubObject repos = new GitHubObject(api, this, "/starred");
+        JsonElement response = repos.getResponse(true);
 
-	@GitHubAccessPoint(path = "@email", type = String.class, requiresAccessToken = false)
-	public String getEmailAdress() throws IllegalAccessException {
-		return getString("email", true);
-	}
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
 
-	@GitHubAccessPoint(path = "@hireable", type = Boolean.class, requiresAccessToken = false)
-	public boolean isHireable() throws IllegalAccessException {
-		return getBoolean("hireable", true);
-	}
+        List<GitHubRepository> list = new ArrayList<>();
+        JsonArray array = response.getAsJsonArray();
 
-	@GitHubAccessPoint(path = "@site_admin", type = Boolean.class, requiresAccessToken = false)
-	public boolean isAdmin() throws IllegalAccessException {
-		return getBoolean("site_admin", false);
-	}
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
 
-	@GitHubAccessPoint(path = "@bio", type = String.class, requiresAccessToken = false)
-	public String getDescription() throws IllegalAccessException {
-		return getString("bio", true);
-	}
+            GitHubRepository repo = new GitHubRepository(api, object.get("full_name").getAsString(), object);
+            list.add(repo);
+        }
 
-	@GitHubAccessPoint(path = "@avatar_url", type = String.class, requiresAccessToken = false)
-	public String getAvatarURL() throws IllegalAccessException {
-		return getString("avatar_url", false);
-	}
+        return list;
+    }
 
-	@GitHubAccessPoint(path = "@type", type = String.class, requiresAccessToken = false)
-	public String getType() throws IllegalAccessException {
-		return getString("type", false);
-	}
+    @GitHubAccessPoint(path = "/subscriptions", type = GitHubRepository.class, requiresAccessToken = false)
+    public List<GitHubRepository> getSubscribedRepositories() throws IllegalAccessException {
+        GitHubObject repos = new GitHubObject(api, this, "/subscriptions");
+        JsonElement response = repos.getResponse(true);
 
-	@GitHubAccessPoint(path = "@public_repos", type = Integer.class, requiresAccessToken = false)
-	public Integer getRepositoriesAmount() throws IllegalAccessException {
-		return getInteger("public_repos", true);
-	}
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
 
-	@GitHubAccessPoint(path = "@public_gists", type = Integer.class, requiresAccessToken = false)
-	public Integer getGistsAmount() throws IllegalAccessException {
-		return getInteger("public_gists", true);
-	}
+        List<GitHubRepository> list = new ArrayList<>();
+        JsonArray array = response.getAsJsonArray();
 
-	@GitHubAccessPoint(path = "@followers", type = Integer.class, requiresAccessToken = false)
-	public Integer getFollowersAmount() throws IllegalAccessException {
-		return getInteger("followers", true);
-	}
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
 
-	@GitHubAccessPoint(path = "@following", type = Integer.class, requiresAccessToken = false)
-	public Integer getFollowingAmount() throws IllegalAccessException {
-		return getInteger("following", true);
-	}
-	
-	public GitHubOrganization toOrganization() throws IllegalAccessException {
-		if (getType().equals("Organization")) {
-			return new GitHubOrganization(api, username);
-		}
-		else {
-			return null;
-		}
-	}
+            GitHubRepository repo = new GitHubRepository(api, object.get("full_name").getAsString(), object);
+            list.add(repo);
+        }
+
+        return list;
+    }
+
+    @GitHubAccessPoint(path = "/followers", type = GitHubUser.class, requiresAccessToken = false)
+    public List<GitHubUser> getFollowers() throws IllegalAccessException {
+        GitHubObject users = new GitHubObject(api, this, "/followers");
+        JsonElement response = users.getResponse(true);
+
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+
+        List<GitHubUser> list = new ArrayList<>();
+        JsonArray array = response.getAsJsonArray();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
+
+            GitHubUser user = new GitHubUser(api, object.get("login").getAsString(), object);
+            list.add(user);
+        }
+
+        return list;
+    }
+
+    @GitHubAccessPoint(path = "/following", type = GitHubUser.class, requiresAccessToken = false)
+    public List<GitHubUser> getFollowing() throws IllegalAccessException {
+        GitHubObject users = new GitHubObject(api, this, "/following");
+        JsonElement response = users.getResponse(true);
+
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+
+        List<GitHubUser> list = new ArrayList<>();
+        JsonArray array = response.getAsJsonArray();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
+
+            GitHubUser user = new GitHubUser(api, object.get("login").getAsString(), object);
+            list.add(user);
+        }
+
+        return list;
+    }
+
+    @GitHubAccessPoint(path = "/orgs", type = GitHubOrganization.class, requiresAccessToken = false)
+    public List<GitHubOrganization> getOrganizations() throws IllegalAccessException {
+        GitHubObject orgs = new GitHubObject(api, this, "/orgs");
+        JsonElement response = orgs.getResponse(true);
+
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+
+        List<GitHubOrganization> list = new ArrayList<GitHubOrganization>();
+        JsonArray array = response.getAsJsonArray();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
+
+            GitHubOrganization org = new GitHubOrganization(api, object.get("login").getAsString());
+            list.add(org);
+        }
+
+        return list;
+    }
+
+    @GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
+    public String getName() throws IllegalAccessException {
+        return getString("name", true);
+    }
+
+    @GitHubAccessPoint(path = "/gists", type = GitHubGist.class, requiresAccessToken = false)
+    public List<GitHubGist> getPublicGists() throws IllegalAccessException {
+        GitHubObject gists = new GitHubObject(api, this, "/gists");
+        JsonElement response = gists.getResponse(true);
+
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+
+        List<GitHubGist> list = new ArrayList<GitHubGist>();
+        JsonArray array = response.getAsJsonArray();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
+
+            GitHubGist org = new GitHubGist(api, object.get("id").getAsString(), object);
+            list.add(org);
+        }
+
+        return list;
+    }
+
+    @GitHubAccessPoint(path = "@login", type = String.class, requiresAccessToken = false)
+    public String getUsername() throws IllegalAccessException {
+        if (this.username != null) {
+            return this.username;
+        }
+
+        return getString("login", false);
+    }
+
+    @GitHubAccessPoint(path = "@blog", type = String.class, requiresAccessToken = false)
+    public String getWebsite() throws IllegalAccessException {
+        return getString("blog", true);
+    }
+
+    @GitHubAccessPoint(path = "@company", type = String.class, requiresAccessToken = false)
+    public String getCompany() throws IllegalAccessException {
+        return getString("company", true);
+    }
+
+    @GitHubAccessPoint(path = "@location", type = String.class, requiresAccessToken = false)
+    public String getLocation() throws IllegalAccessException {
+        return getString("location", true);
+    }
+
+    @GitHubAccessPoint(path = "@email", type = String.class, requiresAccessToken = false)
+    public String getEmailAdress() throws IllegalAccessException {
+        return getString("email", true);
+    }
+
+    @GitHubAccessPoint(path = "@hireable", type = Boolean.class, requiresAccessToken = false)
+    public boolean isHireable() throws IllegalAccessException {
+        return getBoolean("hireable", true);
+    }
+
+    @GitHubAccessPoint(path = "@site_admin", type = Boolean.class, requiresAccessToken = false)
+    public boolean isAdmin() throws IllegalAccessException {
+        return getBoolean("site_admin", false);
+    }
+
+    @GitHubAccessPoint(path = "@bio", type = String.class, requiresAccessToken = false)
+    public String getDescription() throws IllegalAccessException {
+        return getString("bio", true);
+    }
+
+    @GitHubAccessPoint(path = "@avatar_url", type = String.class, requiresAccessToken = false)
+    public String getAvatarURL() throws IllegalAccessException {
+        return getString("avatar_url", false);
+    }
+
+    @GitHubAccessPoint(path = "@type", type = String.class, requiresAccessToken = false)
+    public String getType() throws IllegalAccessException {
+        return getString("type", false);
+    }
+
+    @GitHubAccessPoint(path = "@public_repos", type = Integer.class, requiresAccessToken = false)
+    public Integer getRepositoriesAmount() throws IllegalAccessException {
+        return getInteger("public_repos", true);
+    }
+
+    @GitHubAccessPoint(path = "@public_gists", type = Integer.class, requiresAccessToken = false)
+    public Integer getGistsAmount() throws IllegalAccessException {
+        return getInteger("public_gists", true);
+    }
+
+    @GitHubAccessPoint(path = "@followers", type = Integer.class, requiresAccessToken = false)
+    public Integer getFollowersAmount() throws IllegalAccessException {
+        return getInteger("followers", true);
+    }
+
+    @GitHubAccessPoint(path = "@following", type = Integer.class, requiresAccessToken = false)
+    public Integer getFollowingAmount() throws IllegalAccessException {
+        return getInteger("following", true);
+    }
+
+    public GitHubOrganization toOrganization() throws IllegalAccessException {
+        if (getType().equals("Organization")) {
+            return new GitHubOrganization(api, username);
+        } else {
+            return null;
+        }
+    }
 
 }

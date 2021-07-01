@@ -15,153 +15,153 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.RepositoryFeature;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
 public class GitHubIssue extends RepositoryFeature {
-	
-	private GitHubRepository repo;
-	
-	public GitHubIssue(GitHubWebAPI api, GitHubRepository repo, int number) {
-		super(api, repo, "/issues/" + number);
-		
-		this.repo = repo;
-	}
-	
-	public GitHubIssue(GitHubWebAPI api, GitHubRepository repo, int number, JsonElement response) {
-		super(api, repo, "/issues/" + number);
 
-		this.repo = repo;
-		this.minimal = response;
-	}
+    private GitHubRepository repo;
 
-	public GitHubIssue(GitHubObject obj) {
-		super(obj);
-	}
-	
-	@Override
-	public String getRawURL() {
-		return ".*repos/.*/.*/issues/.*";
-	}
+    public GitHubIssue(GitHubWebAPI api, GitHubRepository repo, int number) {
+        super(api, repo, "/issues/" + number);
 
-	@GitHubAccessPoint(path = "@user", type = GitHubUser.class, requiresAccessToken = false)
-	public GitHubUser getUser() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "user") ? null: new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
-	}
+        this.repo = repo;
+    }
 
-	@GitHubAccessPoint(path = "@locked", type = Boolean.class, requiresAccessToken = false)
-	public Boolean isLocked() throws IllegalAccessException {
-		return getBoolean("locked", false);
-	}
-	
-	@GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class, requiresAccessToken = false)
-	public GitHubRepository getRepository() {
-		return this.repo;
-	}
+    public GitHubIssue(GitHubWebAPI api, GitHubRepository repo, int number, JsonElement response) {
+        super(api, repo, "/issues/" + number);
 
-	@GitHubAccessPoint(path = "@labels", type = GitHubLabel.class, requiresAccessToken = false)
-	public List<GitHubLabel> getLabels() throws IllegalAccessException, UnsupportedEncodingException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		List<GitHubLabel> labels = new ArrayList<GitHubLabel>();
-		
-		JsonArray array = response.get("labels").getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-			JsonObject obj = array.get(i).getAsJsonObject();
-			labels.add(new GitHubLabel(api, repo, obj.get("name").getAsString(), obj));
-		}
-		
-		return labels;
-	}
+        this.repo = repo;
+        this.minimal = response;
+    }
 
-	@GitHubAccessPoint(path = "@closed_by", type = GitHubUser.class, requiresAccessToken = false)
-	public GitHubUser getClosedBy() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "closed_by") ? null: new GitHubUser(api, response.get("closed_by").getAsJsonObject().get("login").getAsString(), response.get("closed_by").getAsJsonObject());
-	}
+    public GitHubIssue(GitHubObject obj) {
+        super(obj);
+    }
 
-	@GitHubAccessPoint(path = "@milestone", type = GitHubMilestone.class, requiresAccessToken = false)
-	public GitHubMilestone getMilestone() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "milestone") ? null: new GitHubMilestone(api, getRepository(), response.get("milestone").getAsJsonObject().get("number").getAsInt(), response.get("milestone").getAsJsonObject());
-	}
+    @Override
+    public String getRawURL() {
+        return ".*repos/.*/.*/issues/.*";
+    }
 
-	@GitHubAccessPoint(path = "@body", type = String.class, requiresAccessToken = false)
-	public String getMessageBody() throws IllegalAccessException {
-		return getString("body", false);
-	}
+    @GitHubAccessPoint(path = "@user", type = GitHubUser.class, requiresAccessToken = false)
+    public GitHubUser getUser() throws IllegalAccessException {
+        JsonElement element = getResponse(false);
 
-	@GitHubAccessPoint(path = "@assignees", type = GitHubUser.class, requiresAccessToken = false)
-	public List<GitHubUser> getAssignees() throws IllegalAccessException, UnsupportedEncodingException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		List<GitHubUser> users = new ArrayList<GitHubUser>();
-		
-		JsonArray array = response.get("assignees").getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-			JsonObject obj = array.get(i).getAsJsonObject();
-			users.add(new GitHubUser(api, obj.get("login").getAsString(), obj));
-		}
-		
-		return users;
-	}
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
 
-	@GitHubAccessPoint(path = "/comments", type = GitHubComment.class, requiresAccessToken = false)
-	public List<GitHubComment> getComments() throws IllegalAccessException {
-		GitHubObject repos = new GitHubObject(api, this, "/comments");
-		JsonElement response = repos.getResponse(true);
-		
-		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		
-		List<GitHubComment> list = new ArrayList<>();
-		JsonArray array = response.getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-	    	JsonObject object = array.get(i).getAsJsonObject();
-	    	
-	    	GitHubComment comment = new GitHubComment(api, getRepository(), object.get("id").getAsInt(), object);
-	    	list.add(comment);
-	    }
-		
-		return list;
-	}
+        return isInvalid(response, "user") ? null : new GitHubUser(api, response.get("user").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
+    }
 
-	public GitHubComment getComment(int id) throws IllegalAccessException {
-		return new GitHubComment(api, getRepository(), id);
-	}
+    @GitHubAccessPoint(path = "@locked", type = Boolean.class, requiresAccessToken = false)
+    public Boolean isLocked() throws IllegalAccessException {
+        return getBoolean("locked", false);
+    }
 
-	@GitHubAccessPoint(path = "@comments", type = Integer.class, requiresAccessToken = false)
-	public Integer getCommentsAmount() throws IllegalAccessException {
-		return getInteger("comments", false);
-	}
+    @GitHubAccessPoint(path = "@repository_url", type = GitHubRepository.class, requiresAccessToken = false)
+    public GitHubRepository getRepository() {
+        return this.repo;
+    }
+
+    @GitHubAccessPoint(path = "@labels", type = GitHubLabel.class, requiresAccessToken = false)
+    public List<GitHubLabel> getLabels() throws IllegalAccessException, UnsupportedEncodingException {
+        JsonElement element = getResponse(false);
+
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
+
+        List<GitHubLabel> labels = new ArrayList<GitHubLabel>();
+
+        JsonArray array = response.get("labels").getAsJsonArray();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject obj = array.get(i).getAsJsonObject();
+            labels.add(new GitHubLabel(api, repo, obj.get("name").getAsString(), obj));
+        }
+
+        return labels;
+    }
+
+    @GitHubAccessPoint(path = "@closed_by", type = GitHubUser.class, requiresAccessToken = false)
+    public GitHubUser getClosedBy() throws IllegalAccessException {
+        JsonElement element = getResponse(true);
+
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
+
+        return isInvalid(response, "closed_by") ? null : new GitHubUser(api, response.get("closed_by").getAsJsonObject().get("login").getAsString(), response.get("closed_by").getAsJsonObject());
+    }
+
+    @GitHubAccessPoint(path = "@milestone", type = GitHubMilestone.class, requiresAccessToken = false)
+    public GitHubMilestone getMilestone() throws IllegalAccessException {
+        JsonElement element = getResponse(true);
+
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
+
+        return isInvalid(response, "milestone") ? null : new GitHubMilestone(api, getRepository(), response.get("milestone").getAsJsonObject().get("number").getAsInt(), response.get("milestone").getAsJsonObject());
+    }
+
+    @GitHubAccessPoint(path = "@body", type = String.class, requiresAccessToken = false)
+    public String getMessageBody() throws IllegalAccessException {
+        return getString("body", false);
+    }
+
+    @GitHubAccessPoint(path = "@assignees", type = GitHubUser.class, requiresAccessToken = false)
+    public List<GitHubUser> getAssignees() throws IllegalAccessException, UnsupportedEncodingException {
+        JsonElement element = getResponse(false);
+
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
+
+        List<GitHubUser> users = new ArrayList<GitHubUser>();
+
+        JsonArray array = response.get("assignees").getAsJsonArray();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject obj = array.get(i).getAsJsonObject();
+            users.add(new GitHubUser(api, obj.get("login").getAsString(), obj));
+        }
+
+        return users;
+    }
+
+    @GitHubAccessPoint(path = "/comments", type = GitHubComment.class, requiresAccessToken = false)
+    public List<GitHubComment> getComments() throws IllegalAccessException {
+        GitHubObject repos = new GitHubObject(api, this, "/comments");
+        JsonElement response = repos.getResponse(true);
+
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+
+        List<GitHubComment> list = new ArrayList<>();
+        JsonArray array = response.getAsJsonArray();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
+
+            GitHubComment comment = new GitHubComment(api, getRepository(), object.get("id").getAsInt(), object);
+            list.add(comment);
+        }
+
+        return list;
+    }
+
+    public GitHubComment getComment(int id) throws IllegalAccessException {
+        return new GitHubComment(api, getRepository(), id);
+    }
+
+    @GitHubAccessPoint(path = "@comments", type = Integer.class, requiresAccessToken = false)
+    public Integer getCommentsAmount() throws IllegalAccessException {
+        return getInteger("comments", false);
+    }
 
 }

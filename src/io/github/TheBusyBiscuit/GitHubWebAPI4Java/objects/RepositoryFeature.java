@@ -10,46 +10,46 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 
 public class RepositoryFeature extends UniqueGitHubObject {
 
-	public RepositoryFeature(GitHubWebAPI api, GitHubObject parent, String suffix) {
-		super(api, parent, suffix);
-	}
+    public RepositoryFeature(GitHubWebAPI api, GitHubObject parent, String suffix) {
+        super(api, parent, suffix);
+    }
 
-	public RepositoryFeature(GitHubObject obj) {
-		super(obj);
-	}
-	
-	@GitHubAccessPoint(path = "@number", type = Integer.class, requiresAccessToken = false)
-	public int getNumber() throws IllegalAccessException {
-		return getInteger("number", false);
-	}
+    public RepositoryFeature(GitHubObject obj) {
+        super(obj);
+    }
 
-	@GitHubAccessPoint(path = "@title", type = String.class, requiresAccessToken = false)
-	public String getTitle() throws IllegalAccessException {
-		return getString("title", false);
-	}
-	
-	@GitHubAccessPoint(path = "@closed_at", type = Date.class, requiresAccessToken = false)
-	public Date getClosedDate() throws IllegalAccessException {
-		return getDate("closed_at", true);
-	}
+    @GitHubAccessPoint(path = "@number", type = Integer.class, requiresAccessToken = false)
+    public int getNumber() throws IllegalAccessException {
+        return getInteger("number", false);
+    }
 
-	@GitHubAccessPoint(path = "@state", type = State.class, requiresAccessToken = false)
-	public State getState() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
+    @GitHubAccessPoint(path = "@title", type = String.class, requiresAccessToken = false)
+    public String getTitle() throws IllegalAccessException {
+        return getString("title", false);
+    }
 
-		return isInvalid(response, "state") ? null: State.valueOf(response.get("state").getAsString().toUpperCase());
-	}
-	
-	public static enum State {
-		
-		OPEN,
-		CLOSED;
-		
-	}
+    @GitHubAccessPoint(path = "@closed_at", type = Date.class, requiresAccessToken = false)
+    public Date getClosedDate() throws IllegalAccessException {
+        return getDate("closed_at", true);
+    }
+
+    @GitHubAccessPoint(path = "@state", type = State.class, requiresAccessToken = false)
+    public State getState() throws IllegalAccessException {
+        JsonElement element = getResponse(false);
+
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
+
+        return isInvalid(response, "state") ? null : State.valueOf(response.get("state").getAsString().toUpperCase());
+    }
+
+    public static enum State {
+
+        OPEN,
+        CLOSED;
+
+    }
 
 }

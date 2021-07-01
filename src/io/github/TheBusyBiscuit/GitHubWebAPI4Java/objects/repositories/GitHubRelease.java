@@ -1,16 +1,18 @@
 package io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories;
 
+import java.util.Date;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.GitHubWebAPI;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
-import java.util.Date;
-
 /**
  * Represents a Release from a GitHubRepository.
+ * 
  * @since 1.3.4
  */
 public class GitHubRelease extends GitHubObject {
@@ -31,6 +33,7 @@ public class GitHubRelease extends GitHubObject {
 
     /**
      * Returns the ID of this release.
+     * 
      * @return the ID of this release.
      * @throws IllegalAccessException
      */
@@ -41,6 +44,7 @@ public class GitHubRelease extends GitHubObject {
 
     /**
      * Returns whether this release is a draft (i.e. not published yet) or not.
+     * 
      * @return {@code true} if this release is a draft, {@code false} otherwise.
      * @throws IllegalAccessException
      */
@@ -51,6 +55,7 @@ public class GitHubRelease extends GitHubObject {
 
     /**
      * Returns whether this release is indicated as a pre-release or not.
+     * 
      * @return {@code true} if this release is a pre-release, {@code false} otherwise.
      * @throws IllegalAccessException
      */
@@ -61,6 +66,7 @@ public class GitHubRelease extends GitHubObject {
 
     /**
      * Returns the name of the git tag corresponding to this release.
+     * 
      * @return the name of the git tag corresponding to this release.
      * @throws IllegalAccessException
      */
@@ -76,6 +82,7 @@ public class GitHubRelease extends GitHubObject {
 
     /**
      * Returns the name of this release.
+     * 
      * @return the name of this release.
      * @throws IllegalAccessException
      */
@@ -86,6 +93,7 @@ public class GitHubRelease extends GitHubObject {
 
     /**
      * Returns the creation date of this release.
+     * 
      * @return the creation date of this release.
      * @throws IllegalAccessException
      * @see #getPublicationDate()
@@ -97,6 +105,7 @@ public class GitHubRelease extends GitHubObject {
 
     /**
      * Returns the publication date of this release.
+     * 
      * @return the publication date of this release.
      * @throws IllegalAccessException
      * @see #getCreationDate()
@@ -108,6 +117,7 @@ public class GitHubRelease extends GitHubObject {
 
     /**
      * Returns the content of this release's notes.
+     * 
      * @return the content of this release's notes.
      * @throws IllegalAccessException
      */
@@ -118,6 +128,7 @@ public class GitHubRelease extends GitHubObject {
 
     /**
      * Returns the author of this release.
+     * 
      * @return the author of this release.
      * @throws IllegalAccessException
      */
@@ -130,6 +141,6 @@ public class GitHubRelease extends GitHubObject {
         }
         JsonObject response = element.getAsJsonObject();
 
-        return isInvalid(response, "author") ? null: new GitHubUser(api, response.get("author").getAsJsonObject().get("login").getAsString(), response.get("author").getAsJsonObject());
+        return isInvalid(response, "author") ? null : new GitHubUser(api, response.get("author").getAsJsonObject().get("login").getAsString(), response.get("author").getAsJsonObject());
     }
 }

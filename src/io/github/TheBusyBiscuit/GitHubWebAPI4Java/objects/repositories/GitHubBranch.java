@@ -16,144 +16,144 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.annotations.GitHubAccessPoint;
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.GitHubObject;
 
 public class GitHubBranch extends GitHubObject {
-	
-	private GitHubRepository repo;
-	private String name;
-	
-	public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name) throws UnsupportedEncodingException {
-		super(api, repo, "/branches/" + URLEncoder.encode(name, "utf-8"));
-		
-		this.name = name;
-		this.repo = repo;
-	}
-	
-	public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name, JsonElement response) throws UnsupportedEncodingException {
-		super(api, repo, "/branches/" + URLEncoder.encode(name, "utf-8"));
 
-		this.name = name;
-		this.repo = repo;
-		this.minimal = response;
-	}
+    private GitHubRepository repo;
+    private String name;
 
-	public GitHubBranch(GitHubObject obj) {
-		super(obj);
-	}
-	
-	@Override
-	public String getRawURL() {
-		return ".*repos/.*/.*/branches/.*";
-	}
-	
-	@GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
-	public String getName() throws IllegalAccessException {
-		return getString("name", false);
-	}
+    public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name) throws UnsupportedEncodingException {
+        super(api, repo, "/branches/" + URLEncoder.encode(name, "utf-8"));
 
-	@GitHubAccessPoint(path = "@commit", type = GitHubCommit.class, requiresAccessToken = false)
-	public GitHubCommit getLastCommit() throws IllegalAccessException {
-		JsonElement element = getResponse(true);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		if (!isInvalid(response, "commit")) {
-			if (!isInvalid(response.getAsJsonObject().get("commit").getAsJsonObject(), "sha")) {
-				return new GitHubCommit(api, getRepository(), response.getAsJsonObject().get("commit").getAsJsonObject().get("sha").getAsString(), response.getAsJsonObject().get("commit").getAsJsonObject());
-			}
-		}
-		
-		return null;
-	}
+        this.name = name;
+        this.repo = repo;
+    }
 
-	@GitHubAccessPoint(path = "@commit/sha", type = String.class, requiresAccessToken = false)
-	public String getLastCommitSHA() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		if (!isInvalid(response, "commit")) {
-			if (!isInvalid(response.getAsJsonObject().get("commit").getAsJsonObject(), "sha")) {
-				return response.getAsJsonObject().get("commit").getAsJsonObject().get("sha").getAsString();
-			}
-		}
-		
-		return null;
-	}
-	
-	public GitHubRepository getRepository() {
-		return this.repo;
-	}
-	
-	public boolean isDefaultBranch() throws IllegalAccessException, UnsupportedEncodingException {
-		return name.equals(getRepository().getDefaultBranch().name);
-	}
+    public GitHubBranch(GitHubWebAPI api, GitHubRepository repo, String name, JsonElement response) throws UnsupportedEncodingException {
+        super(api, repo, "/branches/" + URLEncoder.encode(name, "utf-8"));
 
-	@GitHubAccessPoint(path = "@_links/self", type = String.class, requiresAccessToken = false)
-	@Override
-	public String getURL() {
-		return super.getURL();
-	}
+        this.name = name;
+        this.repo = repo;
+        this.minimal = response;
+    }
 
-	public List<GitHubCommit> getCommits() throws IllegalAccessException, UnsupportedEncodingException {
-		return this.getCommits(1);
-	}
+    public GitHubBranch(GitHubObject obj) {
+        super(obj);
+    }
 
-	public List<GitHubCommit> getAllCommits() throws IllegalAccessException, UnsupportedEncodingException {
-		List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
-		
-		int i = 2;
-		List<GitHubCommit> temp = getCommits(1);
-		
-		while (!temp.isEmpty()) {
-			commits.addAll(temp);
-			
-			temp = getCommits(i);
-			i++;
-		}
-		
-		return commits;
-	}
+    @Override
+    public String getRawURL() {
+        return ".*repos/.*/.*/branches/.*";
+    }
 
-	public GitHubCommit getCommit(String sha) throws IllegalAccessException {
-		return new GitHubCommit(api, getRepository(), sha);
-	}
+    @GitHubAccessPoint(path = "@name", type = String.class, requiresAccessToken = false)
+    public String getName() throws IllegalAccessException {
+        return getString("name", false);
+    }
 
-	public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException, UnsupportedEncodingException {
-		final Map<String, String> params = new HashMap<String, String>();
-		params.put("sha", URLEncoder.encode(this.getName(), "utf-8"));
-		params.put("page", String.valueOf(page));
-		params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
-		
-		GitHubObject commits = new GitHubObject(api, getRepository(), "/commits") {
-			
-			@Override
-			public Map<String, String> getParameters() {
-				return params;
-			}
-			
-		};
-		
-		JsonElement response = commits.getResponse(true);
-		
-		if (response == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		
-		List<GitHubCommit> list = new ArrayList<GitHubCommit>();
-		JsonArray array = response.getAsJsonArray();
-		
-		for (int i = 0; i < array.size(); i++) {
-	    	JsonObject object = array.get(i).getAsJsonObject();
-	    	
-	    	GitHubCommit commit = new GitHubCommit(api, getRepository(), object.get("sha").getAsString(), object);
-	    	list.add(commit);
-	    }
-		
-		return list;
-	}
+    @GitHubAccessPoint(path = "@commit", type = GitHubCommit.class, requiresAccessToken = false)
+    public GitHubCommit getLastCommit() throws IllegalAccessException {
+        JsonElement element = getResponse(true);
+
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
+
+        if (!isInvalid(response, "commit")) {
+            if (!isInvalid(response.getAsJsonObject().get("commit").getAsJsonObject(), "sha")) {
+                return new GitHubCommit(api, getRepository(), response.getAsJsonObject().get("commit").getAsJsonObject().get("sha").getAsString(), response.getAsJsonObject().get("commit").getAsJsonObject());
+            }
+        }
+
+        return null;
+    }
+
+    @GitHubAccessPoint(path = "@commit/sha", type = String.class, requiresAccessToken = false)
+    public String getLastCommitSHA() throws IllegalAccessException {
+        JsonElement element = getResponse(false);
+
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
+
+        if (!isInvalid(response, "commit")) {
+            if (!isInvalid(response.getAsJsonObject().get("commit").getAsJsonObject(), "sha")) {
+                return response.getAsJsonObject().get("commit").getAsJsonObject().get("sha").getAsString();
+            }
+        }
+
+        return null;
+    }
+
+    public GitHubRepository getRepository() {
+        return this.repo;
+    }
+
+    public boolean isDefaultBranch() throws IllegalAccessException, UnsupportedEncodingException {
+        return name.equals(getRepository().getDefaultBranch().name);
+    }
+
+    @GitHubAccessPoint(path = "@_links/self", type = String.class, requiresAccessToken = false)
+    @Override
+    public String getURL() {
+        return super.getURL();
+    }
+
+    public List<GitHubCommit> getCommits() throws IllegalAccessException, UnsupportedEncodingException {
+        return this.getCommits(1);
+    }
+
+    public List<GitHubCommit> getAllCommits() throws IllegalAccessException, UnsupportedEncodingException {
+        List<GitHubCommit> commits = new ArrayList<GitHubCommit>();
+
+        int i = 2;
+        List<GitHubCommit> temp = getCommits(1);
+
+        while (!temp.isEmpty()) {
+            commits.addAll(temp);
+
+            temp = getCommits(i);
+            i++;
+        }
+
+        return commits;
+    }
+
+    public GitHubCommit getCommit(String sha) throws IllegalAccessException {
+        return new GitHubCommit(api, getRepository(), sha);
+    }
+
+    public List<GitHubCommit> getCommits(final int page) throws IllegalAccessException, UnsupportedEncodingException {
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("sha", URLEncoder.encode(this.getName(), "utf-8"));
+        params.put("page", String.valueOf(page));
+        params.put("per_page", String.valueOf(GitHubWebAPI.ITEMS_PER_PAGE));
+
+        GitHubObject commits = new GitHubObject(api, getRepository(), "/commits") {
+
+            @Override
+            public Map<String, String> getParameters() {
+                return params;
+            }
+
+        };
+
+        JsonElement response = commits.getResponse(true);
+
+        if (response == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+
+        List<GitHubCommit> list = new ArrayList<GitHubCommit>();
+        JsonArray array = response.getAsJsonArray();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject object = array.get(i).getAsJsonObject();
+
+            GitHubCommit commit = new GitHubCommit(api, getRepository(), object.get("sha").getAsString(), object);
+            list.add(commit);
+        }
+
+        return list;
+    }
 }

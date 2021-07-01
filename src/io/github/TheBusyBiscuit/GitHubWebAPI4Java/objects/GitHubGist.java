@@ -13,92 +13,96 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.repositories.GitHubFil
 import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
 public class GitHubGist extends GitHubObject {
-	
-	public GitHubGist(GitHubWebAPI api, String id) {
-		super(api, null, "gists/" + id);
-	}
-	
-	public GitHubGist(GitHubWebAPI api, String id, JsonElement response) {
-		super(api, null, "gists/" + id);
-		
-		this.minimal = response;
-	}
 
-	public GitHubGist(GitHubObject obj) {
-		super(obj);
-	}
-	
-	@Override
-	public String getRawURL() {
-		return ".*gists/.*";
-	}
+    public GitHubGist(GitHubWebAPI api, String id) {
+        super(api, null, "gists/" + id);
+    }
 
-	@GitHubAccessPoint(path = "@id", type = String.class, requiresAccessToken = false)
-	public String getID() throws IllegalAccessException {
-		return getString("id", false);
-	}
+    public GitHubGist(GitHubWebAPI api, String id, JsonElement response) {
+        super(api, null, "gists/" + id);
 
-	@GitHubAccessPoint(path = "@created_at", type = Date.class, requiresAccessToken = false)
-	public Date getCreationDate() throws IllegalAccessException {
-		return getDate("created_at", false);
-	}
+        this.minimal = response;
+    }
 
-	@GitHubAccessPoint(path = "@updated_at", type = Date.class, requiresAccessToken = false)
-	public Date getLastUpdatedDate() throws IllegalAccessException {
-		return getDate("updated_at", false);
-	}
+    public GitHubGist(GitHubObject obj) {
+        super(obj);
+    }
 
-	@GitHubAccessPoint(path = "@owner", type = GitHubUser.class, requiresAccessToken = false)
-	public GitHubUser getOwner() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
-		
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
-		
-		return isInvalid(response, "owner") ? null: new GitHubUser(api, response.get("owner").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
-	}
+    @Override
+    public String getRawURL() {
+        return ".*gists/.*";
+    }
 
-	@GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
-	public String getDescription() throws IllegalAccessException {
-		return getString("description", false);
-	}
+    @GitHubAccessPoint(path = "@id", type = String.class, requiresAccessToken = false)
+    public String getID() throws IllegalAccessException {
+        return getString("id", false);
+    }
 
-	/**
-	 * Returns a list of {@link GitHubFile} that are part of this gist.
-	 * @return list of {@link GitHubFile} that are part of this gist, may be empty.
-	 * @throws IllegalAccessException if no connection to the GitHub API could be established.
-	 * @since 1.3.3
-	 */
-	public List<GitHubFile> getFiles() throws IllegalAccessException {
-		JsonElement element = getResponse(false);
+    @GitHubAccessPoint(path = "@created_at", type = Date.class, requiresAccessToken = false)
+    public Date getCreationDate() throws IllegalAccessException {
+        return getDate("created_at", false);
+    }
 
-		if (element == null) {
-			throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
-		}
-		JsonObject response = element.getAsJsonObject();
+    @GitHubAccessPoint(path = "@updated_at", type = Date.class, requiresAccessToken = false)
+    public Date getLastUpdatedDate() throws IllegalAccessException {
+        return getDate("updated_at", false);
+    }
 
-		List<GitHubFile> files = new ArrayList<>();
-		if (!isInvalid(response, "files")) {
-			response.getAsJsonObject("files").keySet().forEach(fileName -> files.add(new GitHubFile(api, this, fileName)));
-		}
+    @GitHubAccessPoint(path = "@owner", type = GitHubUser.class, requiresAccessToken = false)
+    public GitHubUser getOwner() throws IllegalAccessException {
+        JsonElement element = getResponse(false);
 
-		return files;
-	}
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
 
-	/**
-	 * Returns the {@link GitHubFile} representing the file with this name in this gist.
-	 * @param name name of the file to get, not null.
-	 * @return the {@link GitHubFile} representing the file with this name in this gist, or null if none could be found.
-	 * @since 1.3.3
-	 */
-	public GitHubFile getFile(String name) throws IllegalAccessException {
-		for (GitHubFile file : getFiles()) {
-			if (name.equals(file.getName())) {
-				return file;
-			}
-		}
-		return null;
-	}
+        return isInvalid(response, "owner") ? null : new GitHubUser(api, response.get("owner").getAsJsonObject().get("login").getAsString(), response.get("owner").getAsJsonObject());
+    }
+
+    @GitHubAccessPoint(path = "@description", type = String.class, requiresAccessToken = false)
+    public String getDescription() throws IllegalAccessException {
+        return getString("description", false);
+    }
+
+    /**
+     * Returns a list of {@link GitHubFile} that are part of this gist.
+     * 
+     * @return list of {@link GitHubFile} that are part of this gist, may be empty.
+     * @throws IllegalAccessException
+     *             if no connection to the GitHub API could be established.
+     * @since 1.3.3
+     */
+    public List<GitHubFile> getFiles() throws IllegalAccessException {
+        JsonElement element = getResponse(false);
+
+        if (element == null) {
+            throw new IllegalAccessException("Could not connect to '" + getURL() + "'");
+        }
+        JsonObject response = element.getAsJsonObject();
+
+        List<GitHubFile> files = new ArrayList<>();
+        if (!isInvalid(response, "files")) {
+            response.getAsJsonObject("files").keySet().forEach(fileName -> files.add(new GitHubFile(api, this, fileName)));
+        }
+
+        return files;
+    }
+
+    /**
+     * Returns the {@link GitHubFile} representing the file with this name in this gist.
+     * 
+     * @param name
+     *            name of the file to get, not null.
+     * @return the {@link GitHubFile} representing the file with this name in this gist, or null if none could be found.
+     * @since 1.3.3
+     */
+    public GitHubFile getFile(String name) throws IllegalAccessException {
+        for (GitHubFile file : getFiles()) {
+            if (name.equals(file.getName())) {
+                return file;
+            }
+        }
+        return null;
+    }
 }

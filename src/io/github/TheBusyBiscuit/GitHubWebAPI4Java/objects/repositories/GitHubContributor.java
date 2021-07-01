@@ -9,17 +9,17 @@ import io.github.TheBusyBiscuit.GitHubWebAPI4Java.objects.users.GitHubUser;
 
 public class GitHubContributor extends GitHubUser {
 
-	public GitHubContributor(GitHubWebAPI api, String username, JsonElement response) {
-		super(api, username, response);
-	}
+    public GitHubContributor(GitHubWebAPI api, String username, JsonElement response) {
+        super(api, username, response);
+    }
 
-	public GitHubContributor(GitHubObject obj) {
-		super(obj);
-	}
+    public GitHubContributor(GitHubObject obj) {
+        super(obj);
+    }
 
-	@GitHubAccessPoint(path = "@contributions", type = Integer.class, requiresAccessToken = false)
-	public Integer getContributionsAmount() throws IllegalAccessException {
-		return getInteger("contributions", false);
-	}
+    @GitHubAccessPoint(path = "@contributions", type = Integer.class, requiresAccessToken = false)
+    public Integer getContributionsAmount() throws IllegalAccessException {
+        return getInteger("contributions", false);
+    }
 
 }
